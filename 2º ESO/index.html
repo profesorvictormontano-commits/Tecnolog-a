@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blip y las estructuras de la Tierra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1E1147; --deep:#140B35; --panel:#2A1A63; --panel2:#3A2585;
+  --mint:#5CF2C6; --pink:#FF4FA3; --sun:#FFD23F; --sky:#43C6F0; --hood:#F29E38;
+  --ink:#F6F2FF; --muted:#C3B8F0; --bad:#FF6B6B; --line:rgba(255,255,255,.14);
+  --display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --night:#1E1147; --panel:#2A1A63; --ink:#F6F2FF; } }
+:root[data-theme="dark"]{ --night:#1E1147; --panel:#2A1A63; --ink:#F6F2FF; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100vh;background:var(--night);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg svg{width:100%;height:100%}
+main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:16px 16px 48px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;margin:0}
+button{font:inherit}
+.hidden{display:none!important}
+
+/* botones */
+.btn{appearance:none;border:0;border-radius:999px;padding:13px 26px;font-family:var(--display);font-size:1.1rem;font-weight:600;cursor:pointer;background:var(--mint);color:#16103A;box-shadow:0 5px 0 #2BB38E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #2BB38E}
+.btn.pink{background:var(--pink);color:#fff;box-shadow:0 5px 0 #B8277A}
+.btn.sun{background:var(--sun);box-shadow:0 5px 0 #C99A10}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
+.btn:focus-visible,.opt:focus-visible,.chip:focus-visible,.mitem:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.center{text-align:center}
+
+/* portada */
+.cover{padding-top:18px;text-align:center}
+.cover h1{font-size:clamp(2.1rem,7vw,3.4rem);font-weight:700;letter-spacing:-.01em}
+.cover h1 .l2{display:block;color:var(--mint)}
+.cover .hero{width:min(300px,78vw);margin:4px auto -6px}
+.cover p.lead{max-width:34em;margin:10px auto 22px;color:var(--muted)}
+.card{background:var(--panel);border-radius:26px;padding:20px;border:2px solid var(--line)}
+.form{max-width:440px;margin:0 auto 16px;text-align:left}
+.form label{display:block;font-weight:700;margin:10px 0 4px}
+.form input{width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--deep);color:var(--ink);font:inherit}
+.form .err{color:var(--bad);min-height:1.4em;font-size:.95rem;margin-top:6px}
+.teacher{max-width:34em;margin:26px auto 0;font-size:.85rem;color:var(--muted);opacity:.85}
+
+/* HUD */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.hud .who{font-family:var(--display);font-weight:500;font-size:.98rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.path{display:flex;align-items:center;gap:0}
+.path i{display:block;width:13px;height:13px;border-radius:50%;background:var(--panel2);border:2px solid var(--line)}
+.path i.done{background:var(--mint);border-color:var(--mint)}
+.path i.now{background:var(--sun);border-color:var(--sun);box-shadow:0 0 0 4px rgba(255,210,63,.25)}
+.path b{display:block;width:16px;height:2px;background:var(--line)}
+
+/* escena */
+.scene{border-radius:26px;overflow:hidden;border:3px solid var(--panel2);background:#000;position:relative}
+.scene svg{display:block;width:100%;height:auto}
+.scene.mini svg{height:150px}
+.fig .zone{pointer-events:none}
+.place{font-family:var(--display);color:var(--sun);font-size:1rem;margin:16px 0 2px}
+.stitle{font-size:1.7rem;margin-bottom:8px}
+.narr{margin:0 0 16px}
+.bubble{position:relative;background:#fff;color:#1b1340;border-radius:20px;padding:12px 16px;margin:0 0 16px;font-weight:600}
+.bubble::before{content:"";position:absolute;left:28px;top:-10px;border:10px solid transparent;border-top:0;border-bottom-color:#fff}
+.bubble strong{color:#B8277A}
+
+/* animación Blip */
+.bob{animation:bob 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:bottom}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.shake{animation:shake .35s linear infinite}
+@keyframes shake{25%{transform:translate(-4px,2px) rotate(-.5deg)}75%{transform:translate(4px,-2px) rotate(.5deg)}}
+.fall{animation:fall 1.2s ease-in forwards;transform-box:fill-box;transform-origin:bottom center}
+@keyframes fall{to{transform:translateY(40px) rotate(14deg) scaleY(.4);opacity:.25}}
+.beam{animation:beam 1.6s ease-in forwards}
+@keyframes beam{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.gone{animation:gone 1.4s ease-in forwards;transform-box:fill-box;transform-origin:center}
+@keyframes gone{to{transform:translateY(-120px) scale(.3);opacity:0}}
+@media (prefers-reduced-motion: reduce){.bob,.shake,.scanline{animation:none!important}}
+
+/* modal escáner */
+.modal{position:fixed;inset:0;z-index:20;background:rgba(10,5,30,.8);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 12px calc(18px + env(safe-area-inset-bottom,0px))}
+.scanner{position:relative;max-width:720px;width:100%;background:#0D2B33;border:3px solid var(--mint);border-radius:26px;padding:22px 20px;box-shadow:0 0 40px rgba(92,242,198,.35);overflow:hidden}
+.scanner::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(92,242,198,.05) 0 2px,transparent 2px 5px);pointer-events:none}
+.scanline{position:absolute;left:0;right:0;height:60px;top:-60px;background:linear-gradient(transparent,rgba(92,242,198,.35),transparent);animation:scan 1.8s ease-in-out 1;pointer-events:none}
+@keyframes scan{to{top:100%}}
+.scanner h2{color:var(--mint);font-size:1.5rem;margin-bottom:4px}
+.scanner .sub{color:#9EE9D5;margin:0 0 12px;font-size:.95rem}
+.sec{background:rgba(92,242,198,.07);border-left:4px solid var(--mint);border-radius:0 16px 16px 0;padding:12px 14px;margin:12px 0}
+.sec h3{font-size:1.15rem;color:var(--sun);margin-bottom:4px}
+.sec p{margin:.3em 0}
+.sec ul{margin:.3em 0;padding-left:1.2em}
+.sec b{color:var(--mint)}
+.fig{background:#fff;border-radius:16px;padding:8px;margin-top:8px}
+.fig svg{display:block;width:100%;height:auto}
+.icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+.icons div{background:#fff;color:#1b1340;border-radius:14px;padding:8px;text-align:center;font-size:.85rem;font-weight:700}
+.icons svg{width:100%;height:auto;display:block}
+
+/* peligro */
+.danger{position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle,rgba(120,0,40,.55),rgba(20,0,10,.92));animation:flash 1s steps(2) infinite}
+@keyframes flash{50%{background:radial-gradient(circle,rgba(170,0,60,.6),rgba(20,0,10,.92))}}
+@media (prefers-reduced-motion: reduce){.danger{animation:none}}
+.dbox{max-width:480px;text-align:center;background:var(--deep);border:3px solid var(--pink);border-radius:26px;padding:24px 20px}
+.dbox .sign{font-family:var(--display);font-size:2.4rem;font-weight:700;color:var(--pink);line-height:1}
+.dbox svg{width:120px;height:120px;margin:4px auto}
+
+/* prueba */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 8px;flex-wrap:wrap}
+.lv{font-family:var(--display);font-weight:600;font-size:1.05rem;padding:5px 14px;border-radius:999px;background:var(--sun);color:#1b1340}
+.lv.C{background:var(--sky)} .lv.P{background:var(--pink);color:#fff} .lv.A{background:var(--mint)} .lv.D{background:#B79CFF}
+.lvsteps{display:flex;gap:6px}
+.lvsteps span{width:26px;height:8px;border-radius:4px;background:var(--panel2)}
+.lvsteps span.ok{background:var(--mint)} .lvsteps span.half{background:var(--sun)} .lvsteps span.ko{background:var(--bad)} .lvsteps span.now{background:#fff}
+.integ{margin:6px 0 14px}
+.integ .lab{font-size:.85rem;color:var(--muted);display:flex;justify-content:space-between}
+.bar{height:14px;border-radius:7px;background:var(--deep);overflow:hidden;border:2px solid var(--line)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--sun),var(--mint));transition:width .6s}
+.second{font-size:.9rem;color:var(--sun);margin-bottom:6px;font-weight:700}
+.qtext{font-family:var(--display);font-weight:500;font-size:1.3rem;margin:0 0 14px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:2px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:16px;padding:12px 14px;cursor:pointer;font:inherit;line-height:1.4}
+.opt.sel{border-color:var(--sun);background:#4A338F}
+.imgs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.opt.img{padding:8px;text-align:center}
+.opt.img svg{display:block;width:100%;height:auto;background:#fff;border-radius:12px}
+.opt.img span{display:block;font-size:.9rem;margin-top:6px}
+.good{border-color:var(--mint)!important;background:#1B5E55!important}
+.wrong{border-color:var(--bad)!important;background:#6B2440!important}
+.locked .opt,.locked .chip,.locked .mitem,.locked .zone{pointer-events:none}
+.sentence{font-size:1.1rem;line-height:2.4}
+.sentence select{font:inherit;font-size:1rem;padding:5px 8px;border-radius:10px;border:2px solid var(--sun);background:var(--deep);color:var(--ink);max-width:100%}
+.sentence select.good{background:#1B5E55!important} .sentence select.wrong{background:#6B2440!important}
+.fillin{width:100%;max-width:320px;padding:12px 14px;border-radius:14px;border:2px solid var(--sun);background:var(--deep);color:var(--ink);font:inherit}
+
+.pool{min-height:60px;border:2px dashed var(--line);border-radius:18px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.pool:empty::after{content:"Todas colocadas. Toca una tarjeta y luego este recuadro para devolverla.";color:var(--muted);font-size:.85rem}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.bin{border:2px solid var(--line);border-radius:18px;background:var(--deep);padding:8px;min-height:120px;cursor:pointer}
+.bin h4{margin:0 0 6px;font-family:var(--display);font-weight:600;font-size:1rem;color:var(--sun);text-align:center}
+.bin .drop{display:flex;flex-direction:column;gap:6px}
+.bin.over{border-color:var(--sun);background:#2E2270}
+.chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;color:#1b1340;border-radius:12px;padding:8px 12px;font-weight:700;font-size:.92rem;cursor:grab;border:3px solid transparent;line-height:1.25}
+.chip.sel{border-color:var(--pink)}
+.chip.lifting{opacity:.35}
+.chip.ghost{position:fixed;z-index:50;pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.4);transform:rotate(-3deg)}
+.chip.good{border-color:var(--mint)!important;background:#D8FFF3!important}
+.chip.wrong{border-color:var(--bad)!important;background:#FFE0E0!important}
+.hintdrag{font-size:.85rem;color:var(--muted);margin:-4px 0 10px}
+
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.match .col{display:grid;gap:10px;align-content:start}
+.mitem{border:2px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:14px;padding:10px 12px;cursor:pointer;font:inherit;font-size:.95rem;text-align:left;position:relative;line-height:1.35}
+.mitem.pick{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
+.mitem .tag{position:absolute;top:-9px;right:-7px;width:22px;height:22px;border-radius:50%;font-size:.8rem;font-weight:800;display:grid;place-items:center;color:#1b1340}
+
+.hotwrap{background:#fff;border-radius:18px;padding:8px}
+.hotwrap svg{display:block;width:100%;height:auto}
+.zone{cursor:pointer}
+.zone .hl{fill:transparent;stroke:transparent}
+.zone:hover .hl{fill:rgba(67,198,240,.18)}
+.zone.sel .hl{fill:rgba(255,210,63,.45);stroke:#E0A800;stroke-width:2}
+.zone.lz .hl{stroke:rgba(255,210,63,.55)}
+.zone.good .hl{fill:rgba(92,242,198,.55);stroke:#1B9E7A}
+.zone.wrong .hl{fill:rgba(255,107,107,.5);stroke:#C0392B}
+
+.fb{margin-top:16px;border-radius:18px;padding:14px 16px}
+.fb.ok{background:#15473F;border:2px solid var(--mint)}
+.fb.no{background:#4D1A33;border:2px solid var(--bad)}
+.fb h3{font-size:1.2rem;margin-bottom:4px}
+.fb .pista{margin-top:10px;background:rgba(255,210,63,.12);border-left:4px solid var(--sun);padding:8px 12px;border-radius:0 12px 12px 0}
+.toast{margin-top:10px;color:var(--sun);font-weight:700;min-height:1.4em}
+.actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+
+/* resultado parada */
+.resbox{text-align:center;margin-top:14px}
+.resbox h2{font-size:1.8rem}
+.resbox .pct{font-family:var(--display);font-size:1.2rem;color:var(--muted);margin:4px 0 14px}
+
+/* diploma */
+.diploma{position:relative;background:#FFF8E6;color:#2A1A63;border-radius:24px;padding:28px 22px;text-align:center;border:10px solid transparent;background-clip:padding-box;box-shadow:0 0 0 4px var(--pink),0 0 0 10px var(--sun),0 0 0 14px var(--mint);margin:20px 8px}
+.diploma .wm{position:absolute;inset:0;opacity:.08;pointer-events:none;overflow:hidden;border-radius:16px}
+.diploma .wm svg{width:100%;height:100%}
+.diploma .top{font-family:var(--display);font-size:1rem;color:#7A5BC8}
+.diploma .name{font-family:var(--display);font-size:clamp(1.6rem,6vw,2.4rem);font-weight:700;margin:8px 0;color:#1E1147;border-bottom:3px dotted #C9B8F5;display:inline-block;padding:0 10px 4px}
+.diploma .rank{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,7vw,2.8rem);line-height:1.1;margin:10px 0 2px;color:#B8277A}
+.diploma .grade{font-family:var(--display);font-size:1.3rem;margin:6px 0 10px}
+.diploma .blipd{width:120px;margin:0 auto}
+.diploma table{margin:14px auto 6px;border-collapse:collapse;font-size:.9rem;text-align:left}
+.diploma td,.diploma th{padding:4px 10px;border-bottom:1px solid #E6DCFB}
+.diploma th{font-family:var(--display);font-weight:600}
+.diploma .foot{font-size:.8rem;color:#6B5BA3;margin-top:10px}
+.rules{max-width:440px;margin:0 auto 16px;text-align:left;background:#3B1840;border:2px solid var(--pink);border-radius:20px;padding:14px 16px;font-size:.95rem}
+.rules h3{font-size:1.1rem;color:var(--pink);margin-bottom:4px}
+.rules p{margin:.3em 0}
+.exits{font-family:var(--display);font-size:.85rem;color:#1b1340;background:var(--sun);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.pause{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,5,30,.94)}
+.pause .dbox{border-color:var(--sun)}
+.pause .sign{color:var(--sun);font-size:2rem}
+.dipwarn{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;font-size:.85rem;font-weight:700}
+.stamp{position:absolute;right:14px;top:14px;width:78px;height:78px;border-radius:50%;border:3px dashed #B8277A;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#B8277A;transform:rotate(12deg);font-size:1.5rem;background:rgba(255,79,163,.07)}
+@media (max-width:480px){.stamp{width:60px;height:60px;font-size:1.1rem;right:8px;top:8px}}
+@media print{
+  body{background:#fff}
+  #bg,.hud,.noprint{display:none!important}
+  main{max-width:none;padding:0}
+  .diploma{margin:20px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<main id="app"></main>
+
+<script>
+/* ========= utilidades ========= */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const shuffle = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zñ ]/g,'').trim();
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ========= fondo con marcas de agua ========= */
+(function(){
+  let stars='';
+  for(let i=0;i<90;i++){const x=Math.random()*1200,y=Math.random()*900,r=Math.random()*1.6+.3;stars+=`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r.toFixed(1)}" fill="#fff" opacity="${(Math.random()*.6+.2).toFixed(2)}"/>`;}
+  let lat='';
+  for(let k=0;k<8;k++){const y=860-k*70;lat+=`<line x1="${1000+k*6}" y1="${y}" x2="${1100-k*6}" y2="${y-70}"/><line x1="${1100-k*6}" y1="${y}" x2="${1000+k*6}" y2="${y-70}"/>`;}
+  $('#bg').innerHTML=`<svg viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs><radialGradient id="neb1" cx="20%" cy="15%" r="45%"><stop offset="0" stop-color="#FF4FA3" stop-opacity=".35"/><stop offset="1" stop-color="#FF4FA3" stop-opacity="0"/></radialGradient>
+  <radialGradient id="neb2" cx="85%" cy="70%" r="50%"><stop offset="0" stop-color="#43C6F0" stop-opacity=".28"/><stop offset="1" stop-color="#43C6F0" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="900" fill="#1E1147"/><rect width="1200" height="900" fill="url(#neb1)"/><rect width="1200" height="900" fill="url(#neb2)"/>
+  ${stars}
+  <g fill="none" stroke="#5CF2C6" stroke-width="3" opacity=".09">
+    <path d="M60 880 L260 560 L460 880 Z M260 560 L330 880"/>
+    <path d="M140 880 V800 A40 40 0 0 1 220 800 V880"/>
+    <g>${lat}<line x1="1000" y1="860" x2="1048" y2="300"/><line x1="1100" y1="860" x2="1052" y2="300"/></g>
+    <path d="M500 200 L560 60 L560 260 M860 200 L800 60 L800 260 M470 200 H890 M560 60 Q680 190 800 60"/>
+  </g></svg>`;
+})();
+
+/* ========= Blip (extraterrestre original) ========= */
+function blip(x,y,s=1,mood='ok',id='bl'){
+  const mouth = mood==='happy' ? '<path d="M-7,-58 Q0,-51 7,-58" stroke="#1A1033" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+    : mood==='scared' ? '<ellipse cx="0" cy="-56" rx="4" ry="5" fill="#1A1033"/>'
+    : '<path d="M-5,-57 Q0,-54 5,-57" stroke="#1A1033" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+  const sweat = mood==='scared' ? '<path d="M22,-82 q4,7 0,10 q-4,-3 0,-10z" fill="#43C6F0"/>' : '';
+  const arms = mood==='happy'
+    ? '<path d="M-19,-44 Q-32,-56 -30,-66" stroke="#F29E38" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M19,-44 Q32,-56 30,-66" stroke="#F29E38" stroke-width="9" fill="none" stroke-linecap="round"/><circle cx="-30" cy="-69" r="5" fill="#6EE7B7"/><circle cx="30" cy="-69" r="5" fill="#6EE7B7"/>'
+    : '<path d="M-19,-44 Q-30,-36 -27,-24" stroke="#F29E38" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M19,-44 Q30,-36 27,-24" stroke="#F29E38" stroke-width="9" fill="none" stroke-linecap="round"/><circle cx="-27" cy="-21" r="5" fill="#6EE7B7"/><circle cx="27" cy="-21" r="5" fill="#6EE7B7"/>';
+  return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><g class="bob">
+  <ellipse cx="0" cy="1" rx="22" ry="4" fill="#000" opacity=".25"/>
+  <rect x="-12" y="-20" width="9" height="19" rx="4" fill="#3B2A6B"/><rect x="3" y="-20" width="9" height="19" rx="4" fill="#3B2A6B"/>
+  <ellipse cx="-9" cy="-1" rx="8" ry="4" fill="#FF4FA3"/><ellipse cx="9" cy="-1" rx="8" ry="4" fill="#FF4FA3"/>
+  <path d="M-21,-16 Q-24,-50 0,-52 Q24,-50 21,-16 Z" fill="#F29E38"/>
+  <rect x="-10" y="-32" width="20" height="10" rx="4" fill="#DB8622"/>
+  ${arms}
+  <line x1="-9" y1="-88" x2="-17" y2="-108" stroke="#6EE7B7" stroke-width="3" stroke-linecap="round"/><circle cx="-18" cy="-110" r="5" fill="#FFD23F"/>
+  <line x1="9" y1="-88" x2="17" y2="-108" stroke="#6EE7B7" stroke-width="3" stroke-linecap="round"/><circle cx="18" cy="-110" r="5" fill="#FFD23F"/>
+  <path d="M-30,-66 Q-30,-100 0,-100 Q30,-100 30,-66 Q30,-46 0,-46 Q-30,-46 -30,-66Z" fill="#DB8622"/>
+  <ellipse cx="0" cy="-68" rx="24" ry="22" fill="#6EE7B7"/>
+  <ellipse cx="-4" cy="-84" rx="10" ry="4" fill="#9CF5D6" opacity=".6"/>
+  <ellipse cx="-10" cy="-69" rx="8" ry="${mood==='scared'?11:10}" fill="#1A1033"/><ellipse cx="10" cy="-69" rx="8" ry="${mood==='scared'?11:10}" fill="#1A1033"/>
+  <circle cx="-7" cy="-73" r="3" fill="#fff"/><circle cx="13" cy="-73" r="3" fill="#fff"/><circle cx="-12" cy="-65" r="1.5" fill="#fff"/><circle cx="8" cy="-65" r="1.5" fill="#fff"/>
+  <circle cx="-17" cy="-60" r="3" fill="#FF4FA3" opacity=".45"/><circle cx="17" cy="-60" r="3" fill="#FF4FA3" opacity=".45"/>
+  ${mouth}${sweat}</g></g>`;
+}
+const SVG = (inner,vb='0 0 400 240',extra=(vb==='0 0 400 240'?'preserveAspectRatio="xMidYMax slice"':'')) => `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" ${extra}>${inner}</svg>`;
+
+/* celosía (triangulada) */
+function lattice(x1,y1,x2,y2,w,n,col='#FFD23F',sw=2){
+  // vertical o horizontal según dimensiones
+  let s='';
+  if(Math.abs(x2-x1)<Math.abs(y2-y1)){ // vertical
+    s+=`<line x1="${x1}" y1="${y1}" x2="${x1}" y2="${y2}"/><line x1="${x1+w}" y1="${y1}" x2="${x1+w}" y2="${y2}"/>`;
+    const st=(y2-y1)/n; for(let i=0;i<n;i++){const ya=y1+i*st,yb=ya+st;s+=`<line x1="${x1}" y1="${ya}" x2="${x1+w}" y2="${yb}"/><line x1="${x1}" y1="${yb}" x2="${x1+w}" y2="${yb}"/>`;}
+  } else {
+    s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y1}"/><line x1="${x1}" y1="${y1+w}" x2="${x2}" y2="${y1+w}"/>`;
+    const st=(x2-x1)/n; for(let i=0;i<n;i++){const xa=x1+i*st,xb=xa+st;s+=`<line x1="${xa}" y1="${y1+w}" x2="${xb}" y2="${y1}"/><line x1="${xb}" y1="${y1}" x2="${xb}" y2="${y1+w}"/>`;}
+  }
+  return `<g stroke="${col}" stroke-width="${sw}" stroke-linecap="round">${s}</g>`;
+}
+
+/* ========= escenas ========= */
+const SCENES = {
+  landing: m => SVG(`<defs><linearGradient id="sk0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B1B6E"/><stop offset="1" stop-color="#7A4BC8"/></linearGradient></defs>
+    <rect width="400" height="240" fill="url(#sk0)"/><circle cx="60" cy="50" r="22" fill="#FFF3C4"/><circle cx="52" cy="44" r="5" fill="#E9D98F"/>
+    <path d="M0,180 Q100,150 200,175 T400,170 V240 H0Z" fill="#3FBF8F"/><path d="M0,205 Q120,185 240,205 T400,200 V240 H0Z" fill="#2E9E74"/>
+    <g id="st"><rect x="262" y="100" width="22" height="100" rx="6" fill="#8B5A2B"/><path d="M273,150 L250,128 M273,135 L296,115" stroke="#8B5A2B" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="273" cy="85" r="42" fill="#34D399"/><circle cx="240" cy="104" r="28" fill="#2BB38E"/><circle cx="306" cy="104" r="28" fill="#2BB38E"/><circle cx="262" cy="70" r="12" fill="#6EE7B7" opacity=".6"/></g>
+    <g transform="rotate(-16 105 190)"><ellipse cx="105" cy="170" rx="22" ry="17" fill="#43C6F0" opacity=".8"/><ellipse cx="105" cy="182" rx="50" ry="13" fill="#C3B8F0"/><ellipse cx="105" cy="186" rx="34" ry="5" fill="#8C7BD1"/>
+    <circle cx="72" cy="183" r="3.5" fill="#FF4FA3"/><circle cx="105" cy="190" r="3.5" fill="#FFD23F"/><circle cx="138" cy="183" r="3.5" fill="#5CF2C6"/></g>
+    <circle cx="150" cy="160" r="9" fill="#fff" opacity=".25"/><circle cx="160" cy="140" r="13" fill="#fff" opacity=".18"/><circle cx="172" cy="116" r="17" fill="#fff" opacity=".1"/>
+    ${blip(195,212,.72,m)}`),
+  pyramids: m => SVG(`<defs><linearGradient id="sk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF7AB8"/><stop offset=".6" stop-color="#FFB86B"/><stop offset="1" stop-color="#FFD98A"/></linearGradient></defs>
+    <rect width="400" height="240" fill="url(#sk1)"/><circle cx="330" cy="58" r="28" fill="#FFD23F"/>
+    <g id="st"><polygon points="250,200 315,118 380,200" fill="#E9B949"/><polygon points="315,118 380,200 330,200" fill="#C9922E"/>
+    <polygon points="40,205 165,62 290,205" fill="#F0C35A"/><polygon points="165,62 290,205 205,205" fill="#C9922E"/>
+    <g stroke="#B7802A" stroke-width="1.2" opacity=".6">${[0,1,2,3,4,5,6].map(i=>{const y=85+i*17,dx=(y-62)*125/143;return `<line x1="${165-dx}" y1="${y}" x2="${165+dx}" y2="${y}"/>`}).join('')}</g>
+    <path d="M145,205 V184 A20,20 0 0 1 185,184 V205Z" fill="#3B2A6B"/>
+    <path d="M141,205 V184 A24,24 0 0 1 189,184 V205" fill="none" stroke="#FFF1C9" stroke-width="5" stroke-dasharray="7 3"/></g>
+    <path d="M0,200 Q90,188 200,204 T400,198 V240 H0Z" fill="#F2C14E"/><path d="M0,222 Q140,210 260,226 T400,220 V240 H0Z" fill="#E5AE3A"/>
+    ${blip(95,222,.7,m)}`),
+  city: m => { let fr=''; const xs=[40,95,150,205], ys=[205,160,115,70];
+    xs.forEach(x=>{fr+=`<rect x="${x-10}" y="205" width="28" height="8" fill="#8C7BD1"/><rect x="${x}" y="70" width="8" height="135" fill="#E6E0FF"/>`;});
+    ys.slice(1).forEach(y=>{fr+=`<rect x="36" y="${y}" width="182" height="7" fill="#C3B8F0"/>`;});
+    return SVG(`<defs><linearGradient id="sk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#43C6F0"/><stop offset="1" stop-color="#B8F1FF"/></linearGradient></defs>
+    <rect width="400" height="240" fill="url(#sk2)"/>
+    <g fill="#8FD9F0"><rect x="0" y="120" width="30" height="100"/><rect x="235" y="140" width="26" height="80"/><rect x="360" y="110" width="40" height="110"/></g>
+    <rect y="210" width="400" height="30" fill="#5A4E8C"/>
+    <g id="st">${fr}${lattice(300,40,300,210,14,10,'#FF4FA3',2.2)}${lattice(210,34,395,34,10,12,'#FF4FA3',2)}
+    <rect x="200" y="30" width="22" height="18" fill="#3B2A6B"/><line x1="350" y1="44" x2="350" y2="120" stroke="#3B2A6B" stroke-width="1.5"/><path d="M345,120 q5,10 10,0" stroke="#3B2A6B" stroke-width="3" fill="none"/>
+    <line x1="307" y1="20" x2="212" y2="34" stroke="#3B2A6B" stroke-width="1.5"/><line x1="307" y1="20" x2="390" y2="34" stroke="#3B2A6B" stroke-width="1.5"/><line x1="300" y1="34" x2="307" y2="20" stroke="#FF4FA3" stroke-width="3"/><line x1="314" y1="34" x2="307" y2="20" stroke="#FF4FA3" stroke-width="3"/></g>
+    ${blip(258,222,.62,m)}`);},
+  bridge: m => { let h=''; for(let x=110;x<=290;x+=12){const t=(x-200)/100;const y=40+58*(1-t*t);h+=`<line x1="${x}" y1="${y.toFixed(1)}" x2="${x}" y2="150"/>`;}
+    return SVG(`<defs><linearGradient id="sk3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B3FB0"/><stop offset="1" stop-color="#FF8FC4"/></linearGradient></defs>
+    <rect width="400" height="240" fill="url(#sk3)"/><circle cx="330" cy="70" r="20" fill="#FFF3C4" opacity=".9"/>
+    <rect y="165" width="400" height="75" fill="#2F7FC1"/><g stroke="#8FD9F0" stroke-width="2" opacity=".6"><path d="M20,190 q10,-5 20,0 t20,0"/><path d="M200,210 q10,-5 20,0 t20,0"/><path d="M320,185 q10,-5 20,0 t20,0"/></g>
+    <g id="st"><rect x="94" y="30" width="12" height="185" fill="#FF4FA3"/><rect x="294" y="30" width="12" height="185" fill="#FF4FA3"/><rect x="94" y="60" width="12" height="5" fill="#B8277A"/><rect x="294" y="60" width="12" height="5" fill="#B8277A"/>
+    <rect x="0" y="146" width="400" height="10" fill="#3B2A6B"/>
+    <g stroke="#FFD23F" stroke-width="1.3">${h}</g>
+    <path d="M0,130 L100,40 Q200,156 300,40 L400,130" fill="none" stroke="#FFD23F" stroke-width="3.5"/></g>
+    ${blip(180,146,.5,m)}`);},
+  cliff: m => SVG(`<defs><linearGradient id="sk4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2585"/><stop offset="1" stop-color="#43C6F0"/></linearGradient></defs>
+    <rect width="400" height="240" fill="url(#sk4)"/><rect y="190" width="400" height="50" fill="#1F5FA0"/>
+    <g fill="#fff" opacity=".85"><ellipse cx="310" cy="50" rx="44" ry="15"/><ellipse cx="340" cy="40" rx="26" ry="14"/><ellipse cx="70" cy="30" rx="36" ry="11"/></g>
+    <g stroke="#fff" stroke-width="2" opacity=".5" stroke-linecap="round"><line x1="300" y1="90" x2="370" y2="90"/><line x1="280" y1="110" x2="330" y2="110"/><line x1="320" y1="125" x2="390" y2="125"/></g>
+    <path d="M0,240 V150 Q110,138 235,146 L262,240Z" fill="#6B4F9E"/><path d="M0,240 V168 Q110,158 240,165 L262,240Z" fill="#553B87"/>
+    <g id="st">${lattice(118,40,118,148,20,7,'#FFD23F',2.2)}<line x1="128" y1="40" x2="128" y2="12" stroke="#FFD23F" stroke-width="3"/>
+    <circle cx="128" cy="12" r="4" fill="#FF4FA3"/><path d="M140,50 a14,14 0 0 1 0,24" fill="none" stroke="#fff" stroke-width="4"/>
+    <g stroke="#E6E0FF" stroke-width="1.2"><line x1="118" y1="45" x2="45" y2="146"/><line x1="138" y1="45" x2="212" y2="145"/><line x1="118" y1="90" x2="70" y2="145"/><line x1="138" y1="90" x2="186" y2="145"/></g></g>
+    ${blip(200,146,.55,m)}`),
+  park: m => SVG(`<defs><linearGradient id="sk5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#43C6F0"/><stop offset="1" stop-color="#C6F4FF"/></linearGradient></defs>
+    <rect width="400" height="240" fill="url(#sk5)"/><circle cx="60" cy="45" r="22" fill="#FFD23F"/>
+    <g opacity=".7">${lattice(345,60,345,200,10,7,'#8C7BD1',1.6)}${lattice(290,56,395,56,8,6,'#8C7BD1',1.6)}<line x1="310" y1="64" x2="310" y2="120" stroke="#8C7BD1" stroke-width="1.5"/><rect x="296" y="120" width="28" height="18" fill="#F29E38"/></g>
+    <rect y="200" width="400" height="40" fill="#5DD39E"/><path d="M0,200 Q200,190 400,200" fill="#4CC08B"/>
+    <g id="st" stroke-linecap="round"><g stroke="#FF4FA3" stroke-width="7"><line x1="40" y1="205" x2="70" y2="55"/><line x1="100" y1="205" x2="70" y2="55"/><line x1="230" y1="205" x2="260" y2="55"/><line x1="290" y1="205" x2="260" y2="55"/><line x1="66" y1="55" x2="264" y2="55"/></g>
+    <g stroke="#6B6B8C" stroke-width="2.5" stroke-dasharray="4 2"><line x1="140" y1="58" x2="140" y2="160"/><line x1="190" y1="58" x2="190" y2="160"/></g>
+    <rect x="130" y="158" width="70" height="8" rx="3" fill="#8B5A2B"/></g>
+    ${blip(165,158,.55,m)}`)
+};
+
+/* ========= figuras didácticas ========= */
+const F = {
+  // marco de edificio con zonas (etiquetas opcionales)
+  frame(labels){
+    const L = (t,x,y,a='start')=>labels?`<text x="${x}" y="${y}" font-size="13" font-weight="700" fill="#B8277A" text-anchor="${a}" font-family="Nunito,sans-serif">${t}</text>`:'';
+    return SVG(`<rect width="320" height="210" fill="#fff"/><line x1="0" y1="176" x2="320" y2="176" stroke="#8C7BD1" stroke-width="2"/>
+    <rect x="0" y="176" width="320" height="34" fill="#EFE6D6"/>
+    <g class="zone" data-z="zapata"><rect class="hl" x="40" y="170" width="70" height="30" rx="4"/><rect class="hl" x="210" y="170" width="70" height="30" rx="4"/><rect x="52" y="176" width="46" height="18" fill="#8C7BD1"/><rect x="222" y="176" width="46" height="18" fill="#8C7BD1"/></g>
+    <g class="zone" data-z="pilar"><rect class="hl" x="60" y="66" width="30" height="108" rx="4"/><rect class="hl" x="230" y="66" width="30" height="108" rx="4"/><rect x="67" y="70" width="16" height="106" fill="#6B6B8C"/><rect x="237" y="70" width="16" height="106" fill="#6B6B8C"/></g>
+    <g class="zone" data-z="viga"><rect class="hl" x="44" y="50" width="232" height="26" rx="4"/><rect x="52" y="56" width="216" height="16" fill="#3A2585"/></g>
+    <g class="zone" data-z="vigueta"><rect class="hl" x="70" y="22" width="180" height="32" rx="4"/>${[82,122,162,202,236].map(x=>`<rect x="${x}" y="38" width="14" height="18" fill="#43C6F0" stroke="#1F7FA0"/>`).join('')}</g>
+    ${L('vigueta',160,18,'middle')}${L('viga',290,68)}${L('pilar',100,130)}${L('zapata',160,200,'middle')}
+    ${labels?'<path d="M160,6 v0" /><text x="300" y="30" font-size="12" fill="#6B5BA3" text-anchor="end" font-family="Nunito,sans-serif">↓ peso</text>':''}`,'0 0 320 210');
+  },
+  bridge(labels){
+    let h=''; for(let x=90;x<=230;x+=14){const t=(x-160)/90;const y=40+62*(1-t*t);h+=`<line x1="${x}" y1="${y.toFixed(1)}" x2="${x}" y2="134"/>`;}
+    const L=(t,x,y,a='start')=>labels?`<text x="${x}" y="${y}" font-size="13" font-weight="700" fill="#B8277A" text-anchor="${a}" font-family="Nunito,sans-serif">${t}</text>`:'';
+    return SVG(`<rect width="320" height="200" fill="#fff"/><rect y="150" width="320" height="50" fill="#CDEBFA"/>
+    <g class="zone" data-z="torre"><rect class="hl" x="60" y="26" width="24" height="170" rx="4"/><rect class="hl" x="236" y="26" width="24" height="170" rx="4"/><rect x="66" y="32" width="12" height="160" fill="#FF4FA3"/><rect x="242" y="32" width="12" height="160" fill="#FF4FA3"/></g>
+    <g class="zone" data-z="tablero"><rect class="hl" x="0" y="126" width="320" height="18" rx="3"/><rect x="0" y="130" width="320" height="9" fill="#3A2585"/></g>
+    <g class="zone" data-z="pendolas"><rect class="hl" x="86" y="80" width="148" height="46" rx="4"/><g stroke="#6B6B8C" stroke-width="1.6">${h}</g></g>
+    <g class="zone" data-z="cable"><path class="hl" d="M0,112 L72,34 Q160,164 248,34 L320,112" fill="none" stroke-width="16"/><path d="M0,112 L72,34 Q160,164 248,34 L320,112" fill="none" stroke="#E0A800" stroke-width="3.5"/></g>
+    ${L('torre (soporte)',90,24)}${L('cable principal (catenaria)',160,20,'middle')}${L('péndolas',160,118,'middle')}${L('tablero',300,160,'end')}${L('anclaje',6,108)}`,'0 0 320 200');
+  },
+  swing(labels){
+    const L=(t,x,y,a='start')=>labels?`<text x="${x}" y="${y}" font-size="13" font-weight="700" fill="#B8277A" text-anchor="${a}" font-family="Nunito,sans-serif">${t}</text>`:'';
+    return SVG(`<rect width="320" height="220" fill="#fff"/><rect y="200" width="320" height="20" fill="#D6F5E6"/>
+    <g class="zone" data-z="patas"><path class="hl" d="M40,205 L80,45 L120,205 M200,205 L240,45 L280,205" fill="none" stroke-width="18" stroke-linejoin="round"/><g stroke="#FF4FA3" stroke-width="7" stroke-linecap="round"><line x1="44" y1="205" x2="80" y2="50"/><line x1="116" y1="205" x2="80" y2="50"/><line x1="204" y1="205" x2="240" y2="50"/><line x1="276" y1="205" x2="240" y2="50"/></g></g>
+    <g class="zone" data-z="travesano"><rect class="hl" x="70" y="36" width="180" height="24" rx="5"/><line x1="76" y1="48" x2="244" y2="48" stroke="#B8277A" stroke-width="8" stroke-linecap="round"/></g>
+    <g class="zone" data-z="cadenas"><rect class="hl" x="122" y="54" width="76" height="100" rx="5"/><g stroke="#6B6B8C" stroke-width="3" stroke-dasharray="5 3"><line x1="135" y1="52" x2="135" y2="152"/><line x1="185" y1="52" x2="185" y2="152"/></g></g>
+    <g class="zone" data-z="asiento"><rect class="hl" x="116" y="148" width="88" height="22" rx="5"/><rect x="124" y="152" width="72" height="10" rx="3" fill="#8B5A2B"/></g>
+    ${L('travesaño',160,30,'middle')}${L('cadenas',200,105)}${L('asiento',160,184,'middle')}${L('patas',8,140)}`,'0 0 320 220');
+  },
+  arches(){
+    const st='fill="none" stroke="#C9922E" stroke-width="12" stroke-linejoin="round"';
+    const t=(s,x)=>`<text x="${x}" y="112" font-size="12" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="700" fill="#3A2585">${s}</text>`;
+    return SVG(`<rect width="440" height="120" fill="#fff"/>
+    <path d="M20,98 V60 A35,35 0 0 1 90,60 V98" ${st}/>${t('medio punto',55)}
+    <path d="M130,98 V60 Q130,24 165,12 Q200,24 200,60 V98" ${st}/>${t('apuntado',165)}
+    <path d="M250,98 L246,64 A34,34 0 1 1 304,64 L300,98" ${st}/>${t('herradura',275)}
+    <path d="M350,98 V64 a14,14 0 0 1 14,-18 a18,18 0 0 1 32,0 a14,14 0 0 1 14,18 V98" ${st}/>${t('lobulado',380)}
+    <g stroke="#fff" stroke-width="2"><line x1="55" y1="13" x2="55" y2="37"/><line x1="25" y1="40" x2="38" y2="48"/><line x1="85" y1="40" x2="72" y2="48"/></g>`,'0 0 440 120');
+  },
+  rigid(){
+    const j=(x,y)=>`<circle cx="${x}" cy="${y}" r="4" fill="#fff" stroke="#3A2585" stroke-width="2"/>`;
+    const t=(s,x)=>`<text x="${x}" y="116" font-size="12" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="700" fill="#3A2585">${s}</text>`;
+    return SVG(`<rect width="440" height="124" fill="#fff"/><g stroke="#3A2585" stroke-width="5" stroke-linecap="round">
+    <polygon points="20,95 70,95 100,30 50,30" fill="none"/>
+    <polygon points="170,95 240,95 240,30 170,30" fill="none"/><line x1="170" y1="95" x2="240" y2="30" stroke="#FF4FA3"/>
+    <polygon points="320,95 390,95 390,30 320,30" fill="none"/></g>
+    <polygon points="320,30 342,30 320,52" fill="#FF4FA3"/><polygon points="390,30 368,30 390,52" fill="#FF4FA3"/>
+    ${j(20,95)+j(70,95)+j(100,30)+j(50,30)+j(170,95)+j(240,95)+j(240,30)+j(170,30)}
+    <text x="115" y="60" font-size="18" fill="#B8277A">←F</text>
+    ${t('sin refuerzo: se deforma',60)}${t('triangulación',205)}${t('cartelas (unión rígida)',355)}`,'0 0 440 124');
+  },
+  esf(type){
+    const bar='#8C7BD1', ar='#FF4FA3';
+    const arrow=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${ar}" stroke-width="4" marker-end="url(#ah)"/>`;
+    const defs=`<defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" fill="${ar}"/></marker></defs>`;
+    const g={
+      traccion:`<rect x="40" y="32" width="80" height="14" rx="4" fill="${bar}"/>${arrow(38,39,8,39)}${arrow(122,39,152,39)}`,
+      compresion:`<rect x="40" y="32" width="80" height="14" rx="4" fill="${bar}"/>${arrow(6,39,34,39)}${arrow(154,39,126,39)}`,
+      flexion:`<path d="M25,30 Q80,52 135,30 L135,42 Q80,64 25,42Z" fill="${bar}"/><polygon points="25,44 18,58 32,58" fill="#3A2585"/><polygon points="135,44 128,58 142,58" fill="#3A2585"/>${arrow(80,4,80,32)}`,
+      torsion:`<rect x="30" y="32" width="100" height="14" rx="4" fill="${bar}"/><path d="M28,22 a10,17 0 1 0 6,34" fill="none" stroke="${ar}" stroke-width="3.5" marker-end="url(#ah)"/><path d="M132,56 a10,17 0 1 0 -6,-34" fill="none" stroke="${ar}" stroke-width="3.5" marker-end="url(#ah)"/>`,
+      cortadura:`<rect x="30" y="32" width="100" height="14" rx="4" fill="${bar}"/><line x1="80" y1="22" x2="80" y2="56" stroke="#fff" stroke-width="2" stroke-dasharray="3 2"/>${arrow(74,6,74,30)}${arrow(86,72,86,48)}`,
+      pandeo:`<path d="M80,14 Q98,39 80,64" fill="none" stroke="${bar}" stroke-width="12" stroke-linecap="round"/>${arrow(80,-6,80,10)}<rect x="60" y="66" width="40" height="6" fill="#3A2585"/>`
+    };
+    return SVG(defs+g[type],'0 -8 160 84');
+  }
+};
+
+/* opciones con imagen (120x100) */
+const G = `<line x1="0" y1="92" x2="120" y2="92" stroke="#8C7BD1" stroke-width="3"/>`;
+const IMG = {
+  losa:SVG(G+`<rect x="22" y="50" width="12" height="42" fill="#C9922E"/><rect x="86" y="50" width="12" height="42" fill="#C9922E"/><rect x="14" y="42" width="92" height="9" fill="#E9B949"/><path d="M60,42 l-3,5 l4,4" stroke="#B8277A" stroke-width="2" fill="none"/>`,'0 0 120 100'),
+  boveda:SVG(G+`<path d="M22,92 V62 A38,38 0 0 1 98,62 V92 H86 V62 A26,26 0 0 0 34,62 V92Z" fill="#E9B949" stroke="#C9922E" stroke-width="2"/><g stroke="#C9922E" stroke-width="2"><line x1="60" y1="24" x2="60" y2="36"/><line x1="33" y1="35" x2="42" y2="43"/><line x1="87" y1="35" x2="78" y2="43"/></g>`,'0 0 120 100'),
+  ramas:SVG(G+`<g stroke="#8B5A2B" stroke-width="2"><line x1="20" y1="92" x2="60" y2="30"/><line x1="100" y1="92" x2="60" y2="30"/><line x1="40" y1="92" x2="62" y2="34"/><line x1="80" y1="92" x2="58" y2="34"/></g>`,'0 0 120 100'),
+  columna:SVG(G+[0,1,2,3,4,5].map(i=>`<rect x="${48+(i%2?3:-3)}" y="${80-i*12}" width="24" height="12" rx="2" fill="#E9B949" stroke="#C9922E"/>`).join(''),'0 0 120 100'),
+  muroFino:SVG(G+`<rect x="54" y="12" width="12" height="80" fill="#E9B949" stroke="#C9922E"/>`,'0 0 120 100'),
+  piramide:SVG(G+`<polygon points="10,92 110,92 60,44" fill="#E9B949" stroke="#C9922E" stroke-width="2"/>`,'0 0 120 100'),
+  torrePesada:SVG(G+`<rect x="50" y="42" width="20" height="50" fill="#E9B949" stroke="#C9922E"/><rect x="30" y="18" width="60" height="24" fill="#C9922E"/>`,'0 0 120 100'),
+  t1:SVG(G+`<rect x="53" y="8" width="14" height="84" fill="#43C6F0" stroke="#1F7FA0" stroke-width="2"/>`,'0 0 120 100'),
+  t2:SVG(G+`<polygon points="18,92 102,92 70,14 50,14" fill="#43C6F0" stroke="#1F7FA0" stroke-width="2"/>`,'0 0 120 100'),
+  t3:SVG(G+`<polygon points="50,92 70,92 102,14 18,14" fill="#43C6F0" stroke="#1F7FA0" stroke-width="2"/>`,'0 0 120 100'),
+  t4:SVG(G+`<rect x="54" y="36" width="12" height="56" fill="#43C6F0" stroke="#1F7FA0" stroke-width="2"/><rect x="34" y="12" width="52" height="24" fill="#3A2585"/>`,'0 0 120 100'),
+  fr:(pts,extra='')=>{const p=pts.split(' ').map(s=>s.split(',').map(Number));return SVG(`<g stroke="#3A2585" stroke-width="5" stroke-linecap="round" fill="none"><polygon points="${pts}"/>${extra}</g>${p.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#fff" stroke="#3A2585" stroke-width="2"/>`).join('')}<text x="4" y="58" font-size="14" fill="#B8277A">F→</text>`,'0 0 120 100');},
+  q:{
+    alto:SVG(G+`<rect x="48" y="6" width="24" height="86" fill="#C3B8F0" stroke="#3A2585" stroke-width="2"/>${[0,1,2,3,4,5].map(i=>`<line x1="48" y1="${20+i*13}" x2="72" y2="${20+i*13}" stroke="#3A2585"/>`).join('')}`,'0 0 120 100'),
+    cruces:SVG(G+`<rect x="20" y="24" width="80" height="68" fill="#C3B8F0" stroke="#3A2585" stroke-width="2"/><g stroke="#FF4FA3" stroke-width="3"><line x1="20" y1="58" x2="60" y2="24"/><line x1="20" y1="24" x2="60" y2="58"/><line x1="60" y1="92" x2="100" y2="58"/><line x1="60" y1="58" x2="100" y2="92"/></g><line x1="20" y1="58" x2="100" y2="58" stroke="#3A2585" stroke-width="2"/><rect x="14" y="90" width="92" height="6" fill="#3A2585"/>`,'0 0 120 100'),
+    patas:SVG(G+`<rect x="24" y="14" width="72" height="52" fill="#C3B8F0" stroke="#3A2585" stroke-width="2"/><g stroke="#3A2585" stroke-width="2"><line x1="30" y1="66" x2="30" y2="92"/><line x1="90" y1="66" x2="90" y2="92"/><line x1="60" y1="66" x2="60" y2="92"/></g>`,'0 0 120 100'),
+    bloques:SVG(G+`<rect x="30" y="68" width="60" height="24" fill="#C3B8F0" stroke="#3A2585" stroke-width="2"/><rect x="38" y="44" width="50" height="24" fill="#C3B8F0" stroke="#3A2585" stroke-width="2" transform="rotate(4 60 56)"/><rect x="28" y="20" width="54" height="24" fill="#C3B8F0" stroke="#3A2585" stroke-width="2" transform="rotate(-5 55 32)"/>`,'0 0 120 100')
+  },
+  a:{
+    mastil:SVG(G+`<line x1="60" y1="8" x2="60" y2="92" stroke="#3A2585" stroke-width="4"/>`,'0 0 120 100'),
+    atirantada:SVG(G+`<g stroke="#3A2585" stroke-width="1.6"><line x1="54" y1="8" x2="54" y2="92"/><line x1="66" y1="8" x2="66" y2="92"/>${[0,1,2,3,4,5].map(i=>`<line x1="54" y1="${8+i*14}" x2="66" y2="${22+i*14}"/>`).join('')}</g><g stroke="#FF4FA3" stroke-width="1.4"><line x1="54" y1="14" x2="12" y2="92"/><line x1="66" y1="14" x2="108" y2="92"/><line x1="54" y1="50" x2="28" y2="92"/><line x1="66" y1="50" x2="92" y2="92"/></g>`,'0 0 120 100'),
+    cuadros:SVG(G+`<g stroke="#3A2585" stroke-width="1.6"><line x1="54" y1="8" x2="54" y2="92"/><line x1="66" y1="8" x2="66" y2="92"/>${[0,1,2,3,4,5,6].map(i=>`<line x1="54" y1="${8+i*14}" x2="66" y2="${8+i*14}"/>`).join('')}</g>`,'0 0 120 100'),
+    plato:SVG(G+`<line x1="60" y1="30" x2="60" y2="92" stroke="#3A2585" stroke-width="4"/><path d="M34,10 a26,26 0 0 0 52,0 z" fill="#3A2585"/>`,'0 0 120 100')
+  },
+  b:{
+    catenaria:SVG(`<rect y="70" width="120" height="30" fill="#CDEBFA"/><rect x="28" y="16" width="5" height="80" fill="#FF4FA3"/><rect x="87" y="16" width="5" height="80" fill="#FF4FA3"/><rect y="60" width="120" height="5" fill="#3A2585"/><path d="M0,54 L30,16 Q60,76 90,16 L120,54" fill="none" stroke="#E0A800" stroke-width="2"/>${[38,46,54,62,70,78].map(x=>{const t=(x-60)/30;return `<line x1="${x}" y1="${(16+30*(1-t*t)).toFixed(1)}" x2="${x}" y2="60" stroke="#6B6B8C"/>`}).join('')}`,'0 0 120 100'),
+    atirantado:SVG(`<rect y="70" width="120" height="30" fill="#CDEBFA"/><rect x="28" y="10" width="5" height="86" fill="#FF4FA3"/><rect x="87" y="10" width="5" height="86" fill="#FF4FA3"/><rect y="60" width="120" height="5" fill="#3A2585"/><g stroke="#E0A800" stroke-width="1.4">${[6,14,44,54].map(x=>`<line x1="30" y1="14" x2="${x}" y2="60"/>`).join('')}${[66,76,106,114].map(x=>`<line x1="90" y1="14" x2="${x}" y2="60"/>`).join('')}</g>`,'0 0 120 100'),
+    arco:SVG(`<rect y="70" width="120" height="30" fill="#CDEBFA"/><rect y="40" width="120" height="5" fill="#3A2585"/><path d="M10,92 Q60,-6 110,92" fill="none" stroke="#C9922E" stroke-width="5"/>${[30,45,60,75,90].map(x=>`<line x1="${x}" y1="45" x2="${x}" y2="${(92-196*((x-10)/100)*(1-(x-10)/100)).toFixed(1)}" stroke="#6B6B8C"/>`).join('')}`,'0 0 120 100'),
+    vigas:SVG(`<rect y="70" width="120" height="30" fill="#CDEBFA"/><rect y="40" width="120" height="7" fill="#3A2585"/>${[10,40,70,100].map(x=>`<rect x="${x}" y="47" width="8" height="50" fill="#8C7BD1"/>`).join('')}`,'0 0 120 100')
+  },
+  refugio:null
+};
+
+/* ========= contenidos ========= */
+const LV=[{k:'R',n:'Recuerda',w:1},{k:'C',n:'Comprende',w:1},{k:'P',n:'Piensa',w:.7},{k:'A',n:'Aplica',w:.7},{k:'D',n:'Deduce',w:.6}];
+const MAXSTOP = LV.reduce((a,l)=>a+l.w,0); // 4
+const SECOND = .6; // valor de un acierto en la 2ª pregunta
+
+const STOPS=[
+{ key:'landing', dot:'Aterrizaje', place:'Un bosque cualquiera del planeta Tierra', title:'¿Qué es una estructura?',
+  narr:'La nave de Blip ha aterrizado (bastante mal) junto a un árbol enorme. Blip viene del planeta Kromb, donde todo flota, así que no entiende por qué en la Tierra las cosas necesitan sostenerse. Decide escanear el árbol.',
+  say:'¡Qué planeta tan raro! Aquí todo se cae hacia abajo… <strong>voy a escanear</strong> este árbol para entenderlo.',
+  scan:[
+   {h:'Fuerza',p:'Es todo aquello capaz de <b>deformar un cuerpo</b> (efecto estático) o de <b>cambiar su estado de movimiento o reposo</b> (efecto dinámico). El viento que dobla las ramas o la gravedad que tira del árbol hacia abajo son fuerzas.'},
+   {h:'Esfuerzo',p:'Cuando las fuerzas externas (las <b>cargas</b>) actúan sobre un cuerpo, en su interior aparecen <b>tensiones internas</b>: eso es el esfuerzo. La fuerza viene de fuera; el esfuerzo es lo que el material “sufre” por dentro.'},
+   {h:'Estructura',p:'Es <b>todo elemento capaz de soportar esfuerzos</b>. Es el esqueleto de edificios, puentes, máquinas… y también de los seres vivos: el tronco de este árbol o tu propio esqueleto. Hay estructuras naturales y artificiales.'},
+   {h:'Tipos que Blip va a encontrar',p:'Según sus elementos, las estructuras pueden ser <b>masivas</b>, <b>entramadas</b>, <b>trianguladas</b> y <b>colgadas o colgantes</b>. Y todas deben cumplir tres propiedades: ser <b>estables, resistentes y rígidas</b>.'}
+  ]},
+{ key:'pyramids', dot:'Pirámides', place:'El valle de las pirámides, Egipto', title:'Estructuras masivas',
+  narr:'Caminando por el desierto, Blip descubre unas montañas de piedra perfectamente geométricas. Entra por una puerta con forma de arco y avanza por un pasillo con el techo curvo.',
+  say:'¡Esto es enorme y está macizo por todas partes! <strong>Escaneo</strong>, a ver de qué está hecho.',
+  danger:{n:'¡Terremoto!',icon:'quake',t:'El suelo tiembla y empiezan a caer piedras del techo. Responde bien para reforzar la estructura antes de que se derrumbe sobre Blip.'},
+  scan:[
+   {h:'Qué son',p:'Están formadas por <b>superficies resistentes, pesadas y macizas</b>: mucho material y casi sin huecos. Aguantan gracias a su propio peso.'},
+   {h:'Elementos característicos',p:'<b>Muros</b>: paredes gruesas que soportan el peso.<br><b>Arcos</b>: piezas curvas hechas de piedras llamadas <b>dovelas</b>. Cada dovela empuja a la siguiente y todas trabajan a <b>compresión</b>, llevando el peso hacia los apoyos.<br><b>Bóvedas</b>: son como un arco alargado que forma un techo curvo.',fig:'arches'},
+   {h:'Ejemplos',p:'Pirámides de Egipto, presas de gravedad, murallas, castillos, catedrales, el acueducto de Segovia. Con arcos y bóvedas se construyeron basílicas y catedrales enormes.'},
+   {h:'Ventajas e inconvenientes',p:'Son muy <b>estables y duraderas</b>, pero <b>pesan muchísimo</b>, gastan mucho material y se tarda mucho en construirlas.'}
+  ],
+  qs:{
+   R:[{t:'mc',q:'Blip toca las paredes de la pirámide. Según su escáner, las estructuras masivas están formadas por…',o:['Superficies resistentes, pesadas y macizas','Barras unidas formando triángulos','Cables que cuelgan de torres','Una rejilla de pilares y vigas'],a:0,why:'Las masivas son macizas y pesadas: aguantan gracias a su gran cantidad de material.',pista:'Piensa en cómo es una pirámide por dentro: ¿tiene huecos o es casi todo piedra? ¿Y qué forma tiene la puerta por la que entró Blip?'},
+      {t:'fill',q:'Completa: los elementos característicos de una estructura masiva son los muros, las bóvedas y los ________.',acc:['arcos','arco'],why:'Muros, bóvedas y arcos son los elementos típicos de las estructuras masivas.'}],
+   C:[{t:'mc',q:'En el pasillo hay un arco de piedras sin cemento que no se cae. ¿Por qué aguanta?',o:["Cada dovela empuja a la de al lado y todas trabajan a compresión, llevando el peso hacia los apoyos", "Las piedras trabajan a tracción, como una cuerda tensa que tira de los apoyos hacia el centro del arco", "La piedra central está pegada con un mortero oculto y es la única que sujeta a todas las demás", "El arco trabaja a torsión: las piedras se retuercen unas contra otras y así quedan bloqueadas"],a:0,why:'Las dovelas se aprietan unas contra otras: el arco trabaja a compresión y reparte el peso hacia los lados.',pista:'En un arco, las piedras se aprietan entre sí. ¿Cómo se llama el esfuerzo de “apretar”? Y recuerda: cuanto más peso abajo, más estable.'},
+      {t:'mc',q:'Cerca de las pirámides hay una presa de hormigón mucho más gruesa abajo que arriba. ¿Por qué se construye así?',o:["Abajo el agua empuja con más fuerza y, además, tener el peso en la base la hace más estable", "Arriba se ahorra material para que la presa quede más bonita y se pueda pasear por encima", "Así el agua puede pasar por encima con facilidad cuando el embalse está completamente lleno", "Porque el hormigón resiste mejor la tracción en la parte baja y peor en la parte alta de la presa"],a:0,why:'El empuje del agua crece con la profundidad, y concentrar el peso abajo baja el centro de gravedad: más estabilidad.'}],
+   P:[{t:'img',q:'Blip quiere construir un refugio de piedra sin cemento. ¿Qué techo aguantará mejor el peso?',o:[['losa','Losa plana sobre dos muros'],['boveda','Bóveda de piedras en arco'],['ramas','Tejado de ramas finas'],['columna','Columna alta de piedras sueltas']],a:1,why:'La bóveda hace que todas las piedras trabajen a compresión, justo lo que mejor soporta la piedra. Una losa plana trabajaría a flexión y se partiría.',pista:'La piedra aguanta muy bien que la aprieten, pero se rompe si la doblas. En un arco, cada piedra depende de las que tiene al lado.'},
+      {t:'mc',q:'Si quitas una piedra suelta de un muro muy grueso, normalmente no pasa nada. ¿Y si quitas una dovela de un arco?',o:["El arco puede venirse abajo, porque cada dovela se sostiene gracias a las demás", "No pasa nada, porque en un arco cada piedra aguanta su propio peso sin depender de las otras", "El arco se vuelve más rígido, porque al quitar peso las demás piedras se aprietan todavía más", "Sólo se cae si el arco es de herradura; los de medio punto aguantan aunque les falten piezas"],a:0,why:'En el arco todas las dovelas se empujan entre sí; si falta una, se rompe la cadena de compresión.'}],
+   A:[{t:'drag',q:'Clasifica lo que aparece en la guía de viaje de Blip:',bins:['Estructura masiva','Otro tipo'],items:[['Pirámide de Keops',0],['Presa de gravedad',0],['Muralla medieval',0],['Torre Eiffel',1],['Puente colgante',1],['Edificio de pilares y vigas',1]],why:'Masivas: pirámide, presa y muralla. La Torre Eiffel es triangulada, el puente es colgante y el edificio es entramado.',pista:'Masiva = maciza y pesada, con muros, bóvedas y arcos. Si ves barras, cables o una rejilla, no es masiva.'},
+      {t:'drag',q:'Nueva página de la guía. Clasifica de nuevo:',bins:['Estructura masiva','Otro tipo'],items:[['Iglesia románica de piedra',0],['Acueducto de Segovia',0],['Castillo de muros gruesos',0],['Grúa torre',1],['Teleférico',1],['Nave industrial con cerchas',1]],why:'Iglesia, acueducto y castillo son masivas. La grúa y las cerchas son trianguladas; el teleférico, colgante.'}],
+   D:[{t:'mc',q:'¿Por qué hoy casi nunca se construyen los rascacielos como estructuras masivas?',o:["Pesarían muchísimo y gastarían demasiado material; para grandes alturas se usan estructuras más ligeras", "Porque la piedra y el hormigón se han agotado y hoy sólo se construye con vidrio, plástico y aluminio", "Porque las estructuras masivas son muy poco estables y cualquier viento fuerte acabaría volcándolas", "Porque en una estructura masiva es imposible abrir ventanas, y un rascacielos necesita muchísimas"],a:0,why:'Una estructura masiva de 300 m necesitaría una cantidad enorme de material y pesaría demasiado. Las entramadas y trianguladas consiguen altura con mucho menos peso.',pista:'Imagina cuánta piedra necesitaría una pirámide de 300 metros. Y recuerda: base ancha y peso abajo = más estable.'},
+      {t:'img',q:'Llega un fuerte terremoto a una región con construcciones de piedra. ¿Cuál tiene más posibilidades de resistir?',o:[['muroFino','Muro alto y delgado'],['piramide','Pirámide ancha y baja'],['torrePesada','Torre con remate pesado arriba']],a:1,why:'Base ancha y peso concentrado abajo (centro de gravedad bajo) hacen que la pirámide sea la más estable.'}]
+  }},
+{ key:'city', dot:'Ciudad', place:'Una ciudad en obras', title:'Estructuras entramadas y trianguladas',
+  narr:'Blip llega a una ciudad llena de ruido. Un edificio a medio construir parece un esqueleto en forma de rejilla y, a su lado, una grúa gigantesca está hecha sólo de triángulos. Blip se cuela en la obra.',
+  say:'¡Una rejilla y una torre de triángulos! En Kromb los edificios flotan. <strong>Escaneo</strong> ya mismo.',
+  danger:{n:'¡Huracán!',icon:'wind',t:'Un viento huracanado sacude la obra y la grúa empieza a balancearse. Refuerza las estructuras respondiendo bien.'},
+  scan:[
+   {h:'Estructuras entramadas',p:'Tienen forma de <b>retícula</b> (rejilla). Sus elementos:<br><b>Pilares</b>: piezas verticales; trabajan a <b>compresión</b>.<br><b>Vigas</b>: piezas horizontales, más largas que anchas; trabajan a <b>flexión y cortadura</b>.<br><b>Viguetas</b>: se apoyan en las vigas y sostienen los suelos.<br><b>Cimentación</b>: <b>zapatas</b> (bloques de hormigón que aumentan la superficie de apoyo del pilar), <b>losas</b> (una gran base para suelos blandos) y <b>pilotes</b> (se clavan hasta llegar a la roca dura).',fig:'frame'},
+   {h:'Materiales de las entramadas',p:'<b>Madera</b> para construcciones pequeñas, <b>acero</b> para estructuras enormes y <b>hormigón armado</b> (hormigón con barras de acero dentro) en la mayoría de edificios.'},
+   {h:'Estructuras trianguladas',p:'Están formadas por <b>barras unidas formando triángulos</b>. Son <b>ligeras y resistentes</b>. El triángulo es el <b>único polígono que no se deforma</b>. Sus barras trabajan a <b>tracción o compresión</b>. Elemento típico: la <b>cercha</b> (tejados, naves industriales). Ejemplos: Torre Eiffel, grúas, torres eléctricas, puentes metálicos.'},
+   {h:'Perfiles de las barras',p:'<b>Cable</b> y <b>listón plano</b>: sólo tracción.<br><b>Sección cuadrada</b> y <b>en L</b>: tracción y compresión, flexión moderada.<br><b>Sección en U</b>: tracción, compresión y flexión.<br><b>Doble T</b>: sobre todo flexión (vigas).'}
+  ],
+  qs:{
+   R:[{t:'mc',q:'En la estructura entramada del edificio, ¿cómo se llama la pieza vertical que soporta esfuerzos de compresión?',o:['Pilar','Viga','Vigueta','Tirante'],a:0,why:'El pilar es vertical y trabaja a compresión; la viga es horizontal.',pista:'Vertical = pilar. Horizontal = viga. Las trianguladas están hechas de barras en triángulo: ligeras y resistentes.'},
+      {t:'sel',parts:['Las estructuras trianguladas están formadas por ',{o:['barras','muros','bóvedas'],a:0},' unidas formando ',{o:['triángulos','cuadrados','arcos'],a:0},'. Son ',{o:['ligeras','muy pesadas','macizas'],a:0},' y resistentes.'],q:'Completa la ficha del escáner:',why:'Barras unidas en triángulos: estructuras ligeras y resistentes.'}],
+   C:[{t:'mc',q:'La grúa está hecha de triángulos y no de cuadrados. ¿Por qué?',o:["El triángulo es el único polígono que no se deforma, aunque sus uniones puedan girar", "Porque los triángulos gastan más material y así la grúa pesa más y el viento no la mueve", "Porque los cuadrados sólo sirven para estructuras de madera y la grúa está hecha de acero", "Sólo por estética: los triángulos quedan más modernos y se ven mejor desde lejos en la obra"],a:0,why:'Un cuadrado articulado se aplasta de lado; un triángulo mantiene su forma.',pista:'Imagina un marco cuadrado de palitos unidos con chinchetas en las esquinas: si lo empujas de lado, ¿qué le pasa? Y piensa también en qué necesita un pilar para no hundirse en el suelo.'},
+      {t:'mc',q:'¿Para qué sirve la zapata que hay debajo de cada pilar?',o:["Aumenta la superficie de apoyo del pilar y reparte su peso sobre el suelo", "Une dos vigas entre sí para que el suelo de cada planta quede horizontal", "Protege la base del pilar de la humedad del terreno para que no se oxide", "Sujeta el tejado con cables para que el viento no lo levante en las tormentas"],a:0,why:'La zapata es cimentación: reparte el peso del pilar sobre más superficie de terreno.'}],
+   P:[{t:'hot',fig:'frame',q:'Toca la VIGA en el dibujo de la estructura.',a:'viga',why:'La viga es la pieza horizontal que se apoya sobre los pilares y soporta las viguetas.',pista:'La viga es horizontal y se apoya sobre los pilares. El pilar es vertical y recibe todo el peso de arriba.'},
+      {t:'hot',fig:'frame',q:'Toca la pieza que trabaja sobre todo a COMPRESIÓN porque recibe el peso de todo lo que tiene encima.',a:'pilar',why:'El pilar recibe el peso de vigas y viguetas y lo lleva a la cimentación: trabaja a compresión.'}],
+   A:[{t:'drag',q:'Clasifica estas construcciones:',bins:['Entramada','Triangulada'],items:[['Edificio de viviendas de hormigón',0],['Aparcamiento de varias plantas',0],['Casa de pilares y vigas de madera',0],['Torre eléctrica',1],['Grúa torre',1],['Cercha de un tejado',1]],why:'Rejilla de pilares y vigas = entramada. Barras en triángulo = triangulada.',pista:'Rejilla de pilares y vigas = entramada. Barras en triángulo = triangulada. El cable sólo sirve para tirar; la doble T, para vigas.'},
+      {t:'match',q:'Blip tiene que escoger piezas para reparar la grúa. Relaciona cada elemento con su uso.',pairs:[['Cable','Sólo resiste tracción'],['Perfil doble T','Sobre todo flexión: ideal para vigas'],['Sección cuadrada','Tracción y compresión, flexión moderada'],['Acero','Material para estructuras de enormes dimensiones']],why:'Cable: tracción. Doble T: flexión. Cuadrada: tracción y compresión. Acero: grandes estructuras.'}],
+   D:[{t:'mc',q:'Hay que cubrir una nave industrial gigante sin columnas en medio para que entren camiones. ¿Qué solución elegirías?',o:["Cerchas trianguladas de acero, ligeras y capaces de salvar grandes distancias", "Una bóveda maciza de piedra, muy pesada y resistente, apoyada sobre muros gruesos", "Un techo de lona sin estructura, tensado sólo con cuerdas atadas a los camiones", "Muchos pilares finos repartidos por el centro para que el techo no pueda doblarse"],a:0,why:'Las cerchas trianguladas son ligeras, rígidas y cubren grandes luces sin apoyos intermedios.',pista:'Busca algo ligero, que no se deforme y que cubra mucha distancia. Y si el suelo es blando, hay que buscar la roca.'},
+      {t:'mc',q:'Se va a construir un edificio sobre arcilla blanda, y la roca dura está a 12 metros de profundidad. ¿Qué cimentación es la más adecuada?',o:["Pilotes que atraviesan la arcilla y se apoyan en la roca dura", "Zapatas pequeñas en la superficie, que son más baratas y rápidas", "Ninguna: los pilares se apoyan directamente sobre la arcilla blanda", "Una bóveda de piedra enterrada justo debajo de la planta baja"],a:0,why:'Los pilotes atraviesan el terreno blando y se apoyan en la roca dura.'}]
+  }},
+{ key:'bridge', dot:'Puente', place:'El gran puente de la bahía', title:'Estructuras colgadas y colgantes',
+  narr:'Siguiendo la costa, Blip encuentra un puente enorme colgado de cables, tan largo que parece no tener fin. Se sube al tablero para mirar el mar.',
+  say:'¡El camino cuelga de unos hilos gigantes! ¿Cómo no se cae? <strong>Escaneo</strong>.',
+  danger:{n:'¡Lluvia de meteoritos!',icon:'meteor',t:'Una lluvia de meteoritos cae sobre la bahía y golpea los cables del puente. Responde bien para mantenerlo en pie.'},
+  scan:[
+   {h:'Qué son',p:'Soportan el peso de la construcción mediante <b>cables o barras</b> que cuelgan de unos soportes. Los cables sólo trabajan a <b>tracción</b>: son ligeros y resisten muchísimo cuando tiran de ellos, pero a compresión se doblan.'},
+   {h:'Elementos de un puente colgante',p:'<b>Soportes o torres</b>: de hormigón armado o acero; trabajan a <b>compresión</b> y se apoyan en la cimentación.<br><b>Tablero</b>: una gran viga por donde se circula; trabaja a <b>flexión</b>.<br><b>Cables de sustentación</b>: el cable principal curvo (<b>catenaria</b>) y las <b>péndolas</b> verticales; trabajan a <b>tracción</b> y llevan el peso a los soportes.<br><b>Tirantes o tensores</b>: cables que tensan o sujetan partes de la estructura.',fig:'bridge'},
+   {h:'Dos tipos de puente',p:'<b>Colgante de catenaria</b>: un cable principal curvo del que bajan las péndolas.<br><b>Atirantado</b>: los cables van rectos desde la torre directamente al tablero.'},
+   {h:'Ejemplos',p:'El Golden Gate de San Francisco, los puentes atirantados, teleféricos, marquesinas colgadas, lámparas de techo, carpas y grúas con tensores.'}
+  ],
+  qs:{
+   R:[{t:'mc',q:'Los cables del puente colgante trabajan a…',o:['Tracción','Compresión','Torsión','Pandeo'],a:0,why:'Un cable sólo trabaja cuando tiran de él: tracción.',pista:'Un cable es como una cuerda: sólo sirve cuando tiran de él. El puente tiene torres, un tablero y cables.'},
+      {t:'sel',q:'Completa la ficha del puente:',parts:['Un puente colgante tiene grandes ',{o:['torres','zapatas','bóvedas'],a:0},' que hacen de soporte, un ',{o:['tablero','muro','pilote'],a:0},' por donde circulan los coches y ',{o:['cables','arcos','ladrillos'],a:0},' de sustentación que reparten el peso hacia los soportes.'],why:'Soportes (torres), tablero y cables de sustentación.'}],
+   C:[{t:'mc',q:'¿Por qué no se puede usar un cable de acero como pilar?',o:["Porque un cable sólo resiste tracción; al comprimirlo se dobla", "Porque el acero de los cables es demasiado blando y se oxida al aire", "Porque un cable pesa demasiado para apoyarlo en posición vertical", "Porque un cable sólo resiste compresión; al estirarlo se rompe enseguida"],a:0,why:'Un cable no aguanta compresión: si lo empujas, se dobla.',pista:'¿Qué pasa si intentas empujar una cuerda en lugar de tirar de ella? Fíjate también en cómo van los cables en cada tipo de puente: curvos o rectos.'},
+      {t:'mc',q:'¿Qué diferencia hay entre un puente colgante de catenaria y uno atirantado?',o:["En el de catenaria cuelga un cable principal curvo del que bajan péndolas; en el atirantado los cables van rectos de la torre al tablero", "En el atirantado cuelga un cable principal curvo del que bajan péndolas; en el de catenaria los cables van rectos de la torre al tablero", "El atirantado no tiene torres: sus cables se anclan directamente en el fondo del río y sostienen el tablero desde abajo", "El de catenaria no tiene tablero: los coches circulan apoyados directamente sobre el cable curvo, que es muy ancho"],a:0,why:'Catenaria: cable curvo + péndolas. Atirantado: cables rectos de la torre al tablero.'}],
+   P:[{t:'hot',fig:'bridge',q:'Toca el elemento del puente que trabaja a COMPRESIÓN.',a:'torre',why:'Las torres reciben el peso que les transmiten los cables y lo llevan hacia el suelo: compresión.',pista:'Los cables tiran (tracción). La pieza vertical recibe el peso desde arriba y lo lleva al suelo. La pieza horizontal por donde circulan los coches se comporta como una viga.'},
+      {t:'hot',fig:'bridge',q:'Toca el elemento que trabaja principalmente a FLEXIÓN.',a:'tablero',why:'El tablero es una gran viga: el peso de los coches tiende a curvarlo (flexión).'}],
+   A:[{t:'drag',q:'Clasifica estas construcciones:',bins:['Colgada o colgante','Otro tipo'],items:[['Golden Gate (San Francisco)',0],['Teleférico',0],['Lámpara colgada del techo',0],['Pirámide de Keops',1],['Torre eléctrica',1],['Edificio de pilares y vigas',1]],why:'Colgantes: Golden Gate, teleférico, lámpara. Los demás son masiva, triangulada y entramada.',pista:'¿El peso cuelga de cables? Entonces es colgada. En un atirantado los cables salen rectos de la torre.'},
+      {t:'img',q:'¿Cuál de estos puentes es ATIRANTADO?',o:[['catenaria',''],['atirantado',''],['arco',''],['vigas','']],a:1,src:'b',why:'En el atirantado los cables van rectos desde la torre hasta el tablero, en forma de abanico.'}],
+   D:[{t:'mc',q:'Un meteorito rompe varias péndolas (los cables verticales) de un puente colgante. ¿Qué le pasa al tablero en esa zona?',o:["Se queda sin sujeción, se dobla por flexión y puede caer", "Nada, porque las péndolas sólo decoran y el tablero se sostiene solo", "Se vuelve más rígido, porque ya no tiene cables que lo hagan vibrar", "Las torres se estiran hacia abajo y sujetan el tablero en esa zona"],a:0,why:'Las péndolas sostienen el tablero; sin ellas, el tablero queda como una viga enorme sin apoyos y se dobla.',pista:'¿Qué sujeta el tablero entre las dos torres? Piensa también en lo ligeros y fuertes a tracción que son los cables de acero.'},
+      {t:'mc',q:'¿Por qué con los puentes colgantes se pueden salvar distancias de más de un kilómetro?',o:["Los cables de acero son ligeros y resisten muchísimo a tracción, así se cubre mucha distancia con poco peso", "Porque el tablero es de piedra muy gruesa y aguanta por sí solo sin necesidad de apoyarse en nada más", "Porque no necesitan cimentación: las torres flotan sobre el agua y se pueden colocar donde se quiera", "Porque todos sus elementos trabajan a torsión, que es el esfuerzo que mejor resisten los cables de acero"],a:0,why:'Cables ligeros y muy resistentes a tracción permiten grandes luces con poco peso propio.'}]
+  }},
+{ key:'cliff', dot:'Acantilado', place:'La antena del acantilado', title:'Propiedades de las estructuras',
+  narr:'Blip necesita llamar a casa. Encuentra una torre de comunicaciones en lo alto de un acantilado donde siempre sopla el viento. Antes de enviar su mensaje tiene que asegurarse de que la torre aguanta.',
+  say:'Si esta antena se cae, no vuelvo a Kromb nunca. <strong>Escaneo</strong> sus propiedades.',
+  danger:{n:'¡Tornado!',icon:'tornado',t:'Un tornado se forma sobre el mar y avanza hacia la antena. ¡Blip está subido en ella! Responde bien para que la estructura sea estable, resistente y rígida.'},
+  scan:[
+   {h:'De qué dependen',p:'Las propiedades de una estructura dependen del <b>tipo y posición de las fuerzas</b>, de la <b>forma de la estructura</b> y del <b>material utilizado</b>.'},
+   {h:'Estabilidad: no volcar',p:'La estructura no debe caerse por la acción de las fuerzas. Cómo se consigue: una <b>buena cimentación</b>, <b>anclajes</b> (por ejemplo, cables sujetos al suelo), <b>ampliar la base de apoyo</b> y <b>poner más peso en la base</b> (bajar el centro de gravedad).'},
+   {h:'Resistencia: no romperse',p:'Todos los elementos deben contribuir a soportar los esfuerzos. Depende del material y de la forma o perfil de cada pieza.'},
+   {h:'Rigidez: no deformarse',p:'El triángulo es el único polígono que no se deforma. Para dar rigidez se usa la <b>triangulación</b> (barras diagonales) o las <b>uniones rígidas</b> (soldaduras, ensambles, <b>cartelas</b>).',fig:'rigid'},
+   {h:'Que una viga no se doble',p:'Se pueden <b>colocar columnas</b> intermedias, <b>cables o tirantes</b>, o <b>aumentar la altura h</b> (el canto) de la pieza. Una tabla colocada de canto se dobla mucho menos que colocada de plano.'}
+  ],
+  qs:{
+   R:[{t:'match',q:'Relaciona cada propiedad con lo que evita.',pairs:[['Estabilidad','Que la estructura vuelque o se caiga'],['Resistencia','Que la estructura se rompa'],['Rigidez','Que la estructura se deforme']],why:'Estable: no vuelca. Resistente: no se rompe. Rígida: no se deforma.',pista:'Estable = no vuelca. Resistente = no se rompe. Rígida = no se deforma. La cimentación y los anclajes ayudan a no volcar.'},
+      {t:'mc',q:'Una buena cimentación, los anclajes y una base ancha sirven sobre todo para mejorar la…',o:['Estabilidad','Rigidez','Flexibilidad','Torsión'],a:0,why:'Todo eso evita que la estructura vuelque: estabilidad.'}],
+   C:[{t:'mc',q:'Blip pone una tabla sobre dos piedras para cruzar un charco. ¿Por qué se dobla mucho menos colocada de canto que de plano?',o:["Porque de canto aumenta la altura h de la sección y eso la hace más rígida frente a la flexión", "Porque colocada de canto pesa menos, y al tener menos peso propio la tabla se dobla mucho menos", "Porque de plano la tabla trabaja a tracción y de canto a compresión, que es un esfuerzo que resiste mejor", "No hay ninguna diferencia: la tabla es la misma y se dobla exactamente igual en cualquier posición"],a:0,why:'La rigidez frente a la flexión crece mucho con la altura (canto) de la pieza.',pista:'Fíjate en la altura de la pieza en la dirección en la que empuja el peso. Y recuerda que las esquinas de un marco se pueden reforzar.'},
+      {t:'mc',q:'¿Para qué sirve una cartela colocada en la esquina de un marco?',o:["Refuerza la unión, la hace rígida y evita que el marco se deforme", "Hace el marco más ligero porque permite quitar material de las barras", "Permite que las esquinas giren mejor para que el marco pueda plegarse", "Sirve para colgar cables o tirantes que sujetan el marco desde arriba"],a:0,why:'La cartela convierte la esquina en una unión rígida: el marco ya no se deforma.'}],
+   P:[{t:'img',q:'¿Cuál de estas torres es más ESTABLE?',o:[['t1','Alta y estrecha'],['t2','Ancha abajo, estrecha arriba'],['t3','Estrecha abajo, ancha arriba'],['t4','Con un bloque pesado en lo alto']],a:1,why:'Base ancha y peso abajo: el centro de gravedad queda bajo y la torre no vuelca.',pista:'Estable = base grande y peso abajo. Rígido = busca triángulos.'},
+      {t:'img',q:'Las uniones de estos marcos pueden girar (son articuladas). ¿Cuál NO se deformará al empujarlo de lado?',o:[['f1',''],['f2',''],['f3',''],['f4','']],a:2,src:'frames',why:'Sólo el marco con la barra diagonal está triangulado, y el triángulo no se deforma.'}],
+   A:[{t:'sel',q:'Ayuda a Blip a reforzar la antena:',parts:['Para que la antena no vuelque, añado ',{o:['cables anclados al suelo','una bola pesada en lo alto','ruedas en la base'],a:0},'. Para que el marco cuadrado no se deforme, le pongo ',{o:['una barra diagonal','más tornillos en el centro','una capa de pintura'],a:0},'. Para que la tabla del suelo no se doble, la coloco ',{o:['de canto','de plano','inclinada'],a:0},'.'],why:'Anclajes → estabilidad. Diagonal → rigidez. De canto → menos flexión.',pista:'Estabilidad: anclajes, base ancha y peso abajo. Rigidez: triangulación y uniones rígidas. Contra la flexión: más altura h.'},
+      {t:'drag',q:'Clasifica cada técnica según la propiedad que mejora:',bins:['Mejora la estabilidad','Mejora la rigidez'],items:[['Zapata o losa más grande',0],['Cables anclados al suelo',0],['Más peso en la base',0],['Barra diagonal',1],['Soldar las uniones',1],['Cartela en la esquina',1]],why:'Cimentación, anclajes y peso abajo: estabilidad. Triangulación y uniones rígidas: rigidez.'}],
+   D:[{t:'img',q:'¡Se acerca un TERREMOTO! ¿Qué edificio resistirá mejor?',o:[['alto','Alto, estrecho y sin refuerzos'],['cruces','Base ancha y cruces diagonales'],['patas','Planta baja sobre patas finas'],['bloques','Bloques apilados sin unir']],a:1,src:'q',why:'Base ancha (estable), diagonales (rígido) y bien cimentado: el que mejor aguanta las sacudidas.',pista:'Combínalo todo: estable (base ancha y anclada), rígido (triángulos) y con las piezas bien unidas.'},
+      {t:'img',q:'¡Un HURACÁN sopla con fuerza! ¿Qué antena aguantará mejor?',o:[['mastil','Mástil fino sin sujeción'],['atirantada','Torre triangulada con cables anclados'],['cuadros','Torre de cuadrados sin diagonales'],['plato','Mástil con un plato pesado arriba']],a:1,src:'a',why:'Triangulada (rígida) y con cables anclados al suelo (estable): la más segura frente al viento.'}]
+  }},
+{ key:'park', dot:'Parque', place:'El parque del pueblo', title:'Tipos de esfuerzo',
+  narr:'Blip termina en un parque infantil. Nunca había visto un columpio (en Kromb todo flota) y se sube, fascinado. Al fondo, una grúa levanta una caseta nueva.',
+  say:'¡Este invento es genial! Pero cada pieza parece “sufrir” de una forma distinta… <strong>Escaneo</strong>.',
+  danger:{n:'¡Granizo gigante!',icon:'hail',t:'Empiezan a caer bolas de granizo del tamaño de naranjas sobre el parque. Responde bien para que el columpio aguante y proteja a Blip.'},
+  scan:[
+   {h:'Fuerza y esfuerzo',p:'La <b>fuerza</b> es la acción que viene de fuera. El <b>esfuerzo</b> es la tensión interna que esa fuerza provoca dentro del material.'},
+   {h:'Los seis esfuerzos',p:'<b>Tracción</b>: tiende a <b>alargar</b> el objeto (la cuerda de la soga, las cadenas del columpio, el cable de la grúa).<br><b>Compresión</b>: tiende a <b>aplastarlo</b> (pilares, patas de una silla, patas del columpio).<br><b>Flexión</b>: tiende a <b>curvarlo</b>; la parte de arriba se comprime y la de abajo se estira (vigas, baldas, trampolín, travesaño del columpio).<br><b>Torsión</b>: tiende a <b>retorcerlo</b> (escurrir una toalla, girar una llave, un destornillador).<br><b>Cortadura o cizalladura</b>: un par de fuerzas que tiende a <b>cortarlo en dos</b> (tijeras, tornillos y remaches de unión).<br><b>Pandeo</b>: una pieza <b>larga y delgada comprimida</b> que se curva hacia un lado (una regla apretada por los extremos).',fig:'esf'},
+   {h:'Ejemplo: el columpio',p:'El <b>travesaño</b> de arriba trabaja a <b>flexión</b>; las <b>cadenas</b>, a <b>tracción</b>; las <b>patas</b>, a <b>compresión</b>; y el <b>asiento</b>, a <b>flexión</b>.',fig:'swing'}
+  ],
+  qs:{
+   R:[{t:'match',q:'Relaciona cada esfuerzo con lo que tiende a hacer.',pairs:[['Tracción','Alargar o estirar'],['Compresión','Aplastar o acortar'],['Torsión','Retorcer'],['Cortadura','Cortar en dos partes']],why:'Tracción: estirar. Compresión: aplastar. Torsión: retorcer. Cortadura: cortar.',pista:'Tracción = tirar. Compresión = apretar. Torsión = girar. Cortadura = tijera. La fuerza viene de fuera; el esfuerzo está dentro.'},
+      {t:'mc',q:'¿Cuál es la diferencia entre fuerza y esfuerzo?',o:["La fuerza es la acción que viene de fuera; el esfuerzo es la tensión interna que provoca en el cuerpo", "Son exactamente lo mismo: dos palabras distintas para nombrar la acción que empuja o deforma un cuerpo", "El esfuerzo es la acción que viene de fuera; la fuerza es la tensión interna que aparece dentro del material", "La fuerza sólo aparece en las máquinas que se mueven, y el esfuerzo sólo en los edificios que están quietos"],a:0,why:'Fuerza: externa. Esfuerzo: tensión interna que provoca.'}],
+   C:[{t:'mc',q:'La balda de una estantería se curva con el peso de los libros. ¿Qué ocurre dentro de ella?',o:["Está a flexión: la parte de arriba se comprime y la de abajo se estira (tracción)", "Está a flexión: la parte de arriba se estira (tracción) y la de abajo se comprime", "Está a torsión: el peso de los libros hace que la balda se retuerza sobre sí misma", "Sólo trabaja a cortadura: el peso intenta cortar la balda justo por sus dos apoyos"],a:0,why:'En flexión, la cara de arriba se comprime y la de abajo trabaja a tracción.',pista:'Dobla una goma de borrar: ¿qué cara se arruga y cuál se estira? Y piensa en una regla larga y fina que aprietas por los extremos.'},
+      {t:'mc',q:'¿Qué es el pandeo?',o:["Cuando una pieza larga y delgada que está comprimida se curva hacia un lado", "Cuando una pieza larga y delgada se retuerce sobre sí misma al girar sus extremos", "Cuando un par de fuerzas, como unas tijeras, corta una pieza en dos mitades", "Cuando una cuerda o un cable se alarga porque tiran de él por los dos extremos"],a:0,why:'El pandeo aparece en piezas esbeltas comprimidas: se desplazan hacia un lado.'}],
+   P:[{t:'hot',fig:'swing',q:'Toca el elemento del columpio que trabaja a TRACCIÓN.',a:'cadenas',why:'Las cadenas sostienen el asiento tirando de él hacia arriba: tracción.',pista:'Tracción = tirar. ¿Qué parte “tira” del asiento hacia arriba? La barra horizontal de arriba, en cambio, se curva con el peso que cuelga de ella.'},
+      {t:'hot',fig:'swing',q:'Toca el elemento que trabaja a FLEXIÓN porque de él cuelgan las cadenas.',a:'travesano',why:'El travesaño es horizontal y soporta el peso que cuelga en su centro: flexión.'}],
+   A:[{t:'drag',q:'Clasifica cada situación según el esfuerzo principal:',bins:['Tracción','Compresión','Flexión','Torsión','Cortadura'],items:[['Escurrir una toalla',3],['Cortar papel con tijeras',4],['La cuerda del juego de la soga',0],['La pata de una silla con alguien sentado',1],['Un trampolín con un nadador en la punta',2],['El cable de la grúa sosteniendo la caseta',0]],why:'Toalla: torsión. Tijeras: cortadura. Soga y cable: tracción. Pata: compresión. Trampolín: flexión.',pista:'Tirar → tracción; aplastar → compresión; curvar → flexión; retorcer → torsión; cortar → cortadura.'},
+      {t:'sel',q:'Completa el informe de Blip:',parts:['El cable de la grúa trabaja a ',{o:['tracción','compresión','flexión','torsión','cortadura'],a:0},'; el pilar de un edificio, a ',{o:['tracción','compresión','flexión','torsión','cortadura'],a:1},'; la balda de una estantería con libros, a ',{o:['tracción','compresión','flexión','torsión','cortadura'],a:2},'; y un tornillo cuando lo aprietas con el destornillador, a ',{o:['tracción','compresión','flexión','torsión','cortadura'],a:3},'.'],why:'Cable: tracción. Pilar: compresión. Balda: flexión. Tornillo al girarlo: torsión.'}],
+   D:[{t:'mc',q:'La columna muy alta y fina de un mirador empieza a curvarse hacia un lado, aunque sólo recibe peso desde arriba. ¿Qué ocurre y cómo lo arreglarías?',o:["Es pandeo: la haría más gruesa (menos esbelta) o la sujetaría con barras laterales", "Es torsión: la giraría en sentido contrario para que recuperase su forma recta", "Es tracción: le colgaría más peso desde arriba para estirarla y enderezarla", "Es cortadura: la cortaría por la mitad y la uniría con tornillos más resistentes"],a:0,why:'Una pieza esbelta comprimida que se curva de lado sufre pandeo; se evita haciéndola más gruesa o arriostrándola.',pista:'Pieza larga, delgada y comprimida que se dobla de lado… tiene nombre propio. Recuerda también qué cara de una viga se estira al flexionarse.'},
+      {t:'mc',q:'El hormigón resiste muy bien la compresión pero mal la tracción. ¿Por qué se colocan barras de acero en la parte de abajo de las vigas de hormigón armado?',o:["Porque al flexionarse la viga, la parte de abajo trabaja a tracción y el acero sí la resiste", "Porque al flexionarse la viga, la parte de abajo trabaja a compresión y el hormigón necesita ayuda", "Para que la viga pese menos, ya que el acero es más ligero que el mismo volumen de hormigón", "Para que la viga no se oxide, porque el acero protege al hormigón de la humedad del ambiente"],a:0,why:'En flexión la cara inferior se estira (tracción); el acero aporta la resistencia a tracción que le falta al hormigón.'}]
+  }}
+];
+
+/* ========= estado ========= */
+let ST = { name:'', stop:0, lv:0, v:0, res:{}, sel:null, locked:false };
+
+/* ========= pantallas ========= */
+function hud(){
+  const dots = STOPS.map((s,i)=>`<i class="${i<ST.stop?'done':i===ST.stop?'now':''}" title="${s.dot}"></i>`).join('<b></b>');
+  return `<div class="hud"><div class="who">${esc(ST.name)}</div>${GUARD.exits?`<span class="exits" title="Salidas del juego registradas">Salidas: ${GUARD.exits}</span>`:''}<div class="path" aria-label="Parada ${ST.stop+1} de ${STOPS.length}">${dots}</div></div>`;
+}
+
+function showStart(){
+  app.innerHTML=`<section class="cover">
+    <div class="hero">${SVG(blip(100,196,1.55,'happy'),'0 0 200 210')}</div>
+    <h1>Blip y las estructuras<span class="l2">de la Tierra</span></h1>
+    <p class="lead">Blip es un extraterrestre del planeta Kromb, donde todo flota. Acaba de aterrizar en la Tierra y no entiende cómo se sostienen nuestras construcciones. Acompáñale, escanea cada estructura y responde bien cuando llegue el peligro… o la estructura se le caerá encima.</p>
+    <div class="card form">
+      <label for="nom">Nombre</label><input id="nom" autocomplete="given-name">
+      <label for="ape">Apellidos</label><input id="ape" autocomplete="family-name">
+      <div class="err" id="err" role="alert"></div>
+    </div>
+    <div class="rules" role="note"><h3>Antes de empezar, lee esto</h3>
+      <p>El juego se abre en <b>pantalla completa</b>. Si sales de ella, cambias de pestaña o abres otra ventana o programa, <b>quedará registrado en tu diploma</b>.</p>
+      <p>Si sales <b>mientras respondes una pregunta</b>, ese intento contará como <b>fallo</b>.</p>
+      <p>Toda la información que necesitas te la da el escáner de Blip.</p></div>
+    <div class="center"><button class="btn" id="go">Acepto: empezar en pantalla completa</button></div>
+    <p class="teacher">Situación de aprendizaje para Tecnología y Digitalización de 2º y 3º ESO. Saber básico A: estructuras para la construcción de modelos, elementos de una estructura y esfuerzos básicos a los que están sometidos. Contribuye al criterio de evaluación 3.1. Cada parada evalúa cinco niveles (recuerda, comprende, piensa, aplica y deduce); con recuerda y comprende superados a la primera se alcanza el 5.</p>
+  </section>`;
+  const go=()=>{const n=$('#nom').value.trim(),a=$('#ape').value.trim();
+    if(!n||!a){$('#err').textContent='Escribe tu nombre y tus apellidos para que aparezcan en el diploma.';return;}
+    ST={name:n+' '+a,stop:0,lv:0,v:0,res:{},sel:null,locked:false,inQ:false};
+    Object.assign(GUARD,{exits:0,pen:0,away:false,fs:false,on:false});
+    reqFS().then(ok=>{GUARD.fs=ok;GUARD.on=true;showStop(0);});};
+  $('#go').onclick=go;
+  $('#ape').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+}
+
+function showStop(i){
+  ST.stop=i; const s=STOPS[i];
+  app.innerHTML=`${hud()}<div class="scene" id="scene">${SCENES[s.key]('ok')}</div>
+   <p class="place">${s.place}</p><h2 class="stitle">${s.title}</h2>
+   <p class="narr">${s.narr}</p><p class="bubble">${s.say}</p>
+   <div class="actions"><button class="btn" id="scanBtn">Usar el escáner</button></div>`;
+  $('#scanBtn').onclick=()=>openScan(i);
+  window.scrollTo({top:0});
+}
+
+function figFor(k){
+  if(k==='arches') return `<div class="fig">${F.arches()}</div>`;
+  if(k==='frame') return `<div class="fig">${F.frame(true)}</div>`;
+  if(k==='bridge') return `<div class="fig">${F.bridge(true)}</div>`;
+  if(k==='swing') return `<div class="fig">${F.swing(true)}</div>`;
+  if(k==='rigid') return `<div class="fig">${F.rigid()}</div>`;
+  if(k==='esf') return `<div class="icons">${[['traccion','Tracción'],['compresion','Compresión'],['flexion','Flexión'],['torsion','Torsión'],['cortadura','Cortadura'],['pandeo','Pandeo']].map(([k,n])=>`<div>${F.esf(k)}${n}</div>`).join('')}</div>`;
+  return '';
+}
+
+function openScan(i){
+  const s=STOPS[i]; const m=document.createElement('div'); m.className='modal';
+  m.innerHTML=`<div class="scanner" role="dialog" aria-modal="true" aria-labelledby="scT"><div class="scanline"></div>
+   <h2 id="scT">Escáner de Blip: ${s.title.toLowerCase()}</h2><p class="sub">Análisis completado en: ${s.place}.</p>
+   ${s.scan.map(x=>`<div class="sec"><h3>${x.h}</h3><p>${x.p}</p>${x.fig?figFor(x.fig):''}</div>`).join('')}
+   <div class="actions"><button class="btn" id="closeScan">Cerrar el escáner</button></div></div>`;
+  document.body.appendChild(m); m.scrollTop=0; $('#closeScan').focus({preventScroll:true});
+  $('#closeScan').onclick=()=>{m.remove(); if(i===0){afterLanding();} else showDanger(i);};
+}
+
+function afterLanding(){
+  const b=document.querySelector('.actions');
+  document.querySelector('.bubble').innerHTML='¡Entendido! Una estructura es algo capaz de <strong>soportar esfuerzos</strong>. Vamos a buscar las de los humanos.';
+  b.innerHTML='<button class="btn sun" id="next">Seguir el viaje</button>';
+  $('#next').onclick=()=>showStop(1);
+}
+
+const DICON={
+  quake:`<g stroke="#FF4FA3" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,70 26,70 36,40 50,100 62,30 76,90 86,70 112,70"/></g>`,
+  wind:`<g stroke="#43C6F0" stroke-width="6" fill="none" stroke-linecap="round"><path d="M10,40 H78 a14,14 0 1 0 -14,-14"/><path d="M10,62 H96 a14,14 0 1 1 -14,14"/><path d="M10,84 H60"/></g>`,
+  meteor:`<g stroke-linecap="round"><line x1="20" y1="10" x2="70" y2="60" stroke="#FFD23F" stroke-width="6" opacity=".6"/><circle cx="76" cy="66" r="18" fill="#FF4FA3"/><line x1="60" y1="8" x2="92" y2="40" stroke="#FFD23F" stroke-width="4" opacity=".6"/><circle cx="96" cy="44" r="9" fill="#F29E38"/></g>`,
+  tornado:`<g stroke="#C3B8F0" stroke-width="6" fill="none" stroke-linecap="round"><path d="M14,22 H106"/><path d="M26,42 H94"/><path d="M38,62 H84"/><path d="M50,82 H74"/><path d="M58,100 H66"/></g>`,
+  hail:`<g fill="#E6F7FF" stroke="#43C6F0" stroke-width="3"><circle cx="30" cy="30" r="14"/><circle cx="80" cy="46" r="18"/><circle cx="44" cy="84" r="16"/><circle cx="96" cy="96" r="10"/></g>`
+};
+function showDanger(i){
+  const s=STOPS[i];
+  $('#scene').innerHTML=SCENES[s.key]('scared'); $('#scene').classList.add('shake');
+  const d=document.createElement('div'); d.className='danger';
+  d.innerHTML=`<div class="dbox" role="alertdialog" aria-labelledby="dT"><svg viewBox="0 0 120 120">${DICON[s.danger.icon]}</svg>
+   <div class="sign" id="dT">${s.danger.n}</div><p>${s.danger.t}</p>
+   <button class="btn pink" id="fight">Reforzar la estructura</button></div>`;
+  document.body.appendChild(d); $('#fight').focus();
+  $('#fight').onclick=()=>{d.remove(); ST.lv=0; ST.v=0; ST.res[i]={}; renderQuiz();};
+}
+
+/* ========= prueba ========= */
+function stopPts(i){const r=ST.res[i]||{};return LV.reduce((a,l)=>a+(r[l.k]?r[l.k].pts:0),0);}
+
+function renderQuiz(){
+  const i=ST.stop, s=STOPS[i], L=LV[ST.lv], q=s.qs[L.k][ST.v];
+  const r=ST.res[i]||{};
+  const steps=LV.map((l,k)=>{const x=r[l.k];let c='';if(x){c=x.pts===l.w?'ok':x.pts>0?'half':'ko';}else if(k===ST.lv)c='now';return `<span class="${c}" title="${l.n}"></span>`;}).join('');
+  const pct=Math.round(stopPts(i)/MAXSTOP*100);
+  ST.sel=null; ST.locked=false; ST.inQ=true;
+  app.innerHTML=`${hud()}<div class="scene mini shake" id="scene">${SCENES[s.key]('scared')}</div>
+   <div class="qhead"><span class="lv ${L.k}">${L.n}</span><div class="lvsteps" aria-hidden="true">${steps}</div></div>
+   <div class="integ"><div class="lab"><span>Refuerzo de la estructura</span><span>${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>
+   ${ST.v===1?'<div class="second">Segunda oportunidad: nueva pregunta del mismo nivel</div>':''}
+   <p class="qtext">${q.q||''}</p><div id="qbody"></div><div class="toast" id="toast" role="status"></div>
+   <div id="fb"></div><div class="actions" id="qact"><button class="btn" id="check">Comprobar</button></div>`;
+  const api=buildQ(q,$('#qbody'));
+  $('#check').onclick=()=>{
+    const res=api.check();
+    if(res===null){$('#toast').textContent='Completa la respuesta antes de comprobar.';return;}
+    $('#toast').textContent=''; $('#qbody').classList.add('locked'); ST.locked=true;
+    api.mark(ST.v===1||res);
+    feedback(res,q);
+  };
+  window.scrollTo({top:0});
+}
+
+function feedback(ok,q,pen){
+  const i=ST.stop,s=STOPS[i],L=LV[ST.lv];
+  let html='',btn=''; ST.inQ=false;
+  const penTxt='<p><b>Has salido del juego mientras respondías, así que este intento cuenta como fallo.</b></p>';
+  if(ok){
+    const pts=ST.v===0?L.w:L.w*SECOND; ST.res[i][L.k]={pts,try:ST.v+1};
+    html=`<div class="fb ok"><h3>${ST.v===0?'¡Correcto a la primera!':'¡Correcto en la segunda oportunidad!'}</h3><p>${q.why}</p></div>`;
+    btn='<button class="btn sun" id="nx">Continuar</button>';
+  } else if(ST.v===0){
+    const pista=s.qs[L.k][0].pista;
+    html=`<div class="fb no"><h3>Todavía no</h3>${pen?penTxt:'<p>Esa respuesta no refuerza la estructura.</p>'}<p>Tienes otra oportunidad con una pregunta distinta de este nivel.</p><div class="pista"><strong>Pista de Blip:</strong> ${pista}</div></div>`;
+    btn='<button class="btn pink" id="retry">Otra pregunta de este nivel</button>';
+  } else {
+    ST.res[i][L.k]={pts:0,try:2};
+    html=`<div class="fb no"><h3>Nivel ${L.n.toLowerCase()} no superado</h3>${pen?penTxt:''}<p>${q.why}</p><p>${pen?'':'La respuesta correcta queda marcada en verde. '}Seguimos: aún puedes salvar la estructura.</p></div>`;
+    btn='<button class="btn sun" id="nx">Continuar</button>';
+  }
+  $('#qact').innerHTML=btn; $('#fb').innerHTML=html;
+  const pct=Math.round(stopPts(i)/MAXSTOP*100); document.querySelector('.bar i').style.width=pct+'%'; document.querySelector('.integ .lab span:last-child').textContent=pct+'%';
+  if($('#retry')) $('#retry').onclick=()=>{ST.v=1;renderQuiz();};
+  if($('#nx')) $('#nx').onclick=()=>{ST.v=0; if(ST.lv<LV.length-1){ST.lv++;renderQuiz();} else stopResult(i);};
+  $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* constructores de preguntas */
+function buildQ(q,host){
+  const imgOf=(src,k)=> src==='b'?IMG.b[k]: src==='q'?IMG.q[k]: src==='a'?IMG.a[k]: src==='frames'?FRAMES[k]: IMG[k];
+  if(q.t==='mc'||q.t==='img'){
+    const order=shuffle(q.o.map((_,k)=>k));
+    host.innerHTML = q.t==='mc'
+      ? `<div class="opts" role="radiogroup">${order.map(k=>`<button class="opt" role="radio" aria-checked="false" data-k="${k}">${esc(q.o[k])}</button>`).join('')}</div>`
+      : `<div class="imgs" role="radiogroup">${order.map((k,n)=>`<button class="opt img" role="radio" aria-checked="false" data-k="${k}">${imgOf(q.src,q.o[k][0])}<span>${q.o[k][1]||('Opción '+'ABCD'[n])}</span></button>`).join('')}</div>`;
+    host.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{host.querySelectorAll('.opt').forEach(x=>{x.classList.remove('sel');x.setAttribute('aria-checked','false');});b.classList.add('sel');b.setAttribute('aria-checked','true');ST.sel=+b.dataset.k;});
+    return {check:()=>ST.sel===null?null:ST.sel===q.a,
+      mark:(reveal)=>host.querySelectorAll('.opt').forEach(b=>{const k=+b.dataset.k;if(b.classList.contains('sel'))b.classList.add(k===q.a?'good':'wrong');if(reveal&&k===q.a)b.classList.add('good');})};
+  }
+  if(q.t==='fill'){
+    host.innerHTML=`<input class="fillin" id="fi" autocomplete="off" placeholder="Escribe tu respuesta" aria-label="Respuesta">`;
+    const inp=host.querySelector('#fi'); inp.focus({preventScroll:true});
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#check'))$('#check').click();});
+    return {check:()=>{const v=norm(inp.value);if(!v)return null;return q.acc.map(norm).includes(v);},
+      mark:(reveal)=>{const ok=q.acc.map(norm).includes(norm(inp.value));inp.style.borderColor=ok?'var(--mint)':'var(--bad)';inp.disabled=true;if(!ok&&reveal){inp.insertAdjacentHTML('afterend',`<p>Respuesta correcta: <b>${q.acc[0]}</b></p>`);}}};
+  }
+  if(q.t==='sel'){
+    let n=0;
+    host.innerHTML=`<p class="sentence">${q.parts.map(p=>typeof p==='string'?esc(p):`<select data-a="${esc(p.o[p.a])}" aria-label="Hueco ${++n}"><option value="">elige…</option>${shuffle(p.o).map(o=>`<option>${esc(o)}</option>`).join('')}</select>`).join('')}</p>`;
+    const sels=[...host.querySelectorAll('select')];
+    return {check:()=>sels.some(s=>!s.value)?null:sels.every(s=>s.value===s.dataset.a),
+      mark:(reveal)=>sels.forEach(s=>{s.classList.add(s.value===s.dataset.a?'good':'wrong');s.disabled=true;if(reveal&&s.value!==s.dataset.a){s.insertAdjacentHTML('afterend',` <b style="color:var(--mint)">(${s.dataset.a})</b>`);}})};
+  }
+  if(q.t==='drag') return buildDrag(q,host);
+  if(q.t==='match') return buildMatch(q,host);
+  if(q.t==='hot'){
+    host.innerHTML=`<div class="hotwrap">${F[q.fig](false)}</div><p class="hintdrag">Toca una parte del dibujo para seleccionarla.</p>`;
+    const zs=[...host.querySelectorAll('.zone')];
+    zs.forEach(z=>{z.setAttribute('tabindex','0');z.setAttribute('role','button');
+      const pick=()=>{if(ST.locked)return;zs.forEach(x=>x.classList.remove('sel'));z.classList.add('sel');ST.sel=z.dataset.z;};
+      z.addEventListener('click',pick); z.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});});
+    return {check:()=>ST.sel===null?null:ST.sel===q.a,
+      mark:(reveal)=>zs.forEach(z=>{if(z.classList.contains('sel')){z.classList.remove('sel');z.classList.add(z.dataset.z===q.a?'good':'wrong');}if(reveal&&z.dataset.z===q.a)z.classList.add('good');})};
+  }
+}
+
+const FRAMES={
+  f1:IMG.fr('20,90 90,90 90,20 20,20'),
+  f2:IMG.fr('14,80 106,80 106,30 14,30'),
+  f3:IMG.fr('20,90 90,90 90,20 20,20','<line x1="20" y1="90" x2="90" y2="20" stroke="#FF4FA3"/>'),
+  f4:IMG.fr('55,14 98,44 82,92 28,92 12,44')
+};
+
+function buildDrag(q,host){
+  const items=shuffle(q.items.map((it,k)=>({t:it[0],b:it[1],k})));
+  host.innerHTML=`<p class="hintdrag">Arrastra cada tarjeta a su caja, o tócala y luego toca la caja.</p>
+   <div class="pool" id="pool">${items.map(it=>`<div class="chip" tabindex="0" data-b="${it.b}">${esc(it.t)}</div>`).join('')}</div>
+   <div class="bins">${q.bins.map((b,k)=>`<div class="bin" data-i="${k}" tabindex="0" role="button" aria-label="Caja ${esc(b)}"><h4>${esc(b)}</h4><div class="drop"></div></div>`).join('')}</div>`;
+  const pool=host.querySelector('#pool');
+  let sel=null;
+  const place=(ch,target)=>{ if(target.classList.contains('bin')) target.querySelector('.drop').appendChild(ch); else pool.appendChild(ch); ch.classList.remove('sel'); sel=null; };
+  const toggle=ch=>{ if(sel===ch){ch.classList.remove('sel');sel=null;return;} if(sel)sel.classList.remove('sel'); sel=ch; ch.classList.add('sel'); };
+  host.querySelectorAll('.chip').forEach(ch=>{
+    let d=null,ghost=null;
+    ch.addEventListener('pointerdown',e=>{ if(ST.locked)return; e.preventDefault(); const r=ch.getBoundingClientRect(); d={sx:e.clientX,sy:e.clientY,ox:e.clientX-r.left,oy:e.clientY-r.top,moved:false,w:r.width}; ch.setPointerCapture(e.pointerId); });
+    ch.addEventListener('pointermove',e=>{ if(!d)return; if(!d.moved&&Math.hypot(e.clientX-d.sx,e.clientY-d.sy)>6){ d.moved=true; ghost=ch.cloneNode(true); ghost.classList.add('ghost'); ghost.classList.remove('sel'); ghost.style.width=d.w+'px'; document.body.appendChild(ghost); ch.classList.add('lifting'); }
+      if(d.moved){ ghost.style.left=(e.clientX-d.ox)+'px'; ghost.style.top=(e.clientY-d.oy)+'px'; host.querySelectorAll('.bin').forEach(b=>b.classList.remove('over')); const el=document.elementFromPoint(e.clientX,e.clientY); const b=el&&el.closest('.bin'); if(b)b.classList.add('over'); } });
+    const end=e=>{ if(!d)return; if(d.moved){ const el=document.elementFromPoint(e.clientX,e.clientY); const t=el&&(el.closest('.bin')||el.closest('.pool')); if(t&&host.contains(t))place(ch,t); ghost.remove(); ch.classList.remove('lifting'); host.querySelectorAll('.bin').forEach(b=>b.classList.remove('over')); } else toggle(ch); d=null; };
+    ch.addEventListener('pointerup',end); ch.addEventListener('pointercancel',e=>{if(ghost)ghost.remove();ch.classList.remove('lifting');d=null;});
+    ch.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(ch);}});
+  });
+  const targetClick=t=>e=>{ if(ST.locked||e.target.closest('.chip'))return; if(sel)place(sel,t); };
+  host.querySelectorAll('.bin').forEach(b=>{b.addEventListener('click',targetClick(b));b.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&sel){e.preventDefault();place(sel,b);sel&&0;}});});
+  pool.addEventListener('click',targetClick(pool));
+  return {check:()=>{ if(pool.querySelector('.chip'))return null; return [...host.querySelectorAll('.bin')].every(b=>[...b.querySelectorAll('.chip')].every(c=>c.dataset.b===b.dataset.i)); },
+    mark:(reveal)=>host.querySelectorAll('.bin').forEach(b=>b.querySelectorAll('.chip').forEach(c=>{const ok=c.dataset.b===b.dataset.i;c.classList.add(ok?'good':'wrong');if(reveal&&!ok)c.insertAdjacentHTML('beforeend',` <small>→ ${esc(q.bins[+c.dataset.b])}</small>`);}))};
+}
+
+function buildMatch(q,host){
+  const COL=['#FFD23F','#5CF2C6','#43C6F0','#FF8FC4','#B79CFF'];
+  const L=shuffle(q.pairs.map((p,k)=>({t:p[0],k}))), R=shuffle(q.pairs.map((p,k)=>({t:p[1],k})));
+  host.innerHTML=`<p class="hintdrag">Toca un elemento de la izquierda y después su pareja de la derecha. Toca un elemento emparejado para deshacer la pareja.</p>
+   <div class="match"><div class="col">${L.map(x=>`<button class="mitem" data-s="L" data-k="${x.k}">${esc(x.t)}</button>`).join('')}</div>
+   <div class="col">${R.map(x=>`<button class="mitem" data-s="R" data-k="${x.k}">${esc(x.t)}</button>`).join('')}</div></div>`;
+  const pairs={}; let pick=null;
+  const btn=(s,k)=>host.querySelector(`.mitem[data-s="${s}"][data-k="${k}"]`);
+  const paint=()=>{ host.querySelectorAll('.mitem').forEach(b=>{b.style.borderColor='';const t=b.querySelector('.tag');if(t)t.remove();});
+    Object.entries(pairs).forEach(([l,r],n)=>{const c=COL[n%COL.length];[btn('L',l),btn('R',r)].forEach(b=>{b.style.borderColor=c;b.insertAdjacentHTML('beforeend',`<span class="tag" style="background:${c}">${n+1}</span>`);});}); };
+  host.querySelectorAll('.mitem').forEach(b=>b.onclick=()=>{
+    const s=b.dataset.s,k=b.dataset.k;
+    if(s==='L'&&pairs[k]!==undefined){delete pairs[k];paint();return;}
+    if(s==='R'){const l=Object.keys(pairs).find(x=>pairs[x]===k);if(l!==undefined&&!pick){delete pairs[l];paint();return;}}
+    if(!pick){ if(s==='L'){pick=k;host.querySelectorAll('.mitem').forEach(x=>x.classList.remove('pick'));b.classList.add('pick');} return; }
+    if(s==='L'){pick=k;host.querySelectorAll('.mitem').forEach(x=>x.classList.remove('pick'));b.classList.add('pick');return;}
+    const old=Object.keys(pairs).find(x=>pairs[x]===k); if(old!==undefined)delete pairs[old];
+    pairs[pick]=k; pick=null; host.querySelectorAll('.mitem').forEach(x=>x.classList.remove('pick')); paint();
+  });
+  return {check:()=>Object.keys(pairs).length<q.pairs.length?null:Object.entries(pairs).every(([l,r])=>l===r),
+    mark:(reveal)=>{Object.entries(pairs).forEach(([l,r])=>{const ok=l===r;btn('L',l).classList.add(ok?'good':'wrong');btn('R',r).classList.add(ok?'good':'wrong');});
+      if(reveal){const box=document.createElement('p');box.innerHTML='<b>Parejas correctas:</b> '+q.pairs.map(p=>`${esc(p[0])} ↔ ${esc(p[1])}`).join('; ')+'.';host.appendChild(box);}}};
+}
+
+/* ========= resultado de la parada ========= */
+function stopResult(i){
+  const s=STOPS[i], p=stopPts(i), pct=Math.round(p/MAXSTOP*100), holds=pct>=50;
+  app.innerHTML=`${hud()}<div class="scene" id="scene">${SCENES[s.key](holds?'happy':'scared')}</div>
+   <div class="resbox"><h2>${holds?'¡La estructura aguanta!':'¡La estructura se derrumba!'}</h2>
+   <p class="pct">Refuerzo conseguido: ${pct}%</p>
+   <p>${holds?'Blip sale sano y salvo y apunta en su cuaderno todo lo que ha aprendido.':'En el último segundo, el rayo de emergencia de la nave teletransporta a Blip fuera de peligro. ¡Uf! Repasa esta parte con calma.'}</p>
+   <div class="actions" style="justify-content:center"><button class="btn sun" id="nx">${i<STOPS.length-1?'Seguir el viaje':'Ver mi diploma'}</button></div></div>`;
+  const sc=$('#scene svg');
+  if(!holds){ setTimeout(()=>{const st=sc.querySelector('#st');if(st)st.classList.add('fall');
+      sc.insertAdjacentHTML('beforeend',`<rect class="beam" x="${sc.querySelector('#bl').getBBox().x-10}" y="0" width="${sc.querySelector('#bl').getBBox().width+20}" height="240" fill="#5CF2C6" opacity="0"/>`);
+      const b=sc.querySelector('#bl');b.classList.add('gone');},500); }
+  $('#nx').onclick=()=>{ if(i<STOPS.length-1) showStop(i+1); else showDiploma(); };
+  window.scrollTo({top:0});
+}
+
+/* ========= diploma ========= */
+function showDiploma(){
+  ST.stop=STOPS.length; GUARD.on=false; if(isFS()){try{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}catch(e){}}
+  let tot=0,first=0,second=0,fail=0;
+  const rows=STOPS.slice(1).map((s,j)=>{const i=j+1,r=ST.res[i]||{};const p=stopPts(i);tot+=p;
+    LV.forEach(l=>{const x=r[l.k];if(!x)return;if(x.pts===l.w)first++;else if(x.pts>0)second++;else fail++;});
+    return `<tr><td>${s.title}</td><td>${Math.round(p/MAXSTOP*100)}%</td></tr>`;}).join('');
+  const grade=Math.round(tot/(MAXSTOP*(STOPS.length-1))*100)/10;
+  const rank= grade<5?['Iniciado en','Insuficiente']: grade<6?['Aprendiz de','Suficiente']: grade<7?['Oficial de','Bien']: grade<9?['Maestro en','Notable']:['Gran maestro en','Sobresaliente'];
+  const date=new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+  const msg= grade<5?'Blip ha llegado a casa gracias a su rayo de emergencia. Repasa las paradas en las que la estructura se derrumbó y vuelve a intentarlo: seguro que la próxima vez se sostiene.'
+    : grade<7?'Blip ha vuelto a Kromb contando que los humanos saben construir cosas que no se caen. Has dominado lo básico de las estructuras.'
+    : 'Blip ha vuelto a Kromb y quiere que seas la persona que diseñe sus primeros edificios anclados al suelo. Dominas las estructuras.';
+  app.innerHTML=`<div class="diploma" id="diploma">
+    <div class="wm">${SVG(`<g fill="none" stroke="#3A2585" stroke-width="4"><path d="M20,390 L140,200 L260,390Z"/>${lattice(470,40,470,390,40,10,'#3A2585',3)}<path d="M300,120 Q400,260 500,120"/></g>`,'0 0 560 400','preserveAspectRatio="xMidYMid slice"')}</div>
+    <div class="stamp">${grade.toLocaleString('es-ES')}</div>
+    <div class="blipd">${SVG(blip(100,196,1.55,'happy','bld'),'0 0 200 210')}</div>
+    <div class="top">El Consejo Interplanetario de Kromb concede a</div>
+    <div class="name">${esc(ST.name)}</div>
+    <div class="top">el título de</div>
+    <div class="rank">${rank[0]} Estructuras</div>
+    <div class="grade">Calificación: ${grade.toLocaleString('es-ES',{minimumFractionDigits:1})} (${rank[1]})</div>
+    <p style="max-width:32em;margin:0 auto">${msg}</p>
+    <table><tr><th>Parada</th><th>Refuerzo</th></tr>${rows}</table>
+    <div class="dipwarn" style="background:${GUARD.exits?'#FFE3B3':'#D8FFF3'};color:${GUARD.exits?'#8A4B00':'#136B55'}">${GUARD.exits?`Salidas del juego: ${GUARD.exits} (${GUARD.pen} durante preguntas, penalizadas)`:'Sin salidas del juego durante la prueba'}${GUARD.fs?'':'. Pantalla completa no disponible'}</div>
+    <p class="foot">Niveles superados a la primera: ${first}. En la segunda oportunidad: ${second}. Sin superar: ${fail}.<br>Tecnología y Digitalización, ${date}.</p>
+  </div>
+  <div class="actions noprint" style="justify-content:center"><button class="btn" id="pr">Imprimir o guardar en PDF</button><button class="btn ghost" id="again">Volver a jugar</button></div>
+  <p class="center noprint" style="color:var(--muted);font-size:.9rem">Si la impresión no se abre en tu dispositivo, haz una captura de pantalla del diploma y entrégala.</p>`;
+  $('#pr').onclick=()=>{try{window.print();}catch(e){}};
+  $('#again').onclick=showStart;
+  window.scrollTo({top:0});
+}
+
+/* ========= control de salidas ========= */
+const GUARD={on:false,fs:false,exits:0,pen:0,away:false,blurT:null};
+const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+function reqFS(){const el=document.documentElement,f=el.requestFullscreen||el.webkitRequestFullscreen;if(!f)return Promise.resolve(false);
+  try{return Promise.resolve(f.call(el)).then(()=>isFS()||true,()=>false);}catch(e){return Promise.resolve(false);}}
+function exitDetected(kind){
+  if(!GUARD.on||GUARD.away)return;
+  GUARD.away=true; GUARD.exits++;
+  let penal=false;
+  if(ST.inQ&&!ST.locked&&$('#qbody')){penal=true;GUARD.pen++;
+    const q=STOPS[ST.stop].qs[LV[ST.lv].k][ST.v];
+    $('#qbody').classList.add('locked');ST.locked=true;if($('#toast'))$('#toast').textContent='';feedback(false,q,true);}
+  const ex=document.querySelector('.exits'); if(ex)ex.textContent='Salidas: '+GUARD.exits;
+  else { const w=document.querySelector('.hud .who'); if(w)w.insertAdjacentHTML('afterend',`<span class="exits">Salidas: ${GUARD.exits}</span>`); }
+  const why=kind==='fs'?'Has salido de la pantalla completa.':'Has cambiado de pestaña o de ventana.';
+  const d=document.createElement('div');d.className='pause';
+  d.innerHTML=`<div class="dbox" role="alertdialog" aria-labelledby="pT"><div class="sign" id="pT">Juego en pausa</div>
+    <p>${why} Queda registrado en tu diploma (salidas: ${GUARD.exits}).</p>
+    ${penal?'<p><b>Estabas respondiendo una pregunta, así que ese intento cuenta como fallo.</b></p>':''}
+    <button class="btn sun" id="resume">${GUARD.fs?'Volver a pantalla completa':'Volver al juego'}</button></div>`;
+  document.body.appendChild(d);
+  $('#resume').onclick=()=>{const done=()=>{d.remove();GUARD.away=false;};
+    if(GUARD.fs&&!isFS())reqFS().then(done);else done();};
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)exitDetected('tab');});
+window.addEventListener('blur',()=>{if(!GUARD.on)return;clearTimeout(GUARD.blurT);GUARD.blurT=setTimeout(()=>{if(!document.hasFocus())exitDetected('win');},1200);});
+window.addEventListener('focus',()=>clearTimeout(GUARD.blurT));
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(GUARD.fs&&!isFS())exitDetected('fs');}));
+
+showStart();
+</script>
+</body>
+</html>
