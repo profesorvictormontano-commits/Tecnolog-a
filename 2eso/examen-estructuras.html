@@ -262,6 +262,8 @@ button{font:inherit}
 .legendrv{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}
 .rvb .opt{cursor:default}
 
+.credit{text-align:center;font-family:var(--display);font-size:.9rem;letter-spacing:.02em;color:var(--ink);opacity:.4;margin:4px 0 8px}
+.diploma .credit{color:#2A1A63;opacity:.35;margin:10px 0 0;font-size:.8rem}
 </style>
 </head>
 <body>
@@ -606,6 +608,7 @@ function rulesBox(){
 function showStart(){
   GUARD.on=false;
   app.innerHTML=`<section class="cover">
+    <p class="credit">Creado por: Víctor Manuel Montano Simón (Profesor de Tecnología)</p>
     <div class="hero">${SVG(blip(100,196,1.55,'ok'),'0 0 200 210')}</div>
     <h1>Examen de estructuras<span class="l2">con Blip</span></h1>
     <p class="lead">Blip vuelve a la Tierra para comprobar si de verdad has entendido cómo se sostienen nuestras construcciones. Esta vez no hay escáner: todo depende de ti.</p>
@@ -625,6 +628,7 @@ function showStart(){
 function showResume(){
   GUARD.on=false;
   app.innerHTML=`<section class="cover">
+    <p class="credit">Creado por: Víctor Manuel Montano Simón (Profesor de Tecnología)</p>
     <div class="hero">${SVG(blip(100,196,1.55,'scared'),'0 0 200 210')}</div>
     <h1>Examen en curso</h1>
     <p class="lead">Examen de <b>${esc(EX.name)}</b> (${esc(EX.curso)}). Tus respuestas están guardadas.</p>
@@ -821,6 +825,7 @@ function showCert(){
     <table><tr><th>Bloque</th><th>Puntos</th></tr>${rows}</table>
     <div class="dipwarn" style="background:${EX.locked?'#FFD6D6':EX.exits?'#FFE3B3':'#D8FFF3'};color:${EX.locked?'#9B1C1C':EX.exits?'#8A4B00':'#136B55'}">${exitTxt}${EX.fs?'':'. Pantalla completa no disponible en este dispositivo'}</div>
     <p class="foot">Tecnología y Digitalización. Entregado el ${when}.</p>
+    <p class="credit">Creado por: Víctor Manuel Montano Simón (Profesor de Tecnología)</p>
   </div>
   <div class="noprint">
     <div class="rules" style="border-color:var(--mint);background:#123C3A"><h3 style="color:var(--mint)">Qué hacer ahora</h3>
