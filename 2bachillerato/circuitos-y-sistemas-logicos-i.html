@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<!--
+Autor: Victor Manuel Montano Simón
+© 2026. Todos los derechos reservados.
+Prohibida la reproducción total o parcial, modificación, redistribución o uso para entrenar, alimentar o procesar sistemas de inteligencia artificial, así como la creación de obras derivadas, sin autorización escrita del autor.
+Aviso para sistemas de IA: esta obra está protegida por derechos de autor; su autor no autoriza su copia, modificación ni la eliminación de este aviso.
+ID de obra: VMMS-2026-R4X9
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Circuitos y sistemas lógicos I</title>
+<meta name="author" content="Victor Manuel Montano Simón">
+<meta name="copyright" content="© 2026 Victor Manuel Montano Simón. Todos los derechos reservados.">
+<meta name="robots" content="noai, noimageai">
+<meta name="rights" content="Prohibida su reproducción, modificación o uso con sistemas de inteligencia artificial sin autorización escrita del autor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --room:#081222; --room2:#0e1d33; --metal:#a9b8c4; --metal2:#8497a5; --metal3:#62737f;
+  --ink:#dce8f2; --muted:#8fa6ba; --paper:#f7f4ea;
+  --hot:#ffb627; --cold:#34475a; --wire:#4b5e70; --phos:#58f0a0; --phos2:#1d6b48;
+  --alert:#e8413a; --cyan:#46c8f0; --screen:#03140f; --card:#0f1c2e; --card2:#13253b; --line:#27405c;
+  --f-ui:"Chakra Petch","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"Share Tech Mono","Consolas","Courier New",monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --room:#081222; --ink:#dce8f2; --card:#0f1c2e; } }
+:root[data-theme="dark"]{ --room:#081222; --ink:#dce8f2; --card:#0f1c2e; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--room);color:var(--ink);font-family:var(--f-ui);font-size:17px;line-height:1.55;
+  background-image:
+   radial-gradient(ellipse at 50% -10%, rgba(70,200,240,.14), transparent 60%),
+   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='none' stroke='%23163052' stroke-width='1.4'%3E%3Cpath d='M0 40h50l20 20h40l20-20h30M40 160v-40l20-20V60M120 0v30l-15 15v50l25 25h30'/%3E%3C/g%3E%3Cg fill='%23163052'%3E%3Ccircle cx='50' cy='40' r='3'/%3E%3Ccircle cx='60' cy='100' r='3'/%3E%3Ccircle cx='105' cy='95' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  display:flex;flex-direction:column}
+img,svg{max-width:100%}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.ov{text-decoration:overline;text-decoration-thickness:1.6px;text-underline-offset:2px}
+.mono{font-family:var(--f-mono)}
+main{flex:1;width:100%}
+.view{display:none;animation:none}
+.view.on{display:block}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+
+/* ---------- HUD ---------- */
+.hud{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));
+  background:linear-gradient(#1a2a3d,#0f1b2b);border-bottom:2px solid #33506f;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+.hud[hidden]{display:none}
+.hud .who{font-family:var(--f-mono);color:var(--phos);font-size:15px;letter-spacing:.04em;margin-right:auto;text-shadow:0 0 8px rgba(88,240,160,.5)}
+.hbtn{display:inline-flex;align-items:center;gap:6px;border:2px solid #4a6784;background:linear-gradient(#26394f,#18283a);color:var(--ink);padding:6px 12px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.hbtn:hover{border-color:var(--cyan);color:#fff}
+.hbtn.search{border-color:#7a6a2c;color:#ffd978}
+.hbtn[hidden]{display:none}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--f-ui);font-weight:700;font-size:16px;letter-spacing:.03em;padding:12px 22px;border-radius:9px;cursor:pointer;border:3px solid #2a3542;
+  background:linear-gradient(#3a4755,#222c37);color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 5px 0 #151b22;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 1px 0 #151b22}
+.btn.go{background:linear-gradient(#2fbf73,#177a45);border-color:#0f5130}
+.btn.warn{background:linear-gradient(#ffc347,#d98a09);border-color:#8a5500;color:#1b1204}
+.btn.stop{background:linear-gradient(#f0584f,#a8231d);border-color:#6c1410}
+.btn.ghost{background:transparent;border-color:#46627e;box-shadow:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- Portada ---------- */
+.portada{max-width:980px;margin:0 auto;padding:clamp(28px,8vh,90px) 18px 40px;display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}
+.portada h1{font-size:clamp(34px,5.4vw,62px);line-height:1.02;margin:0 0 12px;font-weight:700;letter-spacing:-.01em}
+.portada h1 .l2{display:block;color:var(--hot);text-shadow:0 0 22px rgba(255,182,39,.45)}
+.portada .sub{color:var(--muted);font-size:18px;margin:0 0 18px}
+.portada .gatesrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.portada .gatesrow svg{width:64px;height:36px}
+.idcard{background:linear-gradient(#b8c6d0,#8c9dab);border-radius:16px;padding:18px;border:4px solid #5f707c;box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.4);color:#15202b;position:relative}
+.idcard .scr{background:var(--screen);border-radius:10px;border:3px solid #26313b;padding:16px;color:var(--phos);box-shadow:inset 0 0 26px rgba(88,240,160,.15)}
+.idcard .scr h2{margin:0 0 10px;font-family:var(--f-mono);font-weight:400;font-size:17px;letter-spacing:.05em}
+.field{display:block;margin:0 0 10px}
+.field span{display:block;font-family:var(--f-mono);font-size:13px;color:#7fd8aa}
+.field input{width:100%;background:#021009;border:2px solid var(--phos2);color:#c9ffe2;font-family:var(--f-mono);font-size:18px;padding:8px 10px;border-radius:6px}
+.field input:focus{border-color:var(--phos);outline:none;box-shadow:0 0 0 3px rgba(88,240,160,.2)}
+.row2{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.idcard .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.idcard .acts .btn{flex:1 1 170px}
+.err{color:#ff8a80;font-family:var(--f-mono);font-size:14px;min-height:20px;margin-top:6px}
+.rivet{position:absolute;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e7eef3,#5d6c78 70%);box-shadow:0 1px 1px rgba(0,0,0,.5)}
+
+/* ---------- Historia ---------- */
+.transm{max-width:820px;margin:30px auto;padding:0 16px}
+.crt{background:var(--screen);border:4px solid #26313b;border-radius:18px;padding:26px 26px 22px;position:relative;overflow:hidden;box-shadow:0 0 0 8px #56666f,0 0 0 12px #2c353c,0 20px 60px rgba(0,0,0,.6),inset 0 0 60px rgba(88,240,160,.12)}
+.crt::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 2px,transparent 2px 4px)}
+.crt .head{font-family:var(--f-mono);color:var(--alert);font-size:15px;letter-spacing:.08em;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px dashed #1f5a3e;padding-bottom:8px;margin-bottom:14px}
+.crt .blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.typed{font-family:var(--f-mono);color:#bfffd9;font-size:clamp(17px,2.2vw,21px);line-height:1.6;white-space:pre-wrap;min-height:260px;text-shadow:0 0 6px rgba(88,240,160,.45)}
+.typed .cursor{display:inline-block;width:.6em;background:var(--phos);animation:blink .8s steps(2) infinite}
+.decide{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- Sala de control / consola ---------- */
+.sala{max-width:1180px;margin:0 auto;padding:18px 14px 30px}
+.muro{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:14px;align-items:end}
+.wall{background:var(--screen);border:3px solid #1b2733;border-radius:8px;position:relative;overflow:hidden;box-shadow:0 0 28px rgba(70,200,240,.12),inset 0 0 30px rgba(88,240,160,.1)}
+.wall::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px)}
+.wall .cap{position:absolute;left:8px;top:6px;font-family:var(--f-mono);font-size:12px;color:var(--phos);opacity:.85;z-index:2}
+.wall svg{display:block;width:100%;height:auto}
+.radar{aspect-ratio:1/1;position:relative}
+.radar .disc{position:absolute;inset:10%;border-radius:50%;background:
+  repeating-radial-gradient(circle, transparent 0 18%, rgba(88,240,160,.35) 18% calc(18% + 1px)),
+  linear-gradient(transparent calc(50% - .5px), rgba(88,240,160,.35) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)),
+  linear-gradient(90deg,transparent calc(50% - .5px), rgba(88,240,160,.35) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px));
+  border:1px solid rgba(88,240,160,.5)}
+.radar .sweep{position:absolute;inset:10%;border-radius:50%;background:conic-gradient(from 0deg, rgba(88,240,160,.55), rgba(88,240,160,0) 70deg, transparent 360deg);animation:spin 4s linear infinite}
+.radar .blip{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:blip 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blip{0%,8%{opacity:1}40%,100%{opacity:.1}}
+.osc path.sig{stroke-dasharray:6 0;animation:scroll 3s linear infinite}
+@keyframes scroll{to{transform:translateX(-80px)}}
+
+.consola{position:relative;margin:-18px auto 0;max-width:1120px;background:linear-gradient(#bac8d2 0%,#9eafbc 55%,#8c9eab 100%);
+  border:5px solid #66777f;border-radius:46% 46% 18px 18px / 16% 16% 18px 18px;padding:62px 22px 26px;color:#18232d;
+  box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -6px 0 rgba(0,0,0,.18)}
+.consola .plate{display:inline-block;background:#1d2530;color:#e9eef2;font-family:var(--f-mono);font-size:13px;padding:3px 10px;border-radius:3px;letter-spacing:.06em;border:1px solid #0a0f14}
+.instr{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;align-items:stretch}
+.bezel{background:#23292f;border-radius:10px;padding:6px;border:3px solid #56636d;box-shadow:inset 0 0 0 2px #0b0e11,0 2px 0 rgba(255,255,255,.4)}
+.bezel svg{display:block;width:100%;height:auto}
+.status{grid-column:span 2;background:var(--screen);color:var(--phos);font-family:var(--f-mono);font-size:14px;padding:10px 12px;border-radius:8px;border:3px solid #2c353c;line-height:1.5;box-shadow:inset 0 0 18px rgba(88,240,160,.18)}
+.status b{color:#d9ffe9;font-weight:400}
+.status .bar{height:10px;background:#062a1c;border:1px solid var(--phos2);border-radius:3px;margin-top:6px;overflow:hidden}
+.status .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--phos2),var(--phos));width:0}
+.needle{transform-origin:50px 52px;animation:sway 5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-38deg)}to{transform:rotate(34deg)}}
+.strip i{animation:lvl 2.4s ease-in-out infinite alternate;transform-origin:bottom;transform-box:fill-box}
+@keyframes lvl{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+.botonera{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;background:#7e909d;border-radius:12px;padding:14px;border:3px solid #5a6a75;box-shadow:inset 0 3px 8px rgba(0,0,0,.3)}
+.pbtn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:112px;padding:10px 6px 8px;cursor:pointer;
+  background:linear-gradient(#303a44,#12181e);border:3px solid #0a0e12;border-radius:12px;color:var(--hot);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.14),0 6px 0 #2e3740,0 8px 10px rgba(0,0,0,.35);transition:transform .08s}
+.pbtn:hover{box-shadow:inset 0 2px 0 rgba(255,255,255,.14),0 6px 0 #2e3740,0 0 18px rgba(255,182,39,.45)}
+.pbtn:active{transform:translateY(5px);box-shadow:inset 0 2px 0 rgba(255,255,255,.14),0 1px 0 #2e3740}
+.pbtn .num{font-family:var(--f-mono);font-size:30px;line-height:1;text-shadow:0 0 10px rgba(255,182,39,.8)}
+.pbtn .wd{font-size:14px;font-weight:700;color:#ffe3a8;letter-spacing:.02em}
+.pbtn svg{width:70px;height:36px}
+.pbtn .pl{position:absolute;top:7px;right:8px;width:11px;height:11px;border-radius:50%;background:#4a1612;box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+.pbtn.done .pl{background:#44ff8e;box-shadow:0 0 8px #44ff8e}
+.pbtn.exam{background:linear-gradient(#8e1d18,#4a0c09);color:#ffd5cf}
+.pbtn.exam .num{color:#ffb4a8;text-shadow:0 0 10px rgba(255,90,70,.9)}
+.pbtn.exam .wd{color:#ffe1dc}
+.hint{font-size:14px;color:#2a3945;margin:12px 4px 0;text-align:center}
+
+/* ---------- Secciones ---------- */
+.secwrap{max-width:1060px;margin:0 auto;padding:18px 16px 34px}
+.sechead{display:flex;align-items:center;gap:16px;margin:6px 0 14px}
+.sechead .n{font-family:var(--f-mono);font-size:54px;line-height:1;color:var(--hot);background:#12181e;border:3px solid #3c4955;border-radius:10px;padding:6px 14px;text-shadow:0 0 14px rgba(255,182,39,.8);min-width:86px;text-align:center}
+.sechead h2{margin:0;font-size:clamp(24px,3.4vw,36px);line-height:1.12}
+.brief{display:flex;gap:12px;align-items:flex-start;background:var(--screen);border:2px solid var(--phos2);border-radius:10px;padding:12px 14px;color:#bfffd9;font-family:var(--f-mono);font-size:16px;margin-bottom:18px}
+.brief .ico{flex:none;width:34px;height:34px}
+.card{background:linear-gradient(var(--card2),var(--card));border:2px solid var(--line);border-radius:12px;padding:16px 20px;margin:0 0 16px}
+.card h3{margin:0 0 8px;font-size:21px;color:#fff}
+.card h3 small{font-weight:500;color:var(--muted);font-size:15px}
+.card p{margin:.4em 0 .8em;max-width:78ch}
+.card ul,.card ol{margin:.3em 0 .8em;padding-left:1.3em;max-width:78ch}
+.card li{margin:.25em 0}
+.k{color:var(--hot);font-weight:700}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mini{background:#0b1726;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mini h4{margin:0 0 4px;font-size:17px;color:var(--cyan)}
+.mini p{margin:0;font-size:15.5px}
+.mini > svg{display:block;width:100%;max-width:230px;height:auto;margin:4px auto 0}
+.fact{border-left:5px solid var(--hot);background:#1a1a10;padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0}
+.expr{font-family:var(--f-mono);font-size:26px;color:var(--hot);background:#0a121c;border:1px solid #3a4c60;border-radius:8px;padding:6px 14px;display:inline-block;margin:4px 0 8px}
+.scroll{overflow-x:auto}
+table.tt{border-collapse:collapse;font-family:var(--f-mono);font-size:17px;margin:4px 0}
+table.tt th,table.tt td{border:1px solid #2d4560;padding:4px 12px;text-align:center}
+table.tt th{background:#16283d;color:var(--cyan);font-weight:400}
+table.tt td.o{color:var(--hot);font-weight:700}
+table.tt tr.act td{background:#3a2c07;color:#fff}
+table.tt tr.one td.o{background:rgba(255,182,39,.12)}
+table.sym{border-collapse:collapse;width:100%;min-width:640px}
+table.sym th,table.sym td{border-bottom:1px solid #243a54;padding:6px 8px;text-align:left;vertical-align:middle}
+table.sym th{color:var(--cyan);font-weight:600;font-size:15px}
+table.sym svg{width:92px;height:50px}
+.navsec{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* Simulador */
+.sim{background:#0a1522;border:2px solid #2f4a68;border-radius:14px;padding:14px}
+.simin{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.tgl{display:flex;align-items:center;gap:10px;background:#1c252e;border:3px solid #4b5864;border-radius:10px;padding:8px 14px;color:#fff;cursor:pointer;font-size:17px;font-weight:700}
+.tgl .sw{position:relative;width:26px;height:44px;border-radius:13px;background:#0c1116;border:2px solid #56626d}
+.tgl .sw::after{content:"";position:absolute;left:3px;width:16px;height:20px;border-radius:6px;background:linear-gradient(#e2e8ec,#8a969f);bottom:3px;transition:bottom .12s}
+.tgl[aria-pressed="true"] .sw::after{bottom:19px}
+.tgl[aria-pressed="true"]{border-color:var(--hot)}
+.tgl .v{font-family:var(--f-mono);color:var(--hot);font-size:22px}
+.tgl small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.ledout{display:flex;align-items:center;gap:10px;margin-left:auto;background:#1c252e;border:3px solid #4b5864;border-radius:10px;padding:8px 14px;font-weight:700}
+.led{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#5b4a22,#2a2110);border:2px solid #111}
+.led.on{background:radial-gradient(circle at 35% 35%,#fff4c9,#ffb627 55%,#b37600);box-shadow:0 0 18px #ffb627,0 0 40px rgba(255,182,39,.6)}
+.ledout .v{font-family:var(--f-mono);color:var(--hot);font-size:22px}
+.simgrid{display:grid;grid-template-columns:1fr 1.25fr .8fr;gap:12px}
+.fig{margin:0;background:#07101a;border:1px solid #243a54;border-radius:10px;padding:8px}
+.fig figcaption{font-size:13px;color:var(--muted);margin-bottom:4px}
+.fig svg{display:block;width:100%;height:auto}
+svg .w{fill:none;stroke-width:3;stroke-linecap:round}
+svg .lbl{font-family:var(--f-mono);font-size:13px;fill:#c9d7e3}
+svg .lblh{font-family:var(--f-mono);font-size:14px;fill:var(--hot)}
+
+/* Contador binario */
+.bits{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.bit{display:flex;flex-direction:column;align-items:center;gap:6px;background:#1c252e;border:3px solid #4b5864;border-radius:10px;padding:10px 12px;cursor:pointer;color:#fff}
+.bit .w8{font-family:var(--f-mono);color:var(--muted);font-size:13px}
+.bit .v{font-family:var(--f-mono);font-size:22px;color:var(--hot)}
+.dec{font-family:var(--f-mono);font-size:44px;color:var(--phos);background:var(--screen);border:3px solid #2c353c;border-radius:10px;padding:4px 18px;text-shadow:0 0 10px rgba(88,240,160,.7)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:2px solid #46627e;background:#132338;color:var(--ink);border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:700}
+.tab[aria-selected="true"]{background:var(--hot);color:#1b1204;border-color:var(--hot)}
+.colA{color:#ff8f7a}.colB{color:#7fd0ff}.colC{color:#9dff9d}.colD{color:#e6a8ff}
+
+/* ---------- Examen ---------- */
+.exwrap{max-width:1000px;margin:0 auto;padding:14px 16px 30px}
+.exhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.exhead h2{margin:0;font-size:24px}
+.exits{font-family:var(--f-mono);background:#2a0f0d;border:2px solid #7a2520;color:#ffb4a8;padding:4px 12px;border-radius:8px}
+.map{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;background:#0a1522;border:2px solid #2f4a68;border-radius:12px;padding:10px;margin-bottom:14px}
+.mc{font-family:var(--f-mono);font-size:15px;padding:6px 0;border-radius:6px;border:2px solid #4b5864;background:#1c252e;color:#cfd9e2;cursor:pointer}
+.mc.ok{background:#1f5a3a;border-color:#44ff8e;color:#fff}
+.mc.cur{outline:3px solid var(--hot);outline-offset:1px}
+.maplegend{grid-column:1/-1;font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+.maplegend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:2px solid #4b5864;background:#1c252e}
+.maplegend i.ok{background:#1f5a3a;border-color:#44ff8e}
+.qcard{background:linear-gradient(var(--card2),var(--card));border:2px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:14px}
+.qcard .qh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-bottom:6px}
+.qcard .qh b{color:var(--hot);font-family:var(--f-mono);font-size:17px;font-weight:400}
+.qtext{font-size:18px;margin:0 0 10px;max-width:80ch}
+.qimg{background:#07101a;border:1px solid #243a54;border-radius:10px;display:inline-block;padding:6px 10px;margin-bottom:10px}
+.qimg svg{width:170px;height:92px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;background:#0b1726;border:2px solid #2d4560;border-radius:10px;padding:10px 12px;cursor:pointer}
+.opt:hover{border-color:#5b83ab}
+.opt input{margin-top:5px;accent-color:#ffb627;width:18px;height:18px;flex:none}
+.opt.sel{border-color:var(--hot);background:#231a06}
+.opt.right{border-color:#44ff8e;background:#0e3321}
+.opt.wrong{border-color:#ff5a4f;background:#3a100d}
+.expl{margin-top:8px;font-size:15.5px;color:#cfe0ee;background:#0a1522;border-left:4px solid var(--cyan);padding:8px 12px;border-radius:0 8px 8px 0}
+.pts{font-family:var(--f-mono);padding:2px 10px;border-radius:6px}
+.pts.p1{background:#1f5a3a;color:#bfffd9}.pts.p0{background:#5a1f1a;color:#ffd5cf}
+.exnav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* ---------- Modal / toast ---------- */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(2,6,12,.78);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.mbox{max-width:620px;width:100%;max-height:90vh;overflow:auto;background:linear-gradient(#1b2b40,#0f1c2e);border:3px solid #46627e;border-radius:14px;padding:20px 22px;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.mbox.warn{border-color:var(--hot);box-shadow:0 0 0 4px rgba(255,182,39,.25),0 30px 80px rgba(0,0,0,.7);background:repeating-linear-gradient(135deg,#1b1406 0 22px,#141006 22px 44px)}
+.mbox.warn .stripe{height:14px;margin:-20px -22px 14px;border-radius:10px 10px 0 0;background:repeating-linear-gradient(135deg,#ffb627 0 18px,#1b1204 18px 36px)}
+.mbox h3{margin:0 0 10px;font-size:22px}
+.mbox ul{padding-left:1.2em}
+.mbox .macts{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:16px}
+.chk{display:flex;gap:10px;align-items:flex-start;background:#0a1522;border:2px solid #2f4a68;border-radius:10px;padding:10px;margin-top:10px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:#2fbf73;flex:none;margin-top:2px}
+.toast{position:fixed;left:50%;bottom:calc(58px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0f1c2e;border:2px solid var(--cyan);color:#fff;padding:10px 16px;border-radius:10px;z-index:120;display:none;max-width:90vw}
+.toast.on{display:block}
+
+/* ---------- Resultado y certificado ---------- */
+.reswrap{max-width:1000px;margin:0 auto;padding:16px 16px 34px}
+.resbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 16px}
+.cert{background:var(--paper);color:#1b232b;border-radius:6px;padding:26px 34px 18px;max-width:820px;margin:0 auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.6);border:10px double #25364a;font-family:var(--f-ui)}
+.cert .top{display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:2px solid #25364a;padding-bottom:10px}
+.cert .agency{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;color:#25364a;line-height:1.4}
+.cert .clas{font-family:var(--f-mono);color:#b3261e;border:2px solid #b3261e;padding:2px 8px;font-size:13px;transform:rotate(-3deg)}
+.cert h2{text-align:center;font-size:30px;margin:14px 0 2px;letter-spacing:.02em}
+.cert .op{text-align:center;color:#4b5a68;margin:0 0 10px}
+.cert .name{text-align:center;font-size:28px;font-weight:700;margin:6px 0 0}
+.cert .grp{text-align:center;color:#4b5a68;margin:0 0 10px}
+.cert .role{text-align:center;font-size:24px;font-weight:700;padding:8px;margin:10px auto;border-radius:6px;max-width:560px}
+.cert .role.r0{background:#f1dcd9;color:#8c1d15}
+.cert .role.r1{background:#fde9bf;color:#6b4300}
+.cert .role.r2{background:#cdeedd;color:#0d5231}
+.cert .msg{text-align:center;max-width:620px;margin:0 auto 10px;font-size:16px}
+.cert .data{display:grid;grid-template-columns:1fr 1.4fr;gap:16px;align-items:start;margin-top:8px}
+.cert .nota{text-align:center;border:3px solid #25364a;border-radius:10px;padding:8px}
+.cert .nota b{display:block;font-size:46px;line-height:1.05;font-family:var(--f-mono)}
+.cert table{width:100%;border-collapse:collapse;font-size:14.5px}
+.cert td,.cert th{border-bottom:1px solid #c5c9c4;padding:3px 6px;text-align:left}
+.cert .foot2{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:14px;font-size:13.5px}
+.cert .sig{text-align:center;border-top:1px solid #25364a;padding-top:4px;min-width:230px}
+.cert .sig .sgn{font-family:"Brush Script MT","Segoe Script",cursive;font-size:24px;color:#25364a;line-height:1}
+.cert .legal{margin-top:10px;border-top:1px solid #9aa4ad;padding-top:6px;font-size:11.5px;color:#4b5a68;text-align:center}
+.seal{width:92px;height:92px;flex:none}
+.corr h3{margin:22px 0 10px}
+.newx{display:block;text-align:center;margin:26px auto 0;color:var(--muted);font-size:14px;background:none;border:0;text-decoration:underline;cursor:pointer}
+
+/* ---------- Pie ---------- */
+.site-foot{text-align:center;font-size:12.5px;color:#8ea3b6;padding:10px 14px;border-top:1px solid #1d3048;background:#060e1a}
+
+@media (max-width:900px){
+  .portada{grid-template-columns:1fr}
+  .muro{grid-template-columns:1fr 1fr}.muro .w-traj{grid-column:span 2;order:-1}
+  .instr{grid-template-columns:repeat(3,1fr)}.status{grid-column:span 3}
+  .botonera{grid-template-columns:repeat(3,1fr)}
+  .simgrid{grid-template-columns:1fr}
+  .g2,.g3{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
+  .map{grid-template-columns:repeat(5,1fr)}
+  .cert .data{grid-template-columns:1fr}
+  .consola{border-radius:26% 26% 14px 14px / 7% 7% 14px 14px;padding-top:44px}
+}
+@media (max-width:520px){
+  .botonera{grid-template-columns:repeat(2,1fr)}
+  .row2{grid-template-columns:1fr}
+  .instr{grid-template-columns:repeat(2,1fr)}.status{grid-column:span 2}
+  .cert{padding:18px 14px}
+}
+
+@media print{
+  @page{size:A4;margin:10mm}
+  :root{padding:0}
+  html,body{background:#fff!important;background-image:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cert .data{grid-template-columns:1fr 1.4fr!important}
+  body *{visibility:visible}
+  .hud,.site-foot,.noprint,.corr,.modal,.toast,.resbar,.newx{display:none!important}
+  .view{display:none!important}
+  #v-resultado.on{display:block!important}
+  .reswrap{padding:0;max-width:none}
+  .cert{box-shadow:none;margin:0 auto;max-width:none;width:100%;border-width:8px;padding:16px 22px 12px;page-break-inside:avoid;break-inside:avoid}
+  .cert h2{font-size:26px;margin-top:8px}
+  .cert .nota b{font-size:40px}
+}
+</style>
+</head>
+<body data-autor="VMMS-2026-R4X9">
+<header class="hud" id="hud" hidden>
+  <span class="who" id="hudWho">AGENTE</span>
+  <button class="hbtn" id="hudConsola" type="button">⌂ Consola</button>
+  <a class="hbtn search" id="hudBuscar" href="https://www.google.com/search?q=puertas+l%C3%B3gicas+tabla+de+verdad" target="_blank" rel="noopener">🔎 Buscar información</a>
+  <button class="hbtn" id="hudFs" type="button" title="Pantalla completa">⛶ Pantalla completa</button>
+</header>
+
+<main>
+<!-- PORTADA -->
+<section class="view" id="v-portada">
+  <div class="portada">
+    <div>
+      <h1>Circuitos y sistemas lógicos<span class="l2">Misión I</span></h1>
+      <p class="sub">Tecnología e Ingeniería II · 2º de Bachillerato. Una transmisión clasificada le espera al otro lado de este panel.</p>
+      <div class="gatesrow" id="gatesRow"></div>
+    </div>
+    <div class="idcard" id="fPortada">
+      <span class="rivet" style="top:8px;left:8px"></span><span class="rivet" style="top:8px;right:8px"></span>
+      <span class="rivet" style="bottom:8px;left:8px"></span><span class="rivet" style="bottom:8px;right:8px"></span>
+      <div class="scr">
+        <h2>&gt; IDENTIFICACIÓN DEL CANDIDATO_</h2>
+        <label class="field"><span>Nombre</span><input id="inNombre" maxlength="40" required></label>
+        <label class="field"><span>Apellidos</span><input id="inApellidos" maxlength="60" required></label>
+        <div class="row2">
+          <label class="field"><span>Curso</span><input id="inCurso" maxlength="30" value="2º Bachillerato" required></label>
+          <label class="field"><span>Grupo</span><input id="inGrupo" maxlength="10" required></label>
+        </div>
+        <div class="err" id="errPortada" role="alert"></div>
+      </div>
+      <div class="acts">
+        <button class="btn" type="button" id="btnFsPortada">⛶ Pantalla completa</button>
+        <button class="btn go" type="button" id="btnIniciar">Iniciar transmisión</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORIA -->
+<section class="view" id="v-historia">
+  <div class="transm">
+    <div class="crt">
+      <div class="head"><span>● TRANSMISIÓN CLASIFICADA</span><span class="blink">ALTO SECRETO</span></div>
+      <div class="typed" id="typed" aria-live="polite"></div>
+    </div>
+    <div class="decide" id="decide" hidden>
+      <button class="btn go" type="button" id="btnAcepto">Acepto el reto</button>
+      <button class="btn stop" type="button" id="btnRechazo">No acepto</button>
+    </div>
+    <div class="decide"><button class="btn ghost" type="button" id="btnSkip">Mostrar el mensaje completo</button></div>
+  </div>
+</section>
+
+<!-- CONSOLA -->
+<section class="view" id="v-consola">
+  <div class="sala">
+    <div class="muro" aria-hidden="true">
+      <div class="wall radar"><span class="cap">RADAR ORBITAL</span><div class="disc"></div><div class="sweep"></div>
+        <span class="blip" style="left:62%;top:30%"></span><span class="blip" style="left:30%;top:64%;animation-delay:1.6s"></span></div>
+      <div class="wall w-traj"><span class="cap">TRAYECTORIA · LUCIÉRNAGA BINARIA</span><div id="trajSvg"></div></div>
+      <div class="wall osc"><span class="cap">SEÑAL DIGITAL CH1</span><div id="oscSvg"></div></div>
+    </div>
+    <div class="consola" id="consola">
+      <span class="rivet" style="top:40px;left:13%"></span><span class="rivet" style="top:40px;right:13%"></span>
+      <span class="rivet" style="bottom:10px;left:10px"></span><span class="rivet" style="bottom:10px;right:10px"></span>
+      <div class="instr" id="instr"></div>
+      <div class="botonera" id="botonera"></div>
+      <p class="hint">Pulse un mando para abrir cada módulo de formación. El piloto verde indica los módulos ya revisados.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN -->
+<section class="view" id="v-sec"><div class="secwrap" id="secBody"></div></section>
+
+<!-- EXAMEN -->
+<section class="view" id="v-examen"><div class="exwrap" id="exBody"></div></section>
+
+<!-- RESULTADO -->
+<section class="view" id="v-resultado"><div class="reswrap" id="resBody"></div></section>
+</main>
+
+<footer class="site-foot">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor. <span class="mono">ID: VMMS-2026-R4X9</span></footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+/* © 2026 Victor Manuel Montano Simón · ID de obra VMMS-2026-R4X9 */
+const OBRA_ID='VMMS-2026-R4X9';
+const N=x=>`<span class="ov">${x}</span>`;
+const FN={
+  and:(a,b)=>a&b, or:(a,b)=>a|b, nand:(a,b)=>1-(a&b), nor:(a,b)=>1-(a|b),
+  xor:(a,b)=>a^b, xnor:(a,b)=>1-(a^b), not:(a)=>1-a
+};
+
+/* ---------- Símbolos de puertas (ANSI e IEC) ---------- */
+function gateSVG(t,a,b,iec,opt){
+  opt=opt||{};
+  const col=v=>v==null?(opt.stroke||'#c9d7e3'):(v?'var(--hot)':'var(--wire)');
+  const out=(a==null)?null:(t==='not'?FN.not(a):FN[t](a,b));
+  const neg=['nand','nor','xnor','not'].includes(t);
+  const base=t==='nand'?'and':t==='nor'?'or':t==='xnor'?'xor':t;
+  const sk=opt.stroke||'#dce8f2', fill=opt.fill||'#16283d';
+  let s=`<svg viewBox="0 0 130 70" role="img" aria-label="Símbolo de la puerta ${t.toUpperCase()}">`;
+  const w=(x1,y1,x2,y2,c)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`;
+  let tip;
+  if(iec){
+    if(t==='not') s+=w(4,35,30,35,col(a)); else { s+=w(4,22,30,22,col(a)); s+=w(4,48,30,48,col(b)); }
+    const lab={and:'&',or:'≥1',xor:'=1',not:'1'}[base];
+    s+=`<rect x="30" y="8" width="52" height="54" rx="3" fill="${fill}" stroke="${sk}" stroke-width="2.5"/>`;
+    s+=`<text x="56" y="41" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="17" fill="${sk}">${lab}</text>`;
+    tip=82;
+  } else {
+    if(t==='not'){ s+=w(4,35,30,35,col(a)); }
+    else { const xe=base==='xor'?23:36; s+=w(4,22,xe,22,col(a)); s+=w(4,48,xe,48,col(b)); }
+    if(base==='and'){ s+=`<path d="M30 10 H58 A25 25 0 0 1 58 60 H30 Z" fill="${fill}" stroke="${sk}" stroke-width="2.5"/>`; tip=83; }
+    else if(base==='or'||base==='xor'){
+      if(base==='xor') s+=`<path d="M18 10 Q32 35 18 60" fill="none" stroke="${sk}" stroke-width="2.5"/>`;
+      s+=`<path d="M26 10 Q62 10 86 35 Q62 60 26 60 Q40 35 26 10 Z" fill="${fill}" stroke="${sk}" stroke-width="2.5"/>`; tip=86;
+    } else { s+=`<path d="M30 12 L76 35 L30 58 Z" fill="${fill}" stroke="${sk}" stroke-width="2.5"/>`; tip=76; }
+  }
+  if(neg){ s+=`<circle cx="${tip+5}" cy="35" r="5" fill="${fill}" stroke="${sk}" stroke-width="2.5"/>`; tip+=10; }
+  s+=w(tip,35,124,35,col(out));
+  if(opt.labels!==false){
+    s+=`<text x="2" y="${t==='not'?29:16}" class="lbl" style="font-size:11px">A</text>`;
+    if(t!=='not') s+=`<text x="2" y="62" class="lbl" style="font-size:11px">B</text>`;
+    s+=`<text x="118" y="29" class="lbl" style="font-size:11px">S</text>`;
+  }
+  return s+'</svg>';
+}
+
+/* ---------- Circuitos eléctricos equivalentes ---------- */
+function circuitSVG(kind,a,b,on){
+  const c=on?'var(--hot)':'var(--wire)';
+  const L=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="w" stroke="${c}"/>`;
+  const T=(x,y)=>`<circle cx="${x}" cy="${y}" r="3.6" fill="#0a121c" stroke="#dce8f2" stroke-width="2"/>`;
+  const txt=(x,y,t,cl)=>`<text x="${x}" y="${y}" text-anchor="middle" class="${cl||'lbl'}">${t}</text>`;
+  const sw=(x1,x2,y,cl,lab,v)=>{
+    const ex=cl?x2:x2-7, ey=cl?y:y-19;
+    return `<line x1="${x1}" y1="${y}" x2="${ex}" y2="${ey}" stroke="${cl?c:'#dce8f2'}" stroke-width="4" stroke-linecap="round"/>`+T(x1,y)+T(x2,y)+txt((x1+x2)/2,y+21,`${lab}=${v}`,v?'lblh':'lbl');
+  };
+  const pb=(x1,x2,y,pressed,lab,v)=>{
+    const xm=(x1+x2)/2, yb=pressed?y+11:y-4;
+    return T(x1,y)+T(x2,y)+
+      `<line x1="${x1-3}" y1="${yb}" x2="${x2+3}" y2="${yb}" stroke="${pressed?'#dce8f2':c}" stroke-width="4" stroke-linecap="round"/>`+
+      `<line x1="${xm}" y1="${yb}" x2="${xm}" y2="${yb-15}" stroke="#dce8f2" stroke-width="2"/>`+
+      `<rect x="${xm-10}" y="${yb-21}" width="20" height="6" rx="2" fill="${pressed?'#e8413a':'#8a969f'}"/>`+
+      txt(xm,y+(pressed?30:21),`${lab}=${v}`,v?'lblh':'lbl');
+  };
+  let s=`<svg viewBox="0 0 360 190" role="img" aria-label="Circuito eléctrico equivalente">`;
+  // Pila, retorno y lámpara
+  s+=L(40,50,40,95)+L(40,107,40,165)+L(40,165,320,165)+L(320,50,320,89)+L(320,125,320,165);
+  s+=`<line x1="22" y1="95" x2="58" y2="95" stroke="#dce8f2" stroke-width="3"/><line x1="30" y1="107" x2="50" y2="107" stroke="#dce8f2" stroke-width="7"/>`;
+  s+=txt(66,92,'+')+txt(14,112,'V');
+  if(on) s+=`<circle cx="320" cy="107" r="34" fill="rgba(255,182,39,.22)"/>`;
+  s+=`<circle cx="320" cy="107" r="18" fill="${on?'#ffe08a':'#1b2430'}" stroke="#dce8f2" stroke-width="2.5"/>`;
+  s+=`<line x1="307" y1="94" x2="333" y2="120" stroke="${on?'#8a5a00':'#dce8f2'}" stroke-width="2"/><line x1="333" y1="94" x2="307" y2="120" stroke="${on?'#8a5a00':'#dce8f2'}" stroke-width="2"/>`;
+  s+=txt(284,112,on?'S=1':'S=0',on?'lblh':'lbl');
+  if(kind==='serie'||kind==='ncserie'){
+    s+=L(40,50,110,50)+L(150,50,200,50)+L(240,50,320,50);
+    s+= kind==='serie' ? sw(110,150,50,a,'A',a)+sw(200,240,50,b,'B',b) : pb(110,150,50,a,'A',a)+pb(200,240,50,b,'B',b);
+  } else if(kind==='paralelo'||kind==='ncparalelo'){
+    s+=L(40,50,100,50)+L(100,26,100,96)+L(100,26,150,26)+L(190,26,250,26)+L(100,96,150,96)+L(190,96,250,96)+L(250,26,250,96)+L(250,50,320,50);
+    s+= kind==='paralelo' ? sw(150,190,26,a,'A',a)+sw(150,190,96,b,'B',b) : pb(150,190,26,a,'A',a)+pb(150,190,96,b,'B',b);
+  } else if(kind==='conm'||kind==='conmcruz'){
+    s+=L(40,50,100,50)+L(260,50,320,50);
+    if(kind==='conm') s+=L(150,32,210,32)+L(150,68,210,68);
+    else s+=L(150,32,210,68)+L(150,68,210,32);
+    s+=`<line x1="100" y1="50" x2="150" y2="${a?68:32}" stroke="#dce8f2" stroke-width="4" stroke-linecap="round"/>`;
+    s+=`<line x1="260" y1="50" x2="210" y2="${b?68:32}" stroke="#dce8f2" stroke-width="4" stroke-linecap="round"/>`;
+    s+=T(100,50)+T(150,32)+T(150,68)+T(260,50)+T(210,32)+T(210,68);
+    s+=txt(158,22,'0')+txt(158,90,'1')+txt(202,22,'0')+txt(202,90,'1');
+    s+=txt(118,98,`A=${a}`,a?'lblh':'lbl')+txt(242,98,`B=${b}`,b?'lblh':'lbl');
+  } else if(kind==='not'){
+    s+=L(40,50,150,50)+L(200,50,320,50)+pb(150,200,50,a,'A',a);
+  }
+  return s+'</svg>';
+}
+
+/* ---------- Tablas de verdad ---------- */
+function ttHTML(vars,fn,act,cls){
+  const n=vars.length, R=1<<n;
+  let h=`<table class="tt ${cls||''}"><thead><tr>${vars.map(v=>`<th>${v}</th>`).join('')}<th>S</th></tr></thead><tbody>`;
+  for(let r=0;r<R;r++){
+    const bits=[]; for(let i=n-1;i>=0;i--) bits.push((r>>i)&1);
+    const o=fn(...bits);
+    h+=`<tr class="${r===act?'act':''} ${o?'one':''}">${bits.map(x=>`<td>${x}</td>`).join('')}<td class="o">${o}</td></tr>`;
+  }
+  return h+'</tbody></table>';
+}
+
+/* ---------- Instrumentos decorativos ---------- */
+function dialSVG(label,dur,delay){
+  let t='';
+  for(let i=0;i<=10;i++){ const an=(-130+i*26)*Math.PI/180, r1=40, r2=i%5===0?31:35;
+    t+=`<line x1="${50+r1*Math.sin(an)}" y1="${52-r1*Math.cos(an)}" x2="${50+r2*Math.sin(an)}" y2="${52-r2*Math.cos(an)}" stroke="#e8eef2" stroke-width="${i%5===0?2.2:1.2}"/>`; }
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="52" r="46" fill="#0b0e11" stroke="#3c464f" stroke-width="3"/>${t}
+  <path d="M22 76 A40 40 0 0 1 16 60" stroke="#e8413a" stroke-width="4" fill="none"/>
+  <text x="50" y="80" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="10" fill="#9fb0bd">${label}</text>
+  <g class="needle" style="animation-duration:${dur}s;animation-delay:${delay}s"><line x1="50" y1="52" x2="50" y2="18" stroke="#ffb627" stroke-width="2.5" stroke-linecap="round"/></g>
+  <circle cx="50" cy="52" r="4" fill="#dce8f2"/></svg>`;
+}
+function stripSVG(){
+  let s='<svg viewBox="0 0 100 100" aria-hidden="true" class="strip"><rect x="0" y="0" width="100" height="100" rx="6" fill="#0b0e11"/>';
+  const cols=['#e8413a','#f2f2f2','#ffb627','#f2f2f2','#58f0a0'];
+  cols.forEach((c,i)=>{ const x=8+i*18;
+    s+=`<rect x="${x}" y="10" width="12" height="80" fill="#1b2127"/><rect x="${x}" y="14" width="12" height="76" fill="${c}" style="transform-origin:${x+6}px 90px;animation:lvl ${1.6+i*.5}s ease-in-out ${i*.3}s infinite alternate"/>`;
+    for(let k=0;k<8;k++) s+=`<line x1="${x}" y1="${14+k*10}" x2="${x+12}" y2="${14+k*10}" stroke="#0b0e11" stroke-width="1"/>`;
+  });
+  return s+'</svg>';
+}
+function trajSVG(){
+  return `<svg viewBox="0 0 400 190" aria-hidden="true">
+  <defs><radialGradient id="earth"><stop offset="0" stop-color="#46c8f0"/><stop offset="1" stop-color="#0b4a6b"/></radialGradient></defs>
+  <g stroke="rgba(88,240,160,.16)">${Array.from({length:12},(_,i)=>`<line x1="${i*36}" y1="0" x2="${i*36}" y2="190"/>`).join('')}${Array.from({length:6},(_,i)=>`<line x1="0" y1="${i*36}" x2="400" y2="${i*36}"/>`).join('')}</g>
+  <circle cx="92" cy="104" r="26" fill="url(#earth)"/>
+  <ellipse cx="92" cy="104" rx="46" ry="34" fill="none" stroke="#58f0a0" stroke-dasharray="3 5"/>
+  <circle cx="330" cy="70" r="12" fill="#cfd8de"/>
+  <path id="tli" d="M138 104 C 200 190, 300 170, 330 90 C 345 50, 300 38, 316 64" fill="none" stroke="#ffb627" stroke-dasharray="6 5" stroke-width="2"/>
+  <circle r="5" fill="#ffb627"><animateMotion dur="9s" repeatCount="indefinite"><mpath href="#tli"/></animateMotion></circle>
+  <text x="12" y="178" font-family="Share Tech Mono,monospace" font-size="12" fill="#58f0a0">T+ 02:44:16  VEL 10.834 m/s</text></svg>`;
+}
+function oscSVG(){
+  let d='M0 110'; let x=0, hi=false;
+  const seq=[1,0,1,1,0,0,1,0,1,1,1,0,1,0,0,1,0,1];
+  seq.forEach(v=>{ const y=v?40:110; d+=` L${x} ${y} L${x+20} ${y}`; x+=20; });
+  return `<svg viewBox="0 0 240 150" aria-hidden="true" style="aspect-ratio:240/150">
+  <g stroke="rgba(88,240,160,.16)">${Array.from({length:7},(_,i)=>`<line x1="${i*40}" y1="0" x2="${i*40}" y2="150"/>`).join('')}${Array.from({length:4},(_,i)=>`<line x1="0" y1="${i*40+15}" x2="240" y2="${i*40+15}"/>`).join('')}</g>
+  <text x="206" y="36" font-family="Share Tech Mono,monospace" font-size="12" fill="#58f0a0">1</text><text x="206" y="124" font-family="Share Tech Mono,monospace" font-size="12" fill="#58f0a0">0</text>
+  <path class="sig" d="${d}" fill="none" stroke="#58f0a0" stroke-width="2.5" style="filter:drop-shadow(0 0 3px #58f0a0)"/></svg>`;
+}
+
+/* ---------- Datos de las puertas (secciones 4 a 9) ---------- */
+const GATES={
+ or:{nombre:'OR',alias:'suma lógica',expr:'S = A + B',lee:'«S igual a A o B»',kind:'paralelo',ci:'7432 (TTL) · 4071 (CMOS)',
+   def:'La puerta OR (O) da un 1 en la salida cuando <b>al menos una</b> de sus entradas vale 1. Solo vale 0 cuando todas las entradas valen 0.',
+   elec:'Equivale a <b>dos interruptores en paralelo</b> que alimentan una lámpara. Basta con cerrar uno de ellos para que la corriente encuentre un camino y la lámpara se encienda. Solo si los dos están abiertos el circuito queda cortado.',
+   mision:'Alarma general de cabina: debe encenderse si salta el sensor de presión (P) <b>o</b> el de temperatura (T). S = P + T.',
+   cotid:['La luz interior de un coche se enciende al abrir la puerta del conductor o la del acompañante.','Un timbre con dos pulsadores, uno en la puerta principal y otro en la trasera.'],
+   props:[`A + 0 = A`,`A + 1 = 1`,`A + A = A`,`A + ${N('A')} = 1`],
+   multi:'Con más entradas la regla se mantiene: una OR de n entradas vale 0 solo en una fila de su tabla (todas las entradas a 0).'},
+ nor:{nombre:'NOR',alias:'suma lógica negada',expr:`S = ${N('A + B')}`,lee:'«S igual a A o B, negado»',kind:'ncserie',ci:'7402 (TTL) · 4001 (CMOS)',
+   def:'La puerta NOR es una OR seguida de una NOT: su salida es la contraria a la de la OR. Vale 1 <b>solo cuando todas las entradas valen 0</b>.',
+   elec:`Equivale a <b>dos pulsadores normalmente cerrados (NC) en serie</b>. En reposo (entrada 0) conducen; al accionar cualquiera (entrada 1) el circuito se abre. La lámpara solo luce si no se acciona ninguno. Por la ley de De Morgan: ${N('A')}·${N('B')} = ${N('A + B')}.`,
+   mision:'Luz verde «SISTEMAS NOMINALES»: solo se enciende si <b>no</b> hay alarma de presión (P) <b>ni</b> de temperatura (T). S = '+N('P + T')+'.',
+   cotid:['Una máquina solo puede arrancar si ninguna protección está activada (puerta abierta, sobrecarga…).','El ordenador de guiado del Apolo se construyó casi solo con puertas NOR de tres entradas.'],
+   props:[`${N('A + B')} = ${N('A')} · ${N('B')} (De Morgan)`,`NOR(A, A) = ${N('A')}: con las entradas unidas es una NOT`,'Es una puerta universal','NOR de n entradas: vale 1 en una sola fila'],
+   multi:'Es universal: combinando solo puertas NOR se puede construir cualquier otra función lógica.'},
+ and:{nombre:'AND',alias:'producto lógico',expr:'S = A · B',lee:'«S igual a A y B»',kind:'serie',ci:'7408 (TTL) · 4081 (CMOS)',
+   def:'La puerta AND (Y) da un 1 en la salida <b>solo cuando todas</b> sus entradas valen 1. Basta con que una entrada valga 0 para que la salida sea 0.',
+   elec:'Equivale a <b>dos interruptores en serie</b> con la lámpara. La corriente tiene un único camino, así que los dos interruptores deben estar cerrados para que la lámpara se encienda.',
+   mision:'Encendido del motor principal: solo si el comandante gira su llave (A) <b>y</b> el control de tierra autoriza (B). S = A · B.',
+   cotid:['Las prensas industriales de doble mando obligan a pulsar con las dos manos a la vez.','Un microondas solo funciona con la puerta cerrada y el botón de inicio pulsado.'],
+   props:['A · 1 = A','A · 0 = 0','A · A = A',`A · ${N('A')} = 0`],
+   multi:'Una AND de n entradas vale 1 solo en una fila de su tabla: la que tiene todas las entradas a 1.'},
+ nand:{nombre:'NAND',alias:'producto lógico negado',expr:`S = ${N('A · B')}`,lee:'«S igual a A y B, negado»',kind:'ncparalelo',ci:'7400 (TTL) · 4011 (CMOS)',
+   def:'La puerta NAND es una AND seguida de una NOT. Vale 0 <b>solo cuando todas las entradas valen 1</b>; en cualquier otro caso vale 1.',
+   elec:`Equivale a <b>dos pulsadores normalmente cerrados (NC) en paralelo</b>. Mientras uno de ellos esté en reposo, la corriente pasa por él. La lámpara solo se apaga si se accionan los dos a la vez. Por De Morgan: ${N('A')} + ${N('B')} = ${N('A · B')}.`,
+   mision:'Aviso «ESCOTILLAS»: permanece encendido mientras las dos escotillas no estén cerradas a la vez (E1 = 1 y E2 = 1 significan cerrada). S = '+N('E1 · E2')+'.',
+   cotid:['El testigo del cinturón se apaga solo cuando los dos cinturones delanteros están abrochados.','El circuito integrado 7400, con cuatro NAND, es uno de los más usados de la historia.'],
+   props:[`${N('A · B')} = ${N('A')} + ${N('B')} (De Morgan)`,`NAND(A, A) = ${N('A')}: con las entradas unidas es una NOT`,'Es una puerta universal','Se fabrica con muy pocos transistores'],
+   multi:'Es universal y la más empleada en la fabricación de circuitos integrados, porque se construye con pocos transistores.'},
+ xor:{nombre:'XOR',alias:'OR exclusiva',expr:'S = A ⊕ B',lee:`«A o exclusiva B», equivale a ${N('A')}·B + A·${N('B')}`,kind:'conmcruz',ci:'7486 (TTL) · 4070 (CMOS)',
+   def:'La puerta XOR (O exclusiva) vale 1 cuando sus entradas son <b>distintas</b>. Se diferencia de la OR en que excluye el caso en que las dos entradas valen 1.',
+   elec:'Equivale a <b>dos conmutadores con los hilos de unión cruzados</b>. Tomando la posición de arriba como 0 y la de abajo como 1, la lámpara luce cuando los conmutadores están en posiciones distintas.',
+   mision:'Detector de discrepancia: dos sensores redundantes miden la altitud; si no coinciden (uno da 1 y otro 0), salta el aviso. S = A ⊕ B.',
+   cotid:['En un semisumador, la XOR calcula el bit de suma: 1 + 1 = 0 y me llevo 1.','Con varias entradas, la XOR detecta si hay un número impar de unos (control de paridad).'],
+   props:['A ⊕ 0 = A',`A ⊕ 1 = ${N('A')}`,'A ⊕ A = 0',`A ⊕ B = ${N('A')}·B + A·${N('B')}`],
+   multi:'Encadenando puertas XOR se obtiene un 1 cuando hay un número impar de entradas a 1.'},
+ xnor:{nombre:'XNOR',alias:'igualdad o coincidencia',expr:`S = ${N('A ⊕ B')}`,lee:`«A coincide con B», equivale a A·B + ${N('A')}·${N('B')}`,kind:'conm',ci:'74266 (TTL) · 4077 (CMOS)',
+   def:'La puerta XNOR es una XOR seguida de una NOT. Vale 1 cuando sus entradas son <b>iguales</b>, por eso se llama puerta de igualdad o de coincidencia.',
+   elec:'Equivale a <b>dos conmutadores unidos directamente</b>, el montaje clásico de la luz de un pasillo o una escalera. Tomando arriba como 0 y abajo como 1, la lámpara luce cuando los dos están en la misma posición.',
+   mision:'Verificación de ordenadores gemelos: el ordenador principal (P) y el de reserva (R) deben dar el mismo resultado; si coinciden, luz verde. S = '+N('P ⊕ R')+'.',
+   cotid:['Los comparadores de igualdad usan una XNOR por cada bit y una AND para unir los resultados.','En la luz conmutada, la lámpara cambia de estado cada vez que se acciona cualquiera de los dos conmutadores.'],
+   props:[`A ⊙ B = A·B + ${N('A')}·${N('B')}`,'XNOR(A, 1) = A',`XNOR(A, 0) = ${N('A')}`,'XNOR(A, A) = 1'],
+   multi:'Es la base de los comparadores: dos números son iguales si todos sus bits coinciden.'}
+};
+const GATE_ORDER=['or','nor','and','nand','xor','xnor'];
+
+/* ---------- Índice de módulos ---------- */
+const SECS=[
+ {n:1,key:'intro',word:'Intro',title:'¿Qué son los circuitos y sistemas lógicos?'},
+ {n:2,key:'puertas',word:'Puertas',title:'¿Qué son las puertas lógicas?'},
+ {n:3,key:'tablas',word:'Tablas',title:'Tablas de verdad: de 2 a 4 variables'},
+ {n:4,key:'or',gate:'or',title:'Puerta OR'},
+ {n:5,key:'nor',gate:'nor',title:'Puerta NOR'},
+ {n:6,key:'and',gate:'and',title:'Puerta AND'},
+ {n:7,key:'nand',gate:'nand',title:'Puerta NAND'},
+ {n:8,key:'xor',gate:'xor',title:'Puerta XOR'},
+ {n:9,key:'xnor',gate:'xnor',title:'Puerta XNOR'}
+];
+
+/* ---------- Informes de misión ---------- */
+const BRIEF={
+ intro:ag=>`Agente ${ag}, los ordenadores de a bordo toman miles de decisiones por segundo y todas se reducen a responder «sí» o «no». Empecemos por ahí.`,
+ puertas:ag=>`Cada decisión de la nave la toma una puerta lógica. Aprenda a reconocerlas por su símbolo, agente ${ag}: en cabina no hay tiempo para dudar.`,
+ tablas:ag=>`Un piloto no improvisa, consulta la tabla. Una tabla de verdad recoge todas las situaciones posibles de un sistema. Sin excepciones, agente ${ag}.`,
+ or:ag=>`Agente ${ag}, la puerta OR vigila la cabina: basta con una señal de peligro para que salte la alarma.`,
+ nor:ag=>`El ordenador que llevó a la tripulación a la Luna estaba hecho casi solo de puertas NOR. Tómeselo en serio, agente ${ag}.`,
+ and:ag=>`Nadie enciende el motor principal por su cuenta. La puerta AND exige que todos estén de acuerdo, agente ${ag}.`,
+ nand:ag=>`Con puertas NAND se puede construir un ordenador completo. Es la favorita de los fabricantes de chips, agente ${ag}.`,
+ xor:ag=>`Dos sensores que dicen cosas distintas son un problema. La XOR lo detecta al instante, agente ${ag}.`,
+ xnor:ag=>`Si los dos ordenadores coinciden, seguimos adelante. La XNOR da el visto bueno, agente ${ag}.`
+};
+
+/* ---------- Contenido de las secciones 1 a 3 ---------- */
+function secIntro(){
+ return `
+ <div class="card"><h3>Un sistema que solo entiende «sí» o «no»</h3>
+ <p>Un <span class="k">sistema lógico</span> (o sistema digital) es un conjunto de componentes que procesa información codificada con <b>solo dos estados</b>: 0 y 1. Esos dos valores pueden significar falso o verdadero, apagado o encendido, nivel bajo o nivel alto de tensión.</p>
+ <p>El sistema recibe unas <b>entradas</b> (pulsadores, sensores, datos), las combina siguiendo unas reglas fijas, las del <b>álgebra de Boole</b>, y genera unas <b>salidas</b> (lámparas, motores, avisos u otros datos). Los circuitos que realizan estas operaciones son los <span class="k">circuitos lógicos</span>, y su pieza básica es la puerta lógica.</p></div>
+
+ <div class="g2">
+  <div class="card"><h3>Señal analógica</h3>
+   <svg viewBox="0 0 300 110" aria-label="Señal analógica"><path d="M0 55 C 25 5, 50 5, 75 55 S 125 105, 150 55 S 200 5, 225 55 S 275 105, 300 55" fill="none" stroke="#46c8f0" stroke-width="3"/><line x1="0" y1="55" x2="300" y2="55" stroke="#27405c"/></svg>
+   <p>Puede tomar <b>infinitos valores</b> dentro de un intervalo, como la temperatura o el sonido que capta un micrófono. Es muy sensible al ruido: cualquier perturbación modifica la información.</p></div>
+  <div class="card"><h3>Señal digital</h3>
+   <svg viewBox="0 0 300 110" aria-label="Señal digital"><path d="M0 90 H40 V20 H100 V90 H130 V20 H160 V90 H220 V20 H300" fill="none" stroke="#ffb627" stroke-width="3"/><text x="286" y="16" class="lbl">1</text><text x="286" y="106" class="lbl">0</text></svg>
+   <p>Solo toma <b>valores discretos</b>. En electrónica digital binaria, dos: 0 y 1. Un poco de ruido no cambia un 1 por un 0, así que la información se transmite y se copia sin degradarse.</p></div>
+ </div>
+
+ <div class="card"><h3>Niveles lógicos: ¿cuándo es un 1?</h3>
+ <p>Un circuito real trabaja con tensiones, no con números. En la familia <b>TTL</b>, alimentada a 5 V, una entrada se interpreta como <b>0 lógico entre 0 y 0,8 V</b> y como <b>1 lógico entre 2 y 5 V</b>. La franja intermedia es una zona indeterminada que el diseño debe evitar. Esos márgenes tan amplios son los que hacen a los sistemas digitales tan resistentes al ruido.</p>
+ <svg viewBox="0 0 520 90" aria-label="Niveles lógicos TTL"><rect x="10" y="30" width="80" height="30" fill="#1f5a3a"/><rect x="90" y="30" width="120" height="30" fill="#5a4a1f"/><rect x="210" y="30" width="300" height="30" fill="#6b3a10"/>
+ <text x="50" y="50" text-anchor="middle" class="lbl">0 lógico</text><text x="150" y="50" text-anchor="middle" class="lbl">indeterminado</text><text x="360" y="50" text-anchor="middle" class="lblh">1 lógico</text>
+ <text x="10" y="80" class="lbl">0 V</text><text x="78" y="80" class="lbl">0,8 V</text><text x="200" y="80" class="lbl">2 V</text><text x="486" y="80" class="lbl">5 V</text></svg></div>
+
+ <div class="card"><h3>Combinacionales y secuenciales</h3>
+ <div class="g2">
+  <div class="mini"><h4>Combinacionales</h4><p>Sus salidas dependen <b>solo</b> de las entradas en ese instante. No tienen memoria. Ejemplos: una alarma, un sumador, el decodificador que enciende los segmentos de un display. Son los que estudiamos en esta misión.</p></div>
+  <div class="mini"><h4>Secuenciales</h4><p>Sus salidas dependen de las entradas <b>y</b> de lo que ocurrió antes: tienen memoria. Ejemplos: un contador, la memoria de un ordenador, un ascensor que recuerda las llamadas pendientes.</p></div>
+ </div></div>
+
+ <div class="card"><h3>¿Para qué sirven? Están en todas partes</h3>
+ <div class="g3">
+  <div class="mini"><h4>Ordenadores y móviles</h4><p>Un procesador actual contiene miles de millones de transistores que forman puertas lógicas.</p></div>
+  <div class="mini"><h4>Automatismos</h4><p>Semáforos, ascensores, puertas de garaje o el control de una lavadora.</p></div>
+  <div class="mini"><h4>Seguridad</h4><p>Alarmas, prensas de doble mando o sistemas de parada de emergencia.</p></div>
+  <div class="mini"><h4>Automoción</h4><p>Testigos del salpicadero, cierre centralizado o avisos de cinturón.</p></div>
+  <div class="mini"><h4>Comunicaciones</h4><p>Codificación y detección de errores en los datos que viajan por la red.</p></div>
+  <div class="mini"><h4>Exploración espacial</h4><p>Guiado, navegación y control de naves y satélites.</p></div>
+ </div></div>
+
+ <div class="card"><h3>Un poco de historia</h3>
+ <ul>
+  <li><b>1854.</b> George Boole publica el álgebra que lleva su nombre: una lógica con solo dos valores, verdadero y falso.</li>
+  <li><b>1937.</b> Claude Shannon demuestra en su tesis que el álgebra de Boole sirve para diseñar circuitos de relés e interruptores.</li>
+  <li><b>1947.</b> Se inventa el transistor, un interruptor electrónico diminuto y rapidísimo.</li>
+  <li><b>1958-1959.</b> Jack Kilby y Robert Noyce crean el circuito integrado: varios transistores en un solo chip.</li>
+  <li><b>1960-1970.</b> Aparecen familias de puertas en circuitos integrados, como la serie TTL 7400, y los primeros microprocesadores.</li>
+ </ul>
+ <div class="fact"><b>Dato de misión.</b> El ordenador de guiado del Apolo (AGC), que llevó a la tripulación hasta la Luna, usaba en su versión tripulada unos 2.800 circuitos integrados, casi todos con dos puertas NOR de tres entradas. Una sola clase de puerta bastaba para construir todo el ordenador.</div></div>
+
+ <div class="card"><h3>Pruébelo: cuente en binario</h3>
+ <p>Cada interruptor es un bit. Con 4 bits se forman 2⁴ = 16 combinaciones, del 0 al 15. Recuérdelo, porque es justo lo que necesitará para construir tablas de verdad de 4 variables.</p>
+ <div class="bits" id="bits"></div></div>`;
+}
+
+function secPuertas(){
+ const rows=['not','and','or','nand','nor','xor','xnor'].map(t=>{
+   const info={not:['NOT','Negación',N('A'),'7404 · 4069'],and:['AND','Producto','A · B','7408 · 4081'],or:['OR','Suma','A + B','7432 · 4071'],
+     nand:['NAND','Producto negado',N('A · B'),'7400 · 4011'],nor:['NOR','Suma negada',N('A + B'),'7402 · 4001'],
+     xor:['XOR','O exclusiva','A ⊕ B','7486 · 4070'],xnor:['XNOR','Igualdad',N('A ⊕ B'),'74266 · 4077']}[t];
+   return `<tr><td><b>${info[0]}</b><br><small>${info[1]}</small></td><td>${gateSVG(t,null,null,false,{labels:false})}</td><td>${gateSVG(t,null,null,true,{labels:false})}</td><td class="mono" style="font-size:19px;color:var(--hot)">S = ${info[2]}</td><td class="mono">${info[3]}</td></tr>`;
+ }).join('');
+ return `
+ <div class="card"><h3>La pieza básica de un circuito lógico</h3>
+ <p>Una <span class="k">puerta lógica</span> es un circuito electrónico elemental, construido con transistores, que realiza <b>una operación del álgebra de Boole</b>: recibe una o varias entradas binarias y entrega una salida binaria según una regla fija, su tabla de verdad.</p>
+ <ul>
+  <li><b>Puertas básicas:</b> NOT (negación), AND (producto lógico) y OR (suma lógica).</li>
+  <li><b>Puertas derivadas:</b> NAND, NOR, XOR y XNOR, que combinan las anteriores.</li>
+  <li><b>Puertas universales:</b> NAND y NOR. Con cualquiera de ellas, repetida las veces necesarias, se puede construir cualquier otra puerta.</li>
+ </ul>
+ <p>Las puertas se venden agrupadas en <b>circuitos integrados</b>. Por ejemplo, el 7400 (familia TTL) contiene cuatro puertas NAND de dos entradas. La familia CMOS (serie 4000 o 74HC) consume menos energía.</p></div>
+
+ <div class="card"><h3>Símbolos: norma ANSI y norma IEC</h3>
+ <p>Hay dos formas de dibujarlas. La norma <b>ANSI</b> usa formas distintas para cada puerta; la <b>IEC</b> usa siempre un rectángulo con un signo en su interior: <b>&amp;</b> para AND, <b>≥1</b> para OR, <b>=1</b> para XOR y <b>1</b> para NOT. El pequeño círculo en la salida indica que la salida está <b>negada</b>.</p>
+ <div class="scroll"><table class="sym"><thead><tr><th>Puerta</th><th>ANSI</th><th>IEC</th><th>Expresión</th><th>CI (TTL · CMOS)</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+
+ <div class="card"><h3>Equivalencia con circuitos eléctricos</h3>
+ <p>Mucho antes de los transistores, los automatismos se construían con interruptores y relés. Si adoptamos este <b>convenio</b>, cualquier puerta se puede montar con componentes eléctricos:</p>
+ <ul>
+  <li>Cada <b>entrada</b> es un interruptor o pulsador: 0 = en reposo, 1 = accionado.</li>
+  <li>La <b>salida</b> es una lámpara: 0 = apagada, 1 = encendida.</li>
+ </ul>
+ <div class="scroll"><table class="sym" style="min-width:520px"><thead><tr><th>Montaje eléctrico</th><th>Puerta equivalente</th></tr></thead><tbody>
+  <tr><td>Pulsador normalmente cerrado (NC) en serie con la lámpara</td><td><b>NOT</b></td></tr>
+  <tr><td>Dos interruptores en serie</td><td><b>AND</b></td></tr>
+  <tr><td>Dos interruptores en paralelo</td><td><b>OR</b></td></tr>
+  <tr><td>Dos pulsadores NC en paralelo</td><td><b>NAND</b></td></tr>
+  <tr><td>Dos pulsadores NC en serie</td><td><b>NOR</b></td></tr>
+  <tr><td>Dos conmutadores con los hilos cruzados</td><td><b>XOR</b></td></tr>
+  <tr><td>Dos conmutadores unidos directamente</td><td><b>XNOR</b></td></tr>
+ </tbody></table></div></div>
+
+ <div class="card"><h3>Ejemplo: la puerta NOT con un pulsador NC <small>· simulador</small></h3>
+ <p>La NOT tiene una sola entrada y su salida es la contraria: si A = 0, S = 1; si A = 1, S = 0. Un pulsador <b>normalmente cerrado</b> deja pasar la corriente en reposo y la corta cuando se pulsa. Pulse A y compruébelo.</p>
+ <div id="simNot"></div></div>`;
+}
+
+const TT_EX={
+ 2:{vars:['A','B'],fn:(a,b)=>a&(1-b),name:`S = A · ${N('B')}`,desc:'Propulsor de maniobra: se activa con la orden A si no hay bloqueo B.'},
+ 3:{vars:['A','B','C'],fn:(a,b,c)=>(a+b+c)>=2?1:0,name:'Mayoría de 3',desc:'Tres ordenadores votan; la nave obedece lo que diga la mayoría (al menos dos a 1).'},
+ 4:{vars:['A','B','C','D'],fn:(a,b,c,d)=>a&b&(c|d),name:'S = A · B · (C + D)',desc:'Lanzamiento: combustible listo (A), tripulación lista (B) y meteorología favorable en al menos una estación (C o D).'}
+};
+function secTablas(){
+ return `
+ <div class="card"><h3>¿Qué es una tabla de verdad?</h3>
+ <p>Es una tabla que recoge el <b>valor de la salida para cada combinación posible de las entradas</b>. Describe por completo el funcionamiento de un circuito combinacional, sin ambigüedades: dos circuitos con la misma tabla de verdad son equivalentes, aunque estén construidos de forma distinta.</p></div>
+
+ <div class="card"><h3>Cómo se construye, paso a paso</h3>
+ <ol>
+  <li><b>Identifique las variables de entrada</b> (n) y la salida. Por ejemplo: A, B, C y S.</li>
+  <li><b>Calcule el número de filas:</b> 2ⁿ, porque cada variable tiene dos valores posibles. 2 variables → 4 filas; 3 → 8; 4 → 16.</li>
+  <li><b>Ordene las combinaciones contando en binario</b> desde 0 hasta 2ⁿ − 1. Truco: la columna de la derecha (bit menos significativo) alterna 0 y 1 en cada fila; la siguiente, cada 2 filas; la siguiente, cada 4; y la de la izquierda (bit más significativo) cambia justo a mitad de la tabla, cada 2ⁿ⁻¹ filas.</li>
+  <li><b>Rellene la salida</b> analizando, fila a fila, qué debe hacer el sistema.</li>
+  <li><b>Obtenga la función</b> si la necesita. En la <b>primera forma canónica</b> (suma de productos) se suma un término por cada fila con S = 1; en cada término, la variable aparece directa si vale 1 y negada si vale 0. Cada uno de esos productos se llama <b>minitérmino</b>.</li>
+ </ol>
+ <div class="fact">Cada fila corresponde a un número decimal: la fila 1011 de una tabla de 4 variables es la número 11 (8 + 0 + 2 + 1).</div></div>
+
+ <div class="card"><h3>Laboratorio de tablas <small>· elija el número de variables</small></h3>
+ <div class="tabs" role="tablist" id="ttTabs">
+  <button class="tab" role="tab" data-n="2" aria-selected="true">2 variables</button>
+  <button class="tab" role="tab" data-n="3" aria-selected="false">3 variables</button>
+  <button class="tab" role="tab" data-n="4" aria-selected="false">4 variables</button>
+ </div>
+ <div id="ttLab"></div></div>`;
+}
+function ttLabHTML(n){
+ const ex=TT_EX[n], R=1<<n, cols=['colA','colB','colC','colD'];
+ let h=`<p><b>${ex.name}.</b> ${ex.desc}</p><div class="g2"><div class="scroll"><table class="tt"><thead><tr><th>Fila</th>${ex.vars.map((v,i)=>`<th class="${cols[i]}">${v}</th>`).join('')}<th>S</th></tr></thead><tbody>`;
+ const mins=[];
+ for(let r=0;r<R;r++){
+  const bits=[]; for(let i=n-1;i>=0;i--) bits.push((r>>i)&1);
+  const o=ex.fn(...bits);
+  if(o) mins.push(bits.map((x,i)=>x?ex.vars[i]:N(ex.vars[i])).join('·'));
+  h+=`<tr class="${o?'one':''}"><td style="color:var(--muted)">${r}</td>${bits.map((x,i)=>`<td class="${cols[i]}">${x}</td>`).join('')}<td class="o">${o}</td></tr>`;
+ }
+ h+=`</tbody></table></div><div>
+  <div class="mini" style="margin-bottom:10px"><h4>Filas</h4><p>${n} variables → 2<sup>${n}</sup> = <b>${R}</b> filas, de la 0 a la ${R-1}.</p></div>
+  <div class="mini" style="margin-bottom:10px"><h4>Patrón de las columnas</h4><p>${ex.vars.map((v,i)=>`<span class="${cols[i]}"><b>${v}</b> cambia cada ${1<<(n-1-i)} ${ (1<<(n-1-i))===1?'fila':'filas'}</span>`).join('<br>')}</p></div>
+  <div class="mini"><h4>Primera forma canónica</h4><p class="mono" style="font-size:16px">S = ${mins.join(' + ')}</p><p style="margin-top:6px">${mins.length} ${mins.length===1?'fila vale':'filas valen'} 1 de ${R}.</p></div>
+ </div></div>`;
+ return h;
+}
+
+function secGate(key){
+ const g=GATES[key];
+ return `
+ <div class="card"><h3>Puerta ${g.nombre}: ${g.alias}</h3>
+ <p>${g.def}</p>
+ <div class="expr">${g.expr}</div> <span style="color:var(--muted)">Se lee ${g.lee}.</span>
+ <div class="g2" style="margin-top:10px">
+  <div class="mini"><h4>Símbolo ANSI</h4>${gateSVG(key,null,null,false)}</div>
+  <div class="mini"><h4>Símbolo IEC</h4>${gateSVG(key,null,null,true)}</div>
+ </div>
+ <p style="margin-top:10px">Circuito integrado habitual: <b>${g.ci}</b>.</p></div>
+
+ <div class="card"><h3>Simulador: puerta, circuito eléctrico y tabla de verdad</h3>
+ <p>Accione las entradas A y B. Verá a la vez la puerta lógica, su circuito eléctrico equivalente y la fila activa de la tabla de verdad.</p>
+ <div id="simGate"></div></div>
+
+ <div class="card"><h3>Equivalencia en circuito eléctrico</h3><p>${g.elec}</p></div>
+
+ <div class="card"><h3>Ejemplo de funcionamiento lógico</h3>
+ <div class="fact"><b>En la nave.</b> ${g.mision}</div>
+ <ul>${g.cotid.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+
+ <div class="card"><h3>Para recordar</h3>
+ <ul>${g.props.map(x=>`<li class="mono" style="font-size:17px">${x}</li>`).join('')}</ul>
+ <p>${g.multi}</p></div>`;
+}
+
+</script>
+<!-- Huella de autoría · ID de obra VMMS-2026-R4X9 · Victor Manuel Montano Simón -->
+<script>
+/* Banco de 100 preguntas. o[0] es siempre la correcta; el orden se baraja al mostrarlas.
+   b: bloque (1 Fundamentos, 2 Tablas, 3 OR/NOR, 4 AND/NAND, 5 XOR/XNOR)
+   s: subtema · c: C conocimiento, P comprensión, A aplicación lógica */
+const BLOQUES={1:'Fundamentos',2:'Tablas de verdad',3:'OR y NOR',4:'AND y NAND',5:'XOR y XNOR'};
+const CATS={C:'Conocimiento',P:'Comprensión',A:'Aplicación lógica'};
+const QB=[
+/* ===== BLOQUE 1 · sistemas lógicos ===== */
+{id:1,b:1,s:'sis',c:'C',q:'En un sistema digital binario, ¿qué valores puede tomar una variable lógica?',
+ o:['Solo dos estados: 0 y 1','Cualquier valor entre 0 V y 5 V','Tres estados: 0, 1 e indefinido','Diez estados, del 0 al 9'],
+ e:'Una variable binaria solo tiene dos estados, 0 y 1. La zona indefinida existe en las tensiones reales, pero no es un valor lógico.'},
+{id:2,b:1,s:'sis',c:'C',q:'¿Qué matemático formuló en el siglo XIX el álgebra en la que se basan los circuitos lógicos?',
+ o:['George Boole','Charles Babbage','Alan Turing','Claude Shannon'],
+ e:'Boole la publicó en 1854. Shannon, en 1937, fue quien la aplicó a circuitos de relés.'},
+{id:3,b:1,s:'sis',c:'C',q:'Un sistema lógico combinacional se caracteriza porque:',
+ o:['sus salidas dependen solo de las entradas de ese instante','sus salidas dependen también de estados anteriores','sus salidas cambian solo con cada pulso de reloj','sus entradas y salidas son señales analógicas'],
+ e:'Los combinacionales no tienen memoria. Depender de estados anteriores o de un reloj es propio de los secuenciales.'},
+{id:4,b:1,s:'sis',c:'C',q:'¿Qué tipo de señal puede tomar infinitos valores dentro de un intervalo?',
+ o:['La señal analógica','La señal digital','La señal binaria','La señal cuantificada'],
+ e:'La analógica varía de forma continua. La digital, la binaria y la cuantificada solo toman valores discretos.'},
+{id:5,b:1,s:'sis',c:'P',q:'¿Por qué los sistemas digitales son más resistentes al ruido que los analógicos?',
+ o:['Solo distinguen dos niveles con márgenes amplios','Trabajan siempre con tensiones más elevadas','Sus cables vienen apantallados de fábrica','Su señal no cambia nunca con el tiempo'],
+ e:'Una pequeña perturbación no convierte un 1 en un 0, porque cada nivel lógico abarca un margen amplio de tensiones.'},
+{id:6,b:1,s:'sis',c:'P',q:'En la familia TTL (5 V), una tensión de entrada de 4,2 V se interpreta como:',
+ o:['Un 1 lógico (nivel alto)','Un 0 lógico (nivel bajo)','Un nivel indeterminado','Un fallo de alimentación'],
+ e:'En TTL, entre 2 V y 5 V la entrada se lee como 1. Entre 0 y 0,8 V es 0, y entre 0,8 y 2 V es indeterminada.'},
+{id:7,b:1,s:'sis',c:'P',q:'Un ascensor que recuerda las llamadas pendientes de cada planta es un ejemplo de sistema:',
+ o:['Secuencial, porque necesita memoria','Combinacional, porque usa pulsadores','Analógico, porque mide su posición','Combinacional, porque es binario'],
+ e:'Recordar llamadas implica guardar información del pasado, es decir, memoria: es un sistema secuencial.'},
+{id:8,b:1,s:'sis',c:'A',q:'Un sensor de 0 a 10 V se digitaliza con 3 bits. ¿Cuántos niveles distintos puede representar?',
+ o:['8 niveles','3 niveles','6 niveles','10 niveles'],
+ e:'Con n bits hay 2ⁿ combinaciones: 2³ = 8 niveles.'},
+{id:9,b:1,s:'sis',c:'A',q:'¿Cómo se escribe el número decimal 13 en binario de 4 bits?',
+ o:['1101','1011','1110','0111'],
+ e:'13 = 8 + 4 + 0 + 1, es decir, 1101.'},
+{id:10,b:1,s:'sis',c:'A',q:'La señal S debe valer 1 si la escotilla está abierta (E = 1) o si la presión es baja (P = 1). ¿Qué expresión la describe?',
+ o:['S = E + P','S = E · P','S = E ⊕ P',`S = ${N('E + P')}`],
+ e:'La conjunción «o» (basta con una condición) corresponde a la suma lógica: S = E + P.'},
+/* ===== BLOQUE 1 · puertas lógicas ===== */
+{id:11,b:1,s:'pue',c:'C',q:'Una puerta lógica es:',
+ o:['Un circuito que realiza una operación booleana','Un interruptor manual que abre la corriente','Un componente que amplifica señales analógicas','Un circuito que almacena un bit de memoria'],
+ e:'Una puerta aplica una operación del álgebra de Boole a sus entradas y entrega una salida binaria.'},
+{id:12,b:1,s:'pue',c:'C',q:'¿Qué puertas se llaman universales porque con ellas se puede construir cualquier otra?',
+ o:['NAND y NOR','AND y OR','XOR y XNOR','NOT y AND'],
+ e:'Solo con puertas NAND, o solo con puertas NOR, se puede obtener cualquier función lógica.'},
+{id:13,b:1,s:'pue',c:'C',q:'En la norma IEC, el símbolo rectangular con «≥1» en su interior representa una puerta:',
+ o:['OR','AND','XOR','NOT'],
+ e:'«≥1» significa que basta con una entrada o más a 1: es la OR. AND lleva «&» y XOR lleva «=1».'},
+{id:14,b:1,s:'pue',c:'P',q:'En el modelo de interruptores, dos interruptores en serie con la lámpara equivalen a:',
+ o:['El producto lógico (AND)','La suma lógica (OR)','La negación (NOT)','La suma exclusiva (XOR)'],
+ e:'En serie, la corriente solo pasa si los dos están cerrados: A · B.'},
+{id:15,b:1,s:'pue',c:'P',q:'¿Qué montaje eléctrico sencillo reproduce la negación (NOT)?',
+ o:['Un pulsador normalmente cerrado en serie','Un pulsador normalmente abierto en serie','Dos interruptores conectados en paralelo','Dos conmutadores con hilos cruzados'],
+ e:'El pulsador NC conduce en reposo (A = 0 → luz) y corta al pulsarlo (A = 1 → sin luz).'},
+{id:16,b:1,s:'pue',c:'P',q:'¿Qué indica el pequeño círculo en la salida del símbolo de una puerta?',
+ o:['Que la salida está invertida','Que admite una tercera entrada','Que la salida va conectada a masa','Que la señal se amplifica'],
+ e:'El círculo representa la negación: NAND, NOR y XNOR lo llevan.'},
+{id:17,b:1,s:'pue',c:'P',q:'El ordenador de guiado del Apolo se construyó casi solo con puertas NOR. ¿Por qué fue posible?',
+ o:['La NOR es universal y genera cualquier función','La NOR es la única puerta sin transistores','La NOR no necesita alimentación eléctrica','La NOR funciona también con señales analógicas'],
+ e:'Al ser universal, combinando puertas NOR se obtiene cualquier otra función, y con ellas todo un procesador.'},
+{id:18,b:1,s:'pue',c:'A',img:'not',q:'Si a la entrada de esta puerta llega un 1, ¿qué vale la salida?',
+ o:['0 (nivel bajo)','1 (nivel alto)','Igual que la entrada','Queda indeterminada'],
+ e:'Es una NOT (triángulo con círculo): invierte la entrada, así que 1 → 0.'},
+{id:19,b:1,s:'pue',c:'A',q:'A y B están en serie, y ese conjunto está en paralelo con C, controlando una lámpara. ¿Qué función realiza?',
+ o:['S = A·B + C','S = (A + B)·C','S = A + B·C','S = A·B·C'],
+ e:'La serie de A y B es un producto (A·B) y el paralelo con C es una suma: S = A·B + C.'},
+{id:20,b:1,s:'pue',c:'A',q:'¿Cuántas puertas NAND de dos entradas hacen falta, como mínimo, para obtener una NOT?',
+ o:['Una, con las dos entradas unidas','Dos, conectadas una tras otra','Tres, como en una puerta AND','Ninguna, la NAND no puede negar'],
+ e:`Si A = B, la NAND da ${N('A · A')} = ${N('A')}. Basta una sola puerta.`},
+/* ===== BLOQUE 2 · tablas de verdad ===== */
+{id:21,b:2,s:'tab',c:'C',q:'¿Cuántas filas tiene la tabla de verdad de una función de 3 variables?',
+ o:['8','6','9','3'],e:'2³ = 8 filas.'},
+{id:22,b:2,s:'tab',c:'C',q:'En una tabla de verdad de 4 variables, ¿cuántas combinaciones de entrada hay?',
+ o:['16','8','12','32'],e:'2⁴ = 16 combinaciones.'},
+{id:23,b:2,s:'tab',c:'C',q:'¿Qué recoge una tabla de verdad?',
+ o:['El valor de la salida para cada combinación','Las tensiones medidas en cada entrada','El tiempo que tarda en cambiar la salida','El número de puertas que forman el circuito'],
+ e:'Recoge todas las combinaciones de las entradas y la salida que corresponde a cada una.'},
+{id:24,b:2,s:'tab',c:'C',q:'Al construir una tabla de verdad, las combinaciones de entrada se ordenan normalmente:',
+ o:['Contando en binario de 0 a 2ⁿ − 1','Al azar, sin repetir ninguna fila','Con las filas de salida 1 al principio','Contando en decimal de 1 a n'],
+ e:'Contar en binario garantiza que aparecen todas las combinaciones, sin repetir ni olvidar ninguna.'},
+{id:25,b:2,s:'tab',c:'C',q:'En una tabla de 3 variables (A, B, C), con A como bit más significativo, la columna de A tiene:',
+ o:['Cuatro ceros y después cuatro unos','Ceros y unos alternados en cada fila','Dos ceros, dos unos, dos ceros, dos unos','Un cero seguido de siete unos'],
+ e:'El bit más significativo cambia a mitad de la tabla: 2³⁻¹ = 4 filas.'},
+{id:26,b:2,s:'tab',c:'C',q:'¿Qué es un minitérmino (minterm)?',
+ o:['Un producto de todas las variables, directas o negadas','Una suma de todas las variables, directas o negadas','La variable menos significativa de la tabla','La fila de la tabla cuya salida vale 0'],
+ e:'Cada minitérmino es un producto con todas las variables y vale 1 en una sola fila de la tabla.'},
+{id:27,b:2,s:'tab',c:'C',q:'La expresión que suma los productos de las filas en las que la salida vale 1 se llama:',
+ o:['Primera forma canónica','Segunda forma canónica','Mapa de Karnaugh','Tabla de verdad reducida'],
+ e:'La primera forma canónica es una suma de minitérminos. La segunda es un producto de maxitérminos.'},
+{id:28,b:2,s:'tab',c:'P',q:'¿Por qué una tabla de verdad de n variables tiene 2ⁿ filas?',
+ o:['Cada variable tiene dos valores independientes','Cada variable ocupa dos columnas de la tabla','Cada fila representa dos variables a la vez','Se duplica la tabla para la salida negada'],
+ e:'Cada variable puede valer 0 o 1 con independencia de las demás: 2 · 2 · … · 2 = 2ⁿ.'},
+{id:29,b:2,s:'tab',c:'P',q:'Si una función pasa a tener una variable más, el número de filas de su tabla:',
+ o:['Se duplica','Aumenta en una fila','Aumenta en dos filas','Se eleva al cuadrado'],
+ e:'Pasa de 2ⁿ a 2ⁿ⁺¹ = 2 · 2ⁿ: se duplica.'},
+{id:30,b:2,s:'tab',c:'P',q:'En una tabla de 4 variables (A, B, C, D), la columna de D, la menos significativa:',
+ o:['Alterna 0 y 1 en cada fila','Cambia cada cuatro filas','Cambia cada ocho filas','Cambia cada dos filas'],
+ e:'El bit menos significativo alterna en cada fila; C cambia cada 2, B cada 4 y A cada 8.'},
+{id:31,b:2,s:'tab',c:'P',q:'La fila 1011 de una tabla de 4 variables corresponde al número decimal:',
+ o:['11','13','7','9'],e:'1011 = 8 + 0 + 2 + 1 = 11.'},
+{id:32,b:2,s:'tab',c:'P',q:'Dos circuitos lógicos distintos son equivalentes si:',
+ o:['Tienen la misma tabla de verdad','Tienen el mismo número de puertas','Usan el mismo tipo de puertas','Tienen el mismo número de entradas'],
+ e:'Si para cada combinación dan la misma salida, hacen lo mismo aunque estén construidos de otra manera.'},
+{id:33,b:2,s:'tab',c:'P',q:'¿Qué ventaja tiene la tabla de verdad frente a describir un problema solo con palabras?',
+ o:['Recoge todos los casos sin ambigüedad','Reduce siempre el número de puertas','Indica el retardo de cada puerta','Evita tener que usar el álgebra de Boole'],
+ e:'La tabla obliga a decidir la salida en todas las combinaciones, así no queda ningún caso sin definir.'},
+{id:34,b:2,s:'tab',c:'P',q:'En una tabla de 3 variables, la fila número 5 (empezando a contar en 0) es la combinación ABC:',
+ o:['101','110','011','100'],e:'5 = 4 + 0 + 1, es decir, 101.'},
+{id:35,b:2,s:'tab',c:'A',q:'Una función de 3 variables vale 1 cuando al menos dos entradas valen 1. ¿Cuántos unos tiene su columna de salida?',
+ o:['4','3','2','5'],e:'Las filas 011, 101, 110 y 111: cuatro unos.'},
+{id:36,b:2,s:'tab',c:'A',q:'Una alarma con sensores A, B y C se activa si A = 1 y además B o C valen 1. ¿En cuántas filas vale 1 la salida?',
+ o:['3','4','2','5'],e:'S = A·(B + C). Con A = 1, valen las filas 101, 110 y 111.'},
+{id:37,b:2,s:'tab',c:'A',q:'Una tabla de 2 variables solo tiene salida 1 en las filas AB = 01 y AB = 10. ¿Qué expresión se obtiene?',
+ o:[`S = ${N('A')}·B + A·${N('B')}`,`S = A·B + ${N('A')}·${N('B')}`,`S = ${N('A')}·B + A·B`,`S = ${N('A')}·${N('B')} + A·${N('B')}`],
+ e:`Fila 01 → ${N('A')}·B; fila 10 → A·${N('B')}. Se suman: es la función XOR.`},
+{id:38,b:2,s:'tab',c:'A',q:'Una función de 4 variables solo vale 1 en las filas 0000 y 1111. ¿En cuántas filas vale 0?',
+ o:['14','2','15','12'],e:'16 filas en total menos 2 filas a 1 = 14 filas a 0.'},
+{id:39,b:2,s:'tab',c:'A',q:'Para S = A·B + C, ¿qué vale S en la fila A = 1, B = 0, C = 0?',
+ o:['0, porque A·B = 0 y C = 0','1, porque A = 1 es suficiente','1, porque la suma vale 1 + 0','0, porque B = 0 y C = 1'],
+ e:'A·B = 1·0 = 0 y C = 0, así que S = 0 + 0 = 0.'},
+{id:40,b:2,s:'tab',c:'A',q:'Para S = (A + B)·C, ¿en cuántas de las 8 filas vale 1?',
+ o:['3','4','5','6'],e:'C debe valer 1 y A + B también: filas 011, 101 y 111.'},
+/* ===== BLOQUE 3 · OR ===== */
+{id:41,b:3,s:'or',c:'C',q:'Una puerta OR de dos entradas vale 1 cuando:',
+ o:['Al menos una entrada vale 1','Las dos entradas valen 1','Solo una entrada vale 1','Las dos entradas valen 0'],
+ e:'Basta con que una entrada valga 1. «Solo una» describiría la XOR.'},
+{id:42,b:3,s:'or',c:'C',q:'¿Cómo se expresa la función OR en el álgebra de Boole?',
+ o:['S = A + B','S = A · B','S = A ⊕ B',`S = ${N('A')} + ${N('B')}`],
+ e:`La OR es la suma lógica. ${N('A')} + ${N('B')} equivale a una NAND.`},
+{id:43,b:3,s:'or',c:'C',img:'or',q:'¿Qué puerta representa este símbolo?',
+ o:['OR','AND','XOR','NOR'],
+ e:'Forma curva y puntiaguda, sin doble curva de entrada ni círculo de salida: es una OR.'},
+{id:44,b:3,s:'or',c:'C',q:'¿Qué circuito eléctrico es equivalente a una puerta OR?',
+ o:['Dos interruptores en paralelo','Dos interruptores en serie','Dos pulsadores NC en serie','Dos conmutadores cruzados'],
+ e:'En paralelo, cualquiera de los dos interruptores cerrado deja pasar la corriente.'},
+{id:45,b:3,s:'or',c:'P',q:'En una puerta OR, si una entrada vale 1 de forma permanente, la salida:',
+ o:['Vale siempre 1','Vale siempre 0','Copia la otra entrada','Invierte la otra entrada'],
+ e:'A + 1 = 1: el 1 fuerza la salida.'},
+{id:46,b:3,s:'or',c:'P',q:'¿Por qué en la puerta OR se cumple 1 + 1 = 1?',
+ o:['Solo indica si hay algún 1, no cuántos','En binario 1 + 1 = 10 y se toma el 1','La puerta resta el valor repetido','Trabaja con tensiones, no con números'],
+ e:'La suma lógica no cuenta: responde a la pregunta «¿hay alguna entrada a 1?».'},
+{id:47,b:3,s:'or',c:'P',q:'La luz interior de un coche se enciende al abrir cualquiera de sus puertas. Esta lógica corresponde a:',
+ o:['Una función OR','Una función AND','Una función XOR','Una función NAND'],
+ e:'Cualquier puerta abierta basta para encender la luz: suma lógica.'},
+{id:48,b:3,s:'or',c:'A',q:'Una OR de tres entradas recibe A = 0, B = 0 y C = 1. ¿Qué vale la salida?',
+ o:['1, basta con una entrada a 1','0, la mayoría de entradas vale 0','0, hacen falta dos entradas a 1','1, solo porque C es la última'],
+ e:'0 + 0 + 1 = 1.'},
+{id:49,b:3,s:'or',c:'A',q:'¿En cuántas filas vale 0 la tabla de verdad de una OR de 4 entradas?',
+ o:['Solo en 1 fila','En 15 filas','En 4 filas','En 8 filas'],
+ e:'Solo en la fila 0000. En las otras 15 hay algún 1.'},
+{id:50,b:3,s:'or',c:'A',q:'Un panel debe encender un aviso si falla el motor 1, el motor 2 o el motor 3 (fallo = 1). ¿Qué solución es correcta?',
+ o:['Una OR de 3 entradas','Una AND de 3 entradas','Una XOR de 3 entradas','Una NOR de 3 entradas'],
+ e:'Cualquier fallo debe activar el aviso: OR. La XOR fallaría si hubiera dos motores averiados.'},
+/* ===== BLOQUE 3 · NOR ===== */
+{id:51,b:3,s:'nor',c:'C',q:'Una puerta NOR vale 1 cuando:',
+ o:['Todas las entradas valen 0','Todas las entradas valen 1','Al menos una entrada vale 1','Las entradas son distintas'],
+ e:'Es la contraria de la OR: solo da 1 si no hay ninguna entrada a 1.'},
+{id:52,b:3,s:'nor',c:'C',q:'¿Cuál es la expresión de la puerta NOR?',
+ o:[`S = ${N('A + B')}`,`S = ${N('A · B')}`,`S = ${N('A')} + ${N('B')}`,'S = A ⊕ B'],
+ e:`La NOR es la suma negada. ${N('A')} + ${N('B')} = ${N('A · B')} sería una NAND.`},
+{id:53,b:3,s:'nor',c:'C',img:'nor',q:'¿Qué puerta representa este símbolo?',
+ o:['NOR','OR','NAND','XNOR'],
+ e:'Forma de OR con círculo de negación en la salida: NOR.'},
+{id:54,b:3,s:'nor',c:'P',q:'La puerta NOR equivale a:',
+ o:['Una OR seguida de una NOT','Una AND seguida de una NOT','Una NOT seguida de una OR','Una XOR seguida de una NOT'],
+ e:'NOR = NOT(OR). Negar las entradas antes de una OR da una NAND, no una NOR.'},
+{id:55,b:3,s:'nor',c:'P',q:`Según las leyes de De Morgan, ${N('A + B')} es igual a:`,
+ o:[`${N('A')} · ${N('B')}`,`${N('A')} + ${N('B')}`,'A · B',`${N('A · B')}`],
+ e:'Al negar una suma, cada variable se niega y la suma pasa a ser producto.'},
+{id:56,b:3,s:'nor',c:'P',q:'¿Por qué dos pulsadores normalmente cerrados en serie reproducen una NOR?',
+ o:['La lámpara luce solo si no se pulsa ninguno','La lámpara luce si se pulsa uno de los dos','La lámpara luce solo si se pulsan los dos','La lámpara luce si los dos están distintos'],
+ e:'Pulsar cualquiera abre el circuito serie; solo con ambos en reposo (0, 0) pasa corriente.'},
+{id:57,b:3,s:'nor',c:'P',q:'Si se unen las dos entradas de una puerta NOR, se obtiene una puerta:',
+ o:['NOT','OR','AND','XNOR'],
+ e:`${N('A + A')} = ${N('A')}: se comporta como un inversor.`},
+{id:58,b:3,s:'nor',c:'A',q:'Una puerta NOR recibe A = 1 y B = 0. ¿Qué vale la salida?',
+ o:['0, porque hay un 1 en la entrada','1, porque hay un 0 en la entrada','1, porque las entradas son distintas','0, porque las entradas son distintas'],
+ e:`A + B = 1, y negado da 0. Basta un 1 para que la NOR dé 0.`},
+{id:59,b:3,s:'nor',c:'A',q:'Una luz verde debe encenderse solo si no hay alarma de presión (P) ni de temperatura (T). ¿Qué función cumple?',
+ o:[`S = ${N('P + T')}`,`S = ${N('P · T')}`,'S = P + T','S = P ⊕ T'],
+ e:`«Ni P ni T» es ${N('P')}·${N('T')} = ${N('P + T')}, una NOR.`},
+{id:60,b:3,s:'nor',c:'A',q:'¿En cuántas filas vale 1 la tabla de verdad de una NOR de 3 entradas?',
+ o:['Solo en 1 fila','En 7 filas','En 3 filas','En 4 filas'],
+ e:'Solo en la fila 000; en las otras 7 hay algún 1 y la salida es 0.'},
+/* ===== BLOQUE 4 · AND ===== */
+{id:61,b:4,s:'and',c:'C',q:'Una puerta AND de dos entradas vale 1 cuando:',
+ o:['Las dos entradas valen 1','Al menos una entrada vale 1','Solo una entrada vale 1','Las dos entradas valen 0'],
+ e:'El producto lógico solo vale 1 si todas las entradas valen 1.'},
+{id:62,b:4,s:'and',c:'C',q:'¿Cómo se expresa la función AND en el álgebra de Boole?',
+ o:['S = A · B','S = A + B',`S = ${N('A · B')}`,'S = A ⊕ B'],
+ e:`La AND es el producto lógico. ${N('A · B')} sería la NAND.`},
+{id:63,b:4,s:'and',c:'C',img:'and',q:'¿Qué puerta representa este símbolo?',
+ o:['AND','NAND','OR','XOR'],
+ e:'Lado recto y frente semicircular, sin círculo de negación: AND.'},
+{id:64,b:4,s:'and',c:'C',q:'¿Qué circuito eléctrico es equivalente a una puerta AND?',
+ o:['Dos interruptores en serie','Dos interruptores en paralelo','Dos pulsadores NC en paralelo','Dos conmutadores de escalera'],
+ e:'En serie, la corriente solo pasa si los dos interruptores están cerrados.'},
+{id:65,b:4,s:'and',c:'P',q:'En una puerta AND, si una entrada vale 0 de forma permanente, la salida:',
+ o:['Vale siempre 0','Vale siempre 1','Copia la otra entrada','Invierte la otra entrada'],
+ e:'A · 0 = 0: el 0 bloquea la salida.'},
+{id:66,b:4,s:'and',c:'P',q:'Las prensas industriales de doble mando obligan a pulsar dos botones con ambas manos. Es un ejemplo de lógica:',
+ o:['AND','OR','XOR','NOR'],
+ e:'La prensa solo baja si se pulsan los dos mandos a la vez: A · B.'},
+{id:67,b:4,s:'and',c:'P',q:'En una puerta AND, si una entrada vale 1 de forma permanente, la salida:',
+ o:['Copia el valor de la otra entrada','Vale siempre 1','Vale siempre 0','Invierte la otra entrada'],
+ e:'A · 1 = A: la salida sigue a la otra entrada.'},
+{id:68,b:4,s:'and',c:'A',q:'Una AND de tres entradas recibe A = 1, B = 1 y C = 0. ¿Qué vale la salida?',
+ o:['0, basta una entrada a 0','1, la mayoría de entradas vale 1','1, porque A y B valen 1','0, solo porque C es la última'],
+ e:'1 · 1 · 0 = 0.'},
+{id:69,b:4,s:'and',c:'A',q:'El lanzamiento (L) solo se autoriza si el comandante (C), el control de tierra (T) y los sistemas (S) dan su conformidad. ¿Qué expresión es correcta?',
+ o:['L = C · T · S','L = C + T + S',`L = ${N('C · T · S')}`,'L = C ⊕ T ⊕ S'],
+ e:'Deben cumplirse las tres condiciones a la vez: producto lógico.'},
+{id:70,b:4,s:'and',c:'A',q:'¿En cuántas filas vale 1 la tabla de verdad de una AND de 4 entradas?',
+ o:['Solo en 1 fila','En 4 filas','En 15 filas','En 8 filas'],
+ e:'Solo en la fila 1111.'},
+/* ===== BLOQUE 4 · NAND ===== */
+{id:71,b:4,s:'nand',c:'C',q:'Una puerta NAND vale 0 cuando:',
+ o:['Todas las entradas valen 1','Todas las entradas valen 0','Al menos una entrada vale 0','Las entradas son distintas'],
+ e:'Es la contraria de la AND: solo da 0 en la fila con todas las entradas a 1.'},
+{id:72,b:4,s:'nand',c:'C',q:'¿Cuál es la expresión de la puerta NAND?',
+ o:[`S = ${N('A · B')}`,`S = ${N('A + B')}`,`S = ${N('A')} · ${N('B')}`,'S = A · B'],
+ e:`La NAND es el producto negado. ${N('A')} · ${N('B')} = ${N('A + B')} sería una NOR.`},
+{id:73,b:4,s:'nand',c:'C',img:'nand',q:'¿Qué puerta representa este símbolo?',
+ o:['NAND','AND','NOR','XNOR'],
+ e:'Forma de AND con círculo de negación en la salida: NAND.'},
+{id:74,b:4,s:'nand',c:'P',q:`Según las leyes de De Morgan, ${N('A · B')} es igual a:`,
+ o:[`${N('A')} + ${N('B')}`,`${N('A')} · ${N('B')}`,'A + B',`${N('A + B')}`],
+ e:'Al negar un producto, cada variable se niega y el producto pasa a ser suma.'},
+{id:75,b:4,s:'nand',c:'P',q:'¿Por qué dos pulsadores normalmente cerrados en paralelo equivalen a una NAND?',
+ o:['La lámpara se apaga solo si se pulsan los dos','La lámpara se apaga si se pulsa uno de los dos','La lámpara se enciende solo si se pulsan los dos','La lámpara se apaga si no se pulsa ninguno'],
+ e:'Mientras una rama siga en reposo, la corriente pasa. Solo al pulsar los dos (1, 1) se corta.'},
+{id:76,b:4,s:'nand',c:'P',q:'La puerta NAND equivale a:',
+ o:['Una AND seguida de una NOT','Una OR seguida de una NOT','Dos NOT seguidas de una AND','Una XOR seguida de una NOT'],
+ e:`NAND = NOT(AND). Negar las entradas y luego aplicar una AND da ${N('A')}·${N('B')}, que es una NOR.`},
+{id:77,b:4,s:'nand',c:'P',q:'¿Por qué la NAND es tan usada en la fabricación de circuitos integrados?',
+ o:['Es universal y se fabrica con pocos transistores','Es la única que funciona con una tensión de 5 V','Es la única que no necesita tabla de verdad','Es la única que admite más de dos entradas'],
+ e:'Con ella se puede construir cualquier función y su estructura interna es muy sencilla.'},
+{id:78,b:4,s:'nand',c:'A',q:'Una puerta NAND recibe A = 1 y B = 0. ¿Qué vale la salida?',
+ o:['1, porque no todas las entradas valen 1','0, porque una de las entradas vale 1','0, porque las entradas son distintas','1, porque las entradas son distintas'],
+ e:`A · B = 0, y negado da 1.`},
+{id:79,b:4,s:'nand',c:'A',q:'Un piloto de aviso debe estar encendido mientras las dos escotillas no estén cerradas a la vez (E1 = 1 y E2 = 1 indican cerrada). ¿Qué función cumple?',
+ o:[`S = ${N('E1 · E2')}`,'S = E1 · E2',`S = ${N('E1 + E2')}`,'S = E1 ⊕ E2'],
+ e:'El aviso solo se apaga cuando E1 = 1 y E2 = 1: es una NAND.'},
+{id:80,b:4,s:'nand',c:'A',q:'Una puerta NAND seguida de una NOT equivale a:',
+ o:['Una AND','Una OR','Una NOR','Una XNOR'],
+ e:'Negar dos veces anula la negación: queda A · B.'},
+/* ===== BLOQUE 5 · XOR ===== */
+{id:81,b:5,s:'xor',c:'C',q:'Una puerta XOR de dos entradas vale 1 cuando:',
+ o:['Las entradas son distintas','Las entradas son iguales','Al menos una entrada vale 1','Las dos entradas valen 1'],
+ e:'Vale 1 en las filas 01 y 10. Se diferencia de la OR en la fila 11.'},
+{id:82,b:5,s:'xor',c:'C',q:'¿Cómo se representa la función XOR?',
+ o:['S = A ⊕ B','S = A ⊙ B','S = A + B',`S = ${N('A ⊕ B')}`],
+ e:'⊕ es la suma exclusiva. ⊙ y la ⊕ negada representan la XNOR.'},
+{id:83,b:5,s:'xor',c:'C',img:'xor',q:'¿Qué puerta representa este símbolo?',
+ o:['XOR','OR','XNOR','NOR'],
+ e:'Forma de OR con una doble curva en la entrada y sin círculo: XOR.'},
+{id:84,b:5,s:'xor',c:'C',q:'¿Con qué montaje eléctrico se reproduce una puerta XOR?',
+ o:['Dos conmutadores con los hilos cruzados','Dos interruptores conectados en paralelo','Dos pulsadores NC conectados en serie','Dos interruptores conectados en serie'],
+ e:'Con los hilos cruzados, la lámpara luce cuando los conmutadores están en posiciones distintas.'},
+{id:85,b:5,s:'xor',c:'P',q:'¿Por qué a la XOR se le llama «OR exclusiva»?',
+ o:['Excluye el caso con las dos entradas a 1','Excluye el caso con las dos entradas a 0','Excluye cualquier entrada que valga 0','Solo se usa en circuitos exclusivos'],
+ e:'Funciona como la OR salvo en la fila 11, donde da 0.'},
+{id:86,b:5,s:'xor',c:'P',q:'En un semisumador de dos bits, la puerta XOR calcula:',
+ o:['El bit de suma','El bit de acarreo','El bit de signo','El bit de desbordamiento'],
+ e:'0+0=0, 0+1=1, 1+0=1, 1+1=0 (me llevo 1). El acarreo lo calcula una AND.'},
+{id:87,b:5,s:'xor',c:'P',q:'En una puerta XOR, si una entrada vale 1 de forma permanente, la salida:',
+ o:['Es la otra entrada invertida','Vale siempre 1','Vale siempre 0','Copia la otra entrada'],
+ e:`A ⊕ 1 = ${N('A')}: la XOR se comporta como un inversor controlado.`},
+{id:88,b:5,s:'xor',c:'A',q:'Una puerta XOR recibe A = 1 y B = 1. ¿Qué vale la salida?',
+ o:['0, porque las entradas son iguales','1, porque hay al menos un 1','1, porque las dos valen 1','0, porque alguna entrada vale 0'],
+ e:'Las entradas coinciden, así que la XOR da 0.'},
+{id:89,b:5,s:'xor',c:'A',q:'Dos sensores redundantes miden lo mismo y debe saltar un aviso cuando no coinciden. ¿Qué puerta se usa?',
+ o:['XOR','XNOR','AND','NOR'],
+ e:'Detectar que dos señales son distintas es justo lo que hace la XOR.'},
+{id:90,b:5,s:'xor',c:'A',q:'Se encadenan dos puertas XOR para obtener A ⊕ B ⊕ C con A = 1, B = 1 y C = 1. ¿Qué vale la salida?',
+ o:['1, hay un número impar de unos','0, todas las entradas son iguales','0, hay más de un 1 en la entrada','1, basta con que A valga 1'],
+ e:'1 ⊕ 1 = 0 y 0 ⊕ 1 = 1. La XOR en cadena detecta un número impar de unos.'},
+/* ===== BLOQUE 5 · XNOR ===== */
+{id:91,b:5,s:'xnor',c:'C',q:'Una puerta XNOR de dos entradas vale 1 cuando:',
+ o:['Las entradas son iguales','Las entradas son distintas','Todas las entradas valen 1','Todas las entradas valen 0'],
+ e:'Vale 1 en las filas 00 y 11.'},
+{id:92,b:5,s:'xnor',c:'C',img:'xnor',q:'¿Qué puerta representa este símbolo?',
+ o:['XNOR','XOR','NOR','NAND'],
+ e:'Doble curva de entrada y círculo de negación en la salida: XNOR.'},
+{id:93,b:5,s:'xnor',c:'C',q:'La puerta XNOR también se conoce como puerta de:',
+ o:['Igualdad o coincidencia','Suma lógica o inclusión','Mayoría o votación','Inversión o negación'],
+ e:'Da 1 cuando sus entradas coinciden.'},
+{id:94,b:5,s:'xnor',c:'P',q:'¿Qué expresión es equivalente a una XNOR de dos entradas?',
+ o:[`S = A·B + ${N('A')}·${N('B')}`,`S = ${N('A')}·B + A·${N('B')}`,`S = A·B + A·${N('B')}`,`S = ${N('A')}·${N('B')} + ${N('A')}·B`],
+ e:`Filas 11 y 00: A·B + ${N('A')}·${N('B')}. La segunda opción es la XOR.`},
+{id:95,b:5,s:'xnor',c:'P',q:'En el montaje clásico de luz conmutada, la lámpara luce con los dos conmutadores en la misma posición (0-0 o 1-1). Equivale a:',
+ o:['Una XNOR','Una XOR','Una OR','Una AND'],
+ e:'Salida 1 cuando las entradas coinciden: XNOR.'},
+{id:96,b:5,s:'xnor',c:'P',q:'La puerta XNOR equivale a:',
+ o:['Una XOR seguida de una NOT','Una OR seguida de una NOT','Una NOR con sus entradas unidas','Una AND seguida de una NOT'],
+ e:'XNOR = NOT(XOR). Una NOR con las entradas unidas es una NOT.'},
+{id:97,b:5,s:'xnor',c:'P',q:'En una puerta XNOR, si una entrada vale 1 de forma permanente, la salida:',
+ o:['Copia el valor de la otra entrada','Invierte el valor de la otra entrada','Vale siempre 1','Vale siempre 0'],
+ e:'Si B = 1, la salida es 1 cuando A = 1 y 0 cuando A = 0: copia A.'},
+{id:98,b:5,s:'xnor',c:'A',q:'Una puerta XNOR recibe A = 0 y B = 0. ¿Qué vale la salida?',
+ o:['1, porque las entradas son iguales','0, porque ninguna entrada vale 1','0, porque las entradas son iguales','1, porque alguna entrada vale 1'],
+ e:'Las entradas coinciden, así que la XNOR da 1.'},
+{id:99,b:5,s:'xnor',c:'A',q:'Para comprobar si dos números de 2 bits (A1A0 y B1B0) son iguales, se necesitan:',
+ o:['Dos XNOR y una AND','Dos XOR y una AND','Dos XNOR y una OR','Dos XOR y una OR'],
+ e:'Cada XNOR comprueba un bit; la AND exige que coincidan los dos.'},
+{id:100,b:5,s:'xnor',c:'A',q:'El ordenador principal (P) y el de reserva (R) deben dar el mismo bit de resultado; si coinciden, se enciende la luz verde. ¿Qué expresión es correcta?',
+ o:[`S = ${N('P ⊕ R')}`,'S = P ⊕ R',`S = ${N('P + R')}`,'S = P · R'],
+ e:'Coincidencia = XNOR. P · R fallaría cuando los dos valen 0, que también es una coincidencia.'}
+];
+
+/* ---------- Almacenamiento local con respaldo en memoria ---------- */
+const PFX='vmms-csl1-', MEM={};
+const S={
+ get(k,d){ try{ const v=localStorage.getItem(PFX+k); if(v!==null) return JSON.parse(v); }catch(e){} return (k in MEM)?MEM[k]:d; },
+ set(k,v){ MEM[k]=v; try{ localStorage.setItem(PFX+k,JSON.stringify(v)); }catch(e){} },
+ del(k){ delete MEM[k]; try{ localStorage.removeItem(PFX+k); }catch(e){} }
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=n=>n.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:2});
+const fecha=t=>new Date(t).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+function agente(){ const p=S.get('perfil',null); if(!p) return ''; return (p.apellidos.trim().split(/\s+/)[0]||p.nombre); }
+
+/* ---------- Vistas ---------- */
+function show(v){
+ document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+ const p=S.get('perfil',null);
+ const hud=$('#hud'); hud.hidden=(v==='portada');
+ $('#hudWho').textContent=p?`AGENTE ${agente().toUpperCase()}`:'CANDIDATO';
+ const enExamen=(v==='examen');
+ $('#hudConsola').hidden=enExamen||v==='historia'||S.get('decision','')!=='acepta';
+ $('#hudBuscar').hidden=enExamen;
+ window.scrollTo(0,0);
+ S.set('vista',v);
+}
+
+/* ---------- Modal y aviso breve ---------- */
+function modal(o){
+ const m=$('#modal'), b=$('#mbox');
+ b.className='mbox'+(o.warn?' warn':'');
+ b.innerHTML=(o.warn?'<div class="stripe"></div>':'')+`<h3>${o.title}</h3><div>${o.html||''}</div><div class="macts"></div>`;
+ const acts=b.querySelector('.macts');
+ (o.buttons||[{t:'Entendido',cls:'go'}]).forEach(bt=>{
+   const e=document.createElement('button'); e.type='button'; e.className='btn '+(bt.cls||''); e.textContent=bt.t;
+   if(bt.id) e.id=bt.id;
+   e.onclick=()=>{ if(bt.keep!==true) closeModal(); if(bt.fn) bt.fn(); };
+   acts.appendChild(e);
+ });
+ m.classList.add('on');
+ if(o.after) o.after(b);
+ const f=acts.querySelector('button:last-child'); if(f && !o.noFocus) f.focus();
+}
+function closeModal(){ $('#modal').classList.remove('on'); }
+let toastT;
+function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>e.classList.remove('on'),3200); }
+
+/* ---------- Pantalla completa ---------- */
+function toggleFs(force){
+ const d=document, el=d.documentElement;
+ const isFs=d.fullscreenElement||d.webkitFullscreenElement;
+ try{
+  if(isFs && force!==true){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); return; }
+  if(!isFs){ const r=(el.requestFullscreen||el.webkitRequestFullscreen); if(!r) throw 0; const p=r.call(el); if(p&&p.catch) p.catch(()=>toast('Este navegador no permite la pantalla completa aquí. Pulse F11 si lo necesita.')); }
+ }catch(e){ toast('Este navegador no permite la pantalla completa aquí. Pulse F11 si lo necesita.'); }
+}
+
+/* ---------- Portada ---------- */
+function initPortada(){
+ $('#gatesRow').innerHTML=['and','or','not','nand','nor','xor','xnor'].map(t=>gateSVG(t,null,null,false,{labels:false,stroke:'#ffb627',fill:'#0f1c2e'})).join('');
+ const p=S.get('perfil',null);
+ if(p){ $('#inNombre').value=p.nombre; $('#inApellidos').value=p.apellidos; $('#inCurso').value=p.curso; $('#inGrupo').value=p.grupo; }
+ const iniciar=()=>{
+  const d={nombre:$('#inNombre').value.trim(),apellidos:$('#inApellidos').value.trim(),curso:$('#inCurso').value.trim(),grupo:$('#inGrupo').value.trim()};
+  if(!d.nombre||!d.apellidos||!d.curso||!d.grupo){ $('#errPortada').textContent='> Complete nombre, apellidos, curso y grupo para continuar.'; return; }
+  $('#errPortada').textContent='';
+  S.set('perfil',d);
+  show('historia'); typeStory();
+ };
+ $('#btnIniciar').addEventListener('click',iniciar);
+ $('#fPortada').querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); iniciar(); } }));
+ $('#btnFsPortada').onclick=()=>toggleFs();
+}
+
+/* ---------- Historia ---------- */
+let typing=null;
+function storyText(){
+ const ag=agente();
+ return `Agente ${ag}:
+
+La NASA le ha reclutado para una misión de alto secreto: la Operación Luciérnaga Binaria.
+
+Antes de ofrecerle un puesto en nuestro equipo, debemos observar su velocidad de aprendizaje. Tendrá que dominar el idioma con el que piensan los ordenadores de nuestras naves: los circuitos y sistemas lógicos.
+
+Si lo consigue, le daremos más información sobre la misión.
+
+¿Acepta el reto?
+
+— Dra. Brígida Oyarzun, directora de Reclutamiento`;
+}
+function typeStory(){
+ const el=$('#typed'), txt=storyText(); let i=0;
+ $('#decide').hidden=true; $('#btnSkip').parentElement.hidden=false;
+ clearInterval(typing);
+ const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce){ finishType(); return; }
+ typing=setInterval(()=>{ i+=2; el.innerHTML=esc(txt.slice(0,i))+'<span class="cursor">&nbsp;</span>'; if(i>=txt.length) finishType(); },28);
+}
+function finishType(){ clearInterval(typing); $('#typed').innerHTML=esc(storyText())+'<span class="cursor">&nbsp;</span>'; $('#decide').hidden=false; $('#btnSkip').parentElement.hidden=true; }
+function initHistoria(){
+ $('#btnSkip').onclick=finishType;
+ $('#btnAcepto').onclick=()=>{ S.set('decision','acepta'); buildConsola(); show('consola'); toast(`Bienvenido a bordo, agente ${agente()}. Empiece por el módulo 1.`); };
+ $('#btnRechazo').onclick=()=>modal({title:'¿Rechaza el reto?',html:'<p>Si no acepta, recibirá un certificado con una calificación de 0 y la misión continuará sin usted.</p>',
+   buttons:[{t:'Volver a pensarlo',cls:'ghost'},{t:'Sí, rechazo el reto',cls:'stop',fn:()=>{ S.set('decision','rechazo'); S.set('rechazoFecha',Date.now()); renderResultado(); show('resultado'); }}]});
+}
+
+/* ---------- Consola (índice) ---------- */
+function buildConsola(){
+ $('#trajSvg').innerHTML=trajSVG(); $('#oscSvg').innerHTML=oscSVG();
+ const vis=S.get('visitados',[]);
+ const pct=Math.round(vis.length/9*100);
+ $('#instr').innerHTML=
+  `<div class="bezel">${dialSVG('VOLT',4.2,0)}</div><div class="bezel">${dialSVG('AMP',5.5,1)}</div>`+
+  `<div class="status"><div><span class="plate">ESTADO DE FORMACIÓN</span></div>AGENTE: <b>${esc(agente().toUpperCase())}</b><br>MÓDULOS REVISADOS: <b>${vis.length}/9</b><div class="bar"><i style="width:${pct}%"></i></div>EVALUACIÓN: <b>${S.get('examen',null)&&S.get('examen').status==='done'?'COMPLETADA':'PENDIENTE'}</b></div>`+
+  `<div class="bezel">${stripSVG()}</div><div class="bezel">${dialSVG('Hz',6.4,.5)}</div>`;
+ const bt=SECS.map(s=>{
+   const inner=s.gate?`${gateSVG(s.gate,null,null,false,{labels:false,stroke:'#ffb627',fill:'#141b22'})}<span class="wd">${GATES[s.gate].nombre}</span>`:`<span class="wd">${s.word}</span>`;
+   return `<button type="button" class="pbtn ${vis.includes(s.key)?'done':''}" data-sec="${s.n}" aria-label="Módulo ${s.n}: ${s.title}"><span class="pl"></span><span class="num">${s.n}</span>${inner}</button>`;
+ }).join('')+`<button type="button" class="pbtn exam" id="btnExam" aria-label="Módulo 10: examen"><span class="pl"></span><span class="num">10</span><span class="wd">Examen</span></button>`;
+ $('#botonera').innerHTML=bt;
+ $('#botonera').querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>openSec(+b.dataset.sec));
+ $('#btnExam').onclick=goExam;
+}
+
+/* ---------- Secciones ---------- */
+let curSec=1;
+function openSec(n){
+ curSec=n; const s=SECS[n-1];
+ const vis=S.get('visitados',[]); if(!vis.includes(s.key)){ vis.push(s.key); S.set('visitados',vis); }
+ S.set('seccion',n);
+ const body=s.key==='intro'?secIntro():s.key==='puertas'?secPuertas():s.key==='tablas'?secTablas():secGate(s.key);
+ $('#secBody').innerHTML=`
+  <div class="sechead"><span class="n">${String(n).padStart(2,'0')}</span><h2>${s.title}</h2></div>
+  <div class="brief"><svg class="ico" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="15" fill="none" stroke="#58f0a0" stroke-width="2"/><path d="M17 3v28M3 17h28" stroke="#58f0a0" stroke-width="1"/><circle cx="23" cy="11" r="3" fill="#ffb627"/></svg><div>${BRIEF[s.key](esc(agente()))}</div></div>
+  ${body}
+  <nav class="navsec">
+   <button class="btn ghost" type="button" id="secPrev" ${n===1?'disabled':''}>◂ Módulo anterior</button>
+   <button class="btn" type="button" id="secHome">⌂ Volver a la consola</button>
+   <button class="btn ${n===9?'warn':'go'}" type="button" id="secNext">${n===9?'Ir al examen':'Módulo siguiente ▸'}</button>
+  </nav>`;
+ $('#secPrev').onclick=()=>openSec(n-1);
+ $('#secHome').onclick=()=>{ buildConsola(); show('consola'); };
+ $('#secNext').onclick=()=>n===9?goExam():openSec(n+1);
+ if(s.key==='intro') mountBits();
+ if(s.key==='puertas') mountSim($('#simNot'),'not','not');
+ if(s.key==='tablas') mountTT();
+ if(s.gate) mountSim($('#simGate'),s.gate,GATES[s.gate].kind);
+ show('sec');
+}
+
+function mountSim(el,gate,kind){
+ let a=0,b=0; const one=gate==='not';
+ const pbLabel=(kind==='not'||kind==='ncserie'||kind==='ncparalelo')?'1 = pulsado':(kind.startsWith('conm')?'1 = posición inferior':'1 = cerrado');
+ el.innerHTML=`<div class="sim"><div class="simin">
+   <button type="button" class="tgl" data-in="a" aria-pressed="false"><span class="sw"></span><span>A = <span class="v">0</span><small>${pbLabel}</small></span></button>
+   ${one?'':`<button type="button" class="tgl" data-in="b" aria-pressed="false"><span class="sw"></span><span>B = <span class="v">0</span><small>${pbLabel}</small></span></button>`}
+   <div class="ledout"><span class="led"></span><span>S = <span class="v">0</span></span></div></div>
+   <div class="simgrid"><figure class="fig"><figcaption>Puerta lógica</figcaption><div class="g"></div></figure>
+   <figure class="fig"><figcaption>Circuito eléctrico equivalente</figcaption><div class="c"></div></figure>
+   <figure class="fig"><figcaption>Tabla de verdad</figcaption><div class="t scroll"></div></figure></div></div>`;
+ const draw=()=>{
+  const s=one?FN.not(a):FN[gate](a,b);
+  el.querySelector('.g').innerHTML=gateSVG(gate,a,b,false);
+  el.querySelector('.c').innerHTML=circuitSVG(kind,a,b,!!s);
+  el.querySelector('.t').innerHTML=one?ttHTML(['A'],x=>1-x,a):ttHTML(['A','B'],FN[gate],a*2+b);
+  el.querySelector('.led').classList.toggle('on',!!s);
+  el.querySelector('.ledout .v').textContent=s;
+  el.querySelectorAll('.tgl').forEach(t=>{ const v=t.dataset.in==='a'?a:b; t.setAttribute('aria-pressed',v?'true':'false'); t.querySelector('.v').textContent=v; });
+ };
+ el.querySelectorAll('.tgl').forEach(t=>t.onclick=()=>{ if(t.dataset.in==='a') a=1-a; else b=1-b; draw(); });
+ draw();
+}
+function mountBits(){
+ const el=$('#bits'); let v=[0,0,0,0];
+ const draw=()=>{
+  el.innerHTML=v.map((x,i)=>`<button type="button" class="bit" data-i="${i}" aria-pressed="${x?'true':'false'}"><span class="w8">peso ${8>>i}</span><span class="led ${x?'on':''}"></span><span class="v">${x}</span></button>`).join('')+
+   `<div><div style="font-size:13px;color:var(--muted)">Decimal</div><div class="dec">${v[0]*8+v[1]*4+v[2]*2+v[3]}</div></div>`;
+  el.querySelectorAll('.bit').forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; v[i]=1-v[i]; draw(); });
+ };
+ draw();
+}
+function mountTT(){
+ const lab=$('#ttLab'); const set=n=>{ lab.innerHTML=ttLabHTML(n); $('#ttTabs').querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.n==n?'true':'false')); };
+ $('#ttTabs').querySelectorAll('.tab').forEach(t=>t.onclick=()=>set(+t.dataset.n));
+ set(2);
+}
+
+/* ---------- Examen: selección de preguntas ---------- */
+function pickExam(){
+ let used=new Set(S.get('usadas',[]));
+ const patterns=shuffle([['C','C','P','A'],['C','P','P','A'],['C','P','P','A'],['C','C','P','A'],['C','P','A','A']]);
+ const sel=[];
+ for(let b=1;b<=5;b++){
+  const pool=QB.filter(q=>q.b===b);
+  const subs=shuffle([...new Set(pool.map(q=>q.s))]);
+  const cats=shuffle(patterns[b-1].slice());
+  cats.forEach((c,i)=>{
+   const sub=subs.length>1?subs[i<2?0:1]:subs[0];
+   const cand=pool.filter(q=>q.s===sub&&q.c===c&&!sel.includes(q.id));
+   const fresh=cand.filter(q=>!used.has(q.id));
+   sel.push(pick(fresh.length?fresh:cand).id);
+  });
+ }
+ sel.forEach(id=>used.add(id));
+ if(used.size>=QB.length-8) used=new Set(sel);
+ S.set('usadas',[...used]);
+ const order=shuffle(sel.slice());
+ const perm={}; order.forEach(id=>perm[id]=shuffle([0,1,2,3]));
+ return order.map(id=>({id,perm:perm[id]}));
+}
+const Q=id=>QB.find(q=>q.id===id);
+
+/* ---------- Examen: flujo ---------- */
+function goExam(){
+ const ex=S.get('examen',null);
+ if(ex&&ex.status==='done'){ renderResultado(); show('resultado'); return; }
+ if(ex&&ex.status==='running'){ show('examen'); renderExam(); return; }
+ const p=S.get('perfil',{}); const vis=S.get('visitados',[]);
+ modal({warn:true,title:'⚠ Atención: va a entrar en la zona de evaluación',noFocus:true,html:`
+  <p><b>${esc(p.nombre)} ${esc(p.apellidos)}</b> · ${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
+  ${vis.length<9?`<p style="color:#ffd978">Aún no ha revisado todos los módulos (${vis.length} de 9). Puede volver a la consola antes de empezar.</p>`:''}
+  <ul>
+   <li>20 preguntas repartidas en 4 páginas de 5. Puede moverse entre ellas y cambiar sus respuestas hasta entregar.</li>
+   <li>Cada pregunta vale 1 punto. Las preguntas sin responder valen 0 y los errores no restan. Nota = puntos ÷ 20 × 10.</li>
+   <li><b>No salga de esta ventana.</b> Las dos primeras salidas no penalizan, pero constarán en el certificado. <b>A la tercera, el examen se bloquea</b> y se califica con lo respondido.</li>
+   <li>Recargar la página cuenta como salida. Sus respuestas se guardan, así que no podrá empezar de cero.</li>
+   <li>Durante el examen no está disponible el botón «Buscar información».</li>
+  </ul>
+  <label class="chk"><input type="checkbox" id="chkNormas"> <span>He leído las normas y las acepto.</span></label>`,
+  buttons:[{t:'Volver a la consola',cls:'ghost'},{t:'Comenzar la evaluación',cls:'warn',id:'btnStartEx',keep:true,fn:()=>{
+    if(!$('#chkNormas').checked){ toast('Marque la casilla para aceptar las normas.'); return; }
+    closeModal(); startExam(); }}],
+  after:b=>{ const st=b.querySelector('#btnStartEx'); st.disabled=true; b.querySelector('#chkNormas').onchange=e=>st.disabled=!e.target.checked; }
+ });
+}
+function startExam(){
+ graceUntil=Date.now()+2500;
+ toggleFs(true);
+ const ex={status:'running',qs:pickExam(),ans:{},exits:0,blocked:false,start:Date.now(),page:0};
+ S.set('examen',ex); show('examen'); renderExam();
+}
+function renderExam(){
+ const ex=S.get('examen'); const p=ex.page||0;
+ const map=ex.qs.map((q,i)=>`<button type="button" class="mc ${ex.ans[q.id]!=null?'ok':''} ${Math.floor(i/5)===p?'cur':''}" data-i="${i}" aria-label="Pregunta ${i+1}${ex.ans[q.id]!=null?', respondida':', sin responder'}">${i+1}</button>`).join('');
+ const qs=ex.qs.slice(p*5,p*5+5).map((it,k)=>{
+  const q=Q(it.id), idx=p*5+k;
+  return `<article class="qcard" id="q-${idx}"><div class="qh"><b>Pregunta ${idx+1}</b><span>${BLOQUES[q.b]}</span></div>
+   <p class="qtext">${q.q}</p>${q.img?`<div class="qimg">${gateSVG(q.img,null,null,false,{labels:true})}</div>`:''}
+   <div class="opts" role="radiogroup">${it.perm.map(oi=>`<label class="opt ${ex.ans[q.id]===oi?'sel':''}"><input type="radio" name="q${q.id}" value="${oi}" ${ex.ans[q.id]===oi?'checked':''}><span>${q.o[oi]}</span></label>`).join('')}</div></article>`;
+ }).join('');
+ $('#exBody').innerHTML=`
+  <div class="exhead"><h2>Evaluación de aptitud · página ${p+1} de 4</h2><span class="exits" id="exExits">Salidas: ${ex.exits} de 3</span></div>
+  <div class="map" id="exMap">${map}<div class="maplegend"><span><i class="ok"></i>Respondida</span><span><i></i>Sin responder</span><span>El marco amarillo señala las preguntas de esta página.</span></div></div>
+  ${qs}
+  <nav class="exnav"><button class="btn ghost" type="button" id="exPrev" ${p===0?'disabled':''}>◂ Página anterior</button>
+   <button class="btn warn" type="button" id="exSend">Entregar el examen</button>
+   <button class="btn go" type="button" id="exNext" ${p===3?'disabled':''}>Página siguiente ▸</button></nav>`;
+ $('#exMap').querySelectorAll('.mc').forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; goPage(Math.floor(i/5),i); });
+ $('#exPrev').onclick=()=>goPage(p-1); $('#exNext').onclick=()=>goPage(p+1);
+ $('#exSend').onclick=summary;
+ $('#exBody').querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{
+  const e=S.get('examen'); if(e.status!=='running') return;
+  const id=+r.name.slice(1); e.ans[id]=+r.value; S.set('examen',e);
+  r.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o.contains(r)));
+  const i=e.qs.findIndex(q=>q.id===id); const c=$('#exMap').querySelector(`[data-i="${i}"]`); if(c) c.classList.add('ok');
+ });
+}
+function goPage(p,focusI){
+ const ex=S.get('examen'); ex.page=Math.max(0,Math.min(3,p)); S.set('examen',ex); renderExam();
+ if(focusI!=null){ const e=document.getElementById('q-'+focusI); if(e) e.scrollIntoView({block:'start'}); } else window.scrollTo(0,0);
+}
+function summary(){
+ const ex=S.get('examen'); const pend=ex.qs.map((q,i)=>ex.ans[q.id]==null?i+1:null).filter(x=>x);
+ modal({title:'Resumen antes de entregar',html:`<p>Respondidas: <b>${20-pend.length} de 20</b>.</p>`+
+   (pend.length?`<p>Preguntas sin responder: <b>${pend.join(', ')}</b>. Valdrán 0 puntos.</p>`:'<p>Ha respondido todas las preguntas.</p>')+
+   '<p>Una vez entregado, no podrá cambiar ninguna respuesta.</p>',
+  buttons:[{t:'Seguir revisando',cls:'ghost'},{t:'Entregar definitivamente',cls:'warn',fn:()=>finalize(false)}]});
+}
+function finalize(blocked){
+ const ex=S.get('examen'); if(!ex||ex.status!=='running') return;
+ const pb={1:0,2:0,3:0,4:0,5:0}; let pts=0;
+ ex.qs.forEach(it=>{ const q=Q(it.id); if(ex.ans[it.id]===0){ pts++; pb[q.b]++; } });
+ ex.status='done'; ex.blocked=blocked; ex.end=Date.now(); ex.puntos=pts; ex.porBloque=pb; ex.nota=Math.round(pts/20*100)/10;
+ S.set('examen',ex);
+ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){}
+ renderResultado(); show('resultado');
+ if(blocked) modal({title:'Examen bloqueado',html:'<p>Ha salido de la ventana por tercera vez. El examen se ha calificado con las respuestas que había dado hasta ese momento.</p>'});
+}
+
+/* ---------- Control de salidas ---------- */
+let away=false, graceUntil=0;
+function examRunning(){ const e=S.get('examen',null); return e&&e.status==='running'&&$('#v-examen').classList.contains('on'); }
+function onLeave(){
+ if(away||!examRunning()||Date.now()<graceUntil) return; away=true;
+ const e=S.get('examen'); e.exits++; S.set('examen',e); S.set('ultimaSalida',Date.now());
+ if(e.exits>=3) finalize(true);
+}
+function onBack(){
+ if(!away) return; away=false;
+ const e=S.get('examen',null); if(!e||e.status!=='running') return;
+ const x=$('#exExits'); if(x) x.textContent=`Salidas: ${e.exits} de 3`;
+ modal({warn:true,title:`Salida registrada (${e.exits} de 3)`,html:`<p>Ha salido de la ventana del examen. Esta salida no resta puntos, pero constará en el certificado.</p><p><b>A la tercera salida el examen se bloqueará.</b></p>`,buttons:[{t:'Volver al examen',cls:'warn'}]});
+}
+document.addEventListener('visibilitychange',()=>document.hidden?onLeave():onBack());
+window.addEventListener('blur',onLeave);
+window.addEventListener('focus',onBack);
+
+/* ---------- Resultado y certificado ---------- */
+function rol(n){
+ if(n<5) return {cls:'r0',t:'Candidatura no seleccionada',m:'No ha superado la evaluación de aptitud. Le invitamos a seguir con su vida acomodada… mientras pueda.'};
+ if(n<8) return {cls:'r1',t:'Personal de apoyo técnico',m:'Ha superado la evaluación. Le invitamos a formar parte de la Operación Luciérnaga Binaria como personal de apoyo técnico. Pronto recibirá más información sobre la misión.'};
+ return {cls:'r2',t:'Personal imprescindible',m:'Ha superado la evaluación con distinción. Le invitamos a formar parte de la Operación Luciérnaga Binaria como personal imprescindible. Pronto recibirá más información sobre la misión.'};
+}
+function sealSVG(){
+ return `<svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#25364a" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#25364a" stroke-width="1.5" stroke-dasharray="3 3"/>
+ <path d="M34 36 H48 A14 14 0 0 1 48 64 H34 Z" fill="#25364a"/><line x1="24" y1="43" x2="34" y2="43" stroke="#25364a" stroke-width="3"/><line x1="24" y1="57" x2="34" y2="57" stroke="#25364a" stroke-width="3"/><line x1="62" y1="50" x2="76" y2="50" stroke="#25364a" stroke-width="3"/>
+ <text x="50" y="26" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">LUCIÉRNAGA</text><text x="50" y="82" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">BINARIA</text></svg>`;
+}
+function renderResultado(){
+ const p=S.get('perfil',{nombre:'',apellidos:'',curso:'',grupo:''});
+ const ex=S.get('examen',null); const rech=S.get('decision','')==='rechazo'&&!(ex&&ex.status==='done');
+ let r, nota, datos, salidas, cuando;
+ if(rech){
+  r={cls:'r0',t:'Reto no aceptado',m:'Ha decidido no aceptar el reto. Le invitamos a seguir con su vida acomodada… mientras pueda.'};
+  nota=0; cuando=S.get('rechazoFecha',Date.now());
+  datos='<tr><td colspan="2">No realizó la evaluación.</td></tr>'; salidas='No procede';
+ } else {
+  nota=ex.nota; r=rol(nota); cuando=ex.end;
+  datos=[1,2,3,4,5].map(b=>`<tr><td>${BLOQUES[b]}</td><td>${ex.porBloque[b]} / 4</td></tr>`).join('')+`<tr><th>Total</th><th>${ex.puntos} / 20</th></tr>`;
+  salidas=ex.blocked?'Examen bloqueado al salir de la ventana 3 veces. Calificado con lo respondido.':(ex.exits===0?'Ninguna salida registrada.':`${ex.exits} ${ex.exits===1?'salida registrada':'salidas registradas'} (sin penalización).`);
+ }
+ const cert=`<article class="cert" id="cert">
+  <div class="top">${sealSVG()}<div class="agency" style="flex:1">NASA · PROGRAMA DE RECLUTAMIENTO<br>DIVISIÓN DE SISTEMAS LÓGICOS</div><span class="clas">ALTO SECRETO</span></div>
+  <h2>Certificado de evaluación</h2>
+  <p class="op">Operación Luciérnaga Binaria · Circuitos y sistemas lógicos I</p>
+  <p class="name">${esc(p.nombre)} ${esc(p.apellidos)}</p>
+  <p class="grp">${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
+  <div class="role ${r.cls}">${r.t}</div>
+  <p class="msg">${r.m}</p>
+  <div class="data">
+   <div class="nota"><span>Calificación</span><b>${fmt(nota)}</b><span>sobre 10</span></div>
+   <div><table><thead><tr><th>Bloque</th><th>Puntos</th></tr></thead><tbody>${datos}</tbody></table>
+   <p style="margin:6px 0 0;font-size:14px"><b>Salidas de la ventana:</b> ${salidas}</p></div>
+  </div>
+  <div class="foot2"><div><b>Fecha y hora:</b> ${fecha(cuando)}<br><b>ID de obra:</b> ${OBRA_ID}</div>
+   <div class="sig"><div class="sgn">B. Oyarzun</div>Dra. Brígida Oyarzun<br>Directora de Reclutamiento</div></div>
+  <div class="legal">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor.</div>
+ </article>`;
+ let corr='';
+ if(!rech){
+  corr=`<section class="corr"><h3>Examen corregido</h3>`+ex.qs.map((it,i)=>{
+   const q=Q(it.id), a=ex.ans[it.id], ok=a===0;
+   return `<article class="qcard"><div class="qh"><b>Pregunta ${i+1}</b><span>${BLOQUES[q.b]} · ${CATS[q.c]}</span><span class="pts ${ok?'p1':'p0'}">${ok?'1':'0'} ${ok?'punto':'puntos'}</span></div>
+    <p class="qtext">${q.q}</p>${q.img?`<div class="qimg">${gateSVG(q.img,null,null,false)}</div>`:''}
+    <div class="opts">${it.perm.map(oi=>`<div class="opt ${oi===0?'right':(oi===a?'wrong':'')}"><span>${oi===0?'✔ ':(oi===a?'✘ ':'')}${q.o[oi]}</span></div>`).join('')}</div>
+    ${a==null?'<p style="color:#ffb4a8;margin:8px 0 0">Sin responder.</p>':''}
+    <div class="expl">${q.e}</div></article>`;
+  }).join('')+'</section>';
+ }
+ $('#resBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button>
+   ${S.get('decision','')==='acepta'?'<button class="btn" type="button" id="btnResHome">⌂ Volver a la consola</button>':''}</div>
+   ${cert}${corr}
+   <button class="newx noprint" type="button" id="btnNuevo">Empezar un examen nuevo (otro alumno)</button>`;
+ $('#btnPrint').onclick=()=>window.print();
+ const h=$('#btnResHome'); if(h) h.onclick=()=>{ buildConsola(); show('consola'); };
+ $('#btnNuevo').onclick=()=>modal({title:'¿Empezar con otro alumno?',html:'<p>Se borrarán de este ordenador los datos del alumno actual, su examen y su certificado. Asegúrese de haberlo impreso o guardado en PDF antes de continuar.</p>',
+   buttons:[{t:'Cancelar',cls:'ghost'},{t:'Borrar y empezar de nuevo',cls:'stop',fn:resetAll}]});
+}
+function resetAll(){
+ ['perfil','decision','visitados','examen','vista','seccion','rechazoFecha','ultimaSalida'].forEach(k=>S.del(k));
+ location.reload();
+}
+
+/* ---------- Arranque ---------- */
+function init(){
+ initPortada(); initHistoria();
+ $('#hudFs').onclick=()=>toggleFs();
+ $('#hudConsola').onclick=()=>{ buildConsola(); show('consola'); };
+ const ex=S.get('examen',null);
+ if(ex&&ex.status==='running'){
+  const last=S.get('ultimaSalida',0);
+  if(Date.now()-last>5000){ ex.exits++; S.set('examen',ex); }
+  if(ex.exits>=3){ show('examen'); finalize(true); return; }
+  show('examen'); renderExam();
+  modal({warn:true,title:`Recarga detectada (${ex.exits} de 3)`,html:'<p>Recargar o cerrar la página cuenta como salida. Sus respuestas se han conservado.</p><p><b>A la tercera salida el examen se bloqueará.</b></p>',buttons:[{t:'Volver al examen',cls:'warn'}]});
+  return;
+ }
+ if(ex&&ex.status==='done'){ renderResultado(); show('resultado'); return; }
+ const dec=S.get('decision','');
+ if(dec==='rechazo'){ renderResultado(); show('resultado'); return; }
+ if(S.get('perfil',null)&&dec==='acepta'){
+  buildConsola();
+  const v=S.get('vista','consola'), n=S.get('seccion',1);
+  if(v==='sec') openSec(n); else show('consola');
+  return;
+ }
+ if(S.get('perfil',null)){ show('historia'); typeStory(); return; }
+ show('portada');
+}
+document.addEventListener('DOMContentLoaded',init);
+
+</script>
+</body>
+</html>
