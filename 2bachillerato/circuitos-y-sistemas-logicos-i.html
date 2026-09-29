@@ -685,9 +685,22 @@ function secIntro(){
  </ul>
  <div class="fact"><b>Dato de misión.</b> El ordenador de guiado del Apolo (AGC), que llevó a la tripulación hasta la Luna, usaba en su versión tripulada unos 2.800 circuitos integrados, casi todos con dos puertas NOR de tres entradas. Una sola clase de puerta bastaba para construir todo el ordenador.</div></div>
 
- <div class="card"><h3>Pruébelo: cuente en binario</h3>
+ <div class="card"><h3>Pruébelo: de binario a decimal</h3>
  <p>Cada interruptor es un bit. Con 4 bits se forman 2⁴ = 16 combinaciones, del 0 al 15. Recuérdelo, porque es justo lo que necesitará para construir tablas de verdad de 4 variables.</p>
- <div class="bits" id="bits"></div></div>`;
+ <div class="bits" id="bits"></div>
+ <p class="mono" id="bin2decOp" style="margin:10px 0 6px;color:var(--hot);font-size:17px"></p>
+ <button class="btn ghost" type="button" data-help="b2d">❓ ¿Cómo se pasa de binario a decimal?</button></div>
+
+ <div class="card"><h3>Pruébelo: de decimal a binario</h3>
+ <p>Escriba un número del 0 al 15 y observe qué bits se encienden y cómo se obtienen con divisiones sucesivas entre 2.</p>
+ <div class="bits" style="align-items:center">
+  <button class="btn" type="button" id="d2bMenos" aria-label="Restar 1">−</button>
+  <input id="d2bIn" type="number" min="0" max="15" value="13" class="dec" style="width:120px;text-align:center;font-family:var(--f-mono)" aria-label="Número decimal">
+  <button class="btn" type="button" id="d2bMas" aria-label="Sumar 1">+</button>
+  <div id="d2bLeds" class="bits"></div>
+ </div>
+ <div class="scroll" id="d2bSteps" style="margin-top:10px"></div>
+ <button class="btn ghost" type="button" data-help="d2b">❓ ¿Cómo se pasa de decimal a binario?</button></div>`;
 }
 
 function secPuertas(){
@@ -706,6 +719,23 @@ function secPuertas(){
   <li><b>Puertas universales:</b> NAND y NOR. Con cualquiera de ellas, repetida las veces necesarias, se puede construir cualquier otra puerta.</li>
  </ul>
  <p>Las puertas se venden agrupadas en <b>circuitos integrados</b>. Por ejemplo, el 7400 (familia TTL) contiene cuatro puertas NAND de dos entradas. La familia CMOS (serie 4000 o 74HC) consume menos energía.</p></div>
+
+ <div class="card"><h3>Cómo se opera con las puertas: producto, suma y negación</h3>
+ <p>Las puertas se operan con el <b>álgebra de Boole</b>, que usa los mismos signos que el álgebra de siempre: el punto (·) para el producto y el signo más (+) para la suma. Las cuentas son casi iguales… con una excepción importante.</p>
+ <div class="g2">
+  <div class="mini"><h4>Producto lógico · AND</h4><p>Funciona exactamente igual que multiplicar:</p>
+   <p class="mono" style="font-size:18px;line-height:1.8">0 · 0 = 0<br>0 · 1 = 0<br>1 · 0 = 0<br>1 · 1 = 1</p><p>Basta un 0 para que el resultado sea 0, como en cualquier multiplicación.</p></div>
+  <div class="mini"><h4>Suma lógica · OR</h4><p>Es como sumar, salvo en el último caso:</p>
+   <p class="mono" style="font-size:18px;line-height:1.8">0 + 0 = 0<br>0 + 1 = 1<br>1 + 0 = 1<br><span style="color:var(--hot)">1 + 1 = 1</span> ⚠</p><p>En álgebra 1 + 1 = 2, pero en lógica la salida solo puede valer 0 o 1. La suma lógica solo responde a una pregunta: <b>¿hay algún 1?</b> Por eso 1 + 1 = 1, y también 1 + 1 + 1 = 1.</p></div>
+ </div>
+ <p style="margin-top:12px"><b>Orden de las operaciones.</b> Igual que en matemáticas: primero lo que hay entre paréntesis, después los productos y por último las sumas. Por ejemplo, con A = 1, B = 0 y C = 1: <span class="mono" style="color:var(--hot)">S = A·B + C = 1·0 + 1 = 0 + 1 = 1</span>.</p>
+ <h4 style="margin:14px 0 6px;color:var(--cyan)">La negación: la barra da la vuelta al resultado</h4>
+ <p>La barra que se dibuja encima (${N('A')}, ${N('A · B')}, ${N('A + B')}) <b>cambia el resultado por el contrario</b>: un 0 pasa a ser 1 y un 1 pasa a ser 0. Cuando la barra cubre una operación, se calcula primero la operación que hay debajo y <b>después se invierte</b> su resultado. Por eso la NAND da justo lo contrario que la AND, y la NOR justo lo contrario que la OR.</p>
+ <div class="scroll"><table class="tt"><thead><tr><th>A</th><th>B</th><th>A · B</th><th>${N('A · B')} (NAND)</th><th>A + B</th><th>${N('A + B')} (NOR)</th></tr></thead><tbody>
+  ${[[0,0],[0,1],[1,0],[1,1]].map(([a,b])=>`<tr><td>${a}</td><td>${b}</td><td>${a&b}</td><td class="o">${1-(a&b)}</td><td>${a|b}</td><td class="o">${1-(a|b)}</td></tr>`).join('')}</tbody></table></div>
+ <div class="fact"><b>¡Cuidado!</b> No es lo mismo negar el resultado (una barra larga sobre toda la operación) que negar cada variable (barras cortas). Con A = 1 y B = 0: ${N('A · B')} = ${N('1 · 0')} = ${N('0')} = <b>1</b>, pero ${N('A')} · ${N('B')} = 0 · 1 = <b>0</b>.</div>
+ <h4 style="margin:14px 0 6px;color:var(--cyan)">Calculadora lógica <small style="color:var(--muted);font-weight:500">· cambie A, B y C</small></h4>
+ <div id="calcBool"></div></div>
 
  <div class="card"><h3>Símbolos: norma ANSI y norma IEC</h3>
  <p>Hay dos formas de dibujarlas. La norma <b>ANSI</b> usa formas distintas para cada puerta; la <b>IEC</b> usa siempre un rectángulo con un signo en su interior: <b>&amp;</b> para AND, <b>≥1</b> para OR, <b>=1</b> para XOR y <b>1</b> para NOT. El pequeño círculo en la salida indica que la salida está <b>negada</b>.</p>
@@ -1263,7 +1293,7 @@ function openSec(n){
  $('#secHome').onclick=()=>{ buildConsola(); show('consola'); };
  $('#secNext').onclick=()=>n===9?goExam():openSec(n+1);
  if(s.key==='intro') mountBits();
- if(s.key==='puertas') mountSim($('#simNot'),'not','not');
+ if(s.key==='puertas'){ mountSim($('#simNot'),'not','not'); mountCalc(); }
  if(s.key==='tablas') mountTT();
  if(s.gate) mountSim($('#simGate'),s.gate,GATES[s.gate].kind);
  show('sec');
@@ -1297,7 +1327,49 @@ function mountBits(){
   el.innerHTML=v.map((x,i)=>`<button type="button" class="bit" data-i="${i}" aria-pressed="${x?'true':'false'}"><span class="w8">peso ${8>>i}</span><span class="led ${x?'on':''}"></span><span class="v">${x}</span></button>`).join('')+
    `<div><div style="font-size:13px;color:var(--muted)">Decimal</div><div class="dec">${v[0]*8+v[1]*4+v[2]*2+v[3]}</div></div>`;
   el.querySelectorAll('.bit').forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; v[i]=1-v[i]; draw(); });
+  $('#bin2decOp').innerHTML=`${v.join('')} → `+v.map((x,i)=>`${x}·${8>>i}`).join(' + ')+` = ${v[0]*8+v[1]*4+v[2]*2+v[3]}`;
  };
+ draw();
+ // decimal a binario
+ const inp=$('#d2bIn');
+ const d2b=()=>{ let n=Math.max(0,Math.min(15,Math.round(+inp.value||0))); inp.value=n;
+  const b=[8,4,2,1].map(w=>(n&w)?1:0);
+  $('#d2bLeds').innerHTML=b.map((x,i)=>`<div class="bit" style="cursor:default"><span class="w8">peso ${8>>i}</span><span class="led ${x?'on':''}"></span><span class="v">${x}</span></div>`).join('');
+  let q=n, rows=''; const rs=[];
+  if(n===0) rows='<tr><td>0 ÷ 2</td><td>0</td><td class="o">0</td></tr>';
+  while(q>0){ rows+=`<tr><td>${q} ÷ 2</td><td>${Math.floor(q/2)}</td><td class="o">${q%2}</td></tr>`; rs.push(q%2); q=Math.floor(q/2); }
+  const bin=n===0?'0':rs.slice().reverse().join('');
+  $('#d2bSteps').innerHTML=`<table class="tt"><thead><tr><th>División</th><th>Cociente</th><th>Resto</th></tr></thead><tbody>${rows}</tbody></table>
+   <p class="mono" style="color:var(--hot);font-size:17px;margin:8px 0">Restos leídos de abajo arriba: ${n} = ${bin}₂ → con 4 bits: ${b.join('')}</p>`; };
+ inp.oninput=d2b; $('#d2bMenos').onclick=()=>{ inp.value=(+inp.value||0)-1; d2b(); }; $('#d2bMas').onclick=()=>{ inp.value=(+inp.value||0)+1; d2b(); };
+ d2b();
+ document.querySelectorAll('[data-help]').forEach(b=>b.onclick=()=>modal(HELP[b.dataset.help]));
+}
+const HELP={
+ b2d:{title:'De binario a decimal',html:`<p>En binario, cada posición tiene un <b>peso</b> que es una potencia de 2. Empezando por la derecha, los pesos son 1, 2, 4, 8, 16…</p>
+  <table class="tt"><thead><tr><th>Posición</th><th>4.ª</th><th>3.ª</th><th>2.ª</th><th>1.ª</th></tr></thead><tbody><tr><td>Peso</td><td>2³ = 8</td><td>2² = 4</td><td>2¹ = 2</td><td>2⁰ = 1</td></tr></tbody></table>
+  <p><b>Método:</b> multiplique cada bit por su peso y sume los resultados. Como los bits solo valen 0 o 1, basta con <b>sumar los pesos de las posiciones que tienen un 1</b>.</p>
+  <p class="mono" style="color:var(--hot);font-size:17px">1011 = 1·8 + 0·4 + 1·2 + 1·1 = 8 + 2 + 1 = 11</p>
+  <p class="mono" style="color:var(--hot);font-size:17px">0110 = 0·8 + 1·4 + 1·2 + 0·1 = 4 + 2 = 6</p>`},
+ d2b:{title:'De decimal a binario',html:`<p><b>Método 1: divisiones sucesivas entre 2.</b></p>
+  <ol><li>Divida el número entre 2 y anote el <b>resto</b> (siempre será 0 o 1).</li><li>Vuelva a dividir el <b>cociente</b> entre 2 y anote el nuevo resto.</li><li>Repita hasta que el cociente sea 0.</li><li>Lea los restos <b>de abajo arriba</b>: ese es el número en binario.</li></ol>
+  <table class="tt"><thead><tr><th>División</th><th>Cociente</th><th>Resto</th></tr></thead><tbody><tr><td>13 ÷ 2</td><td>6</td><td class="o">1</td></tr><tr><td>6 ÷ 2</td><td>3</td><td class="o">0</td></tr><tr><td>3 ÷ 2</td><td>1</td><td class="o">1</td></tr><tr><td>1 ÷ 2</td><td>0</td><td class="o">1</td></tr></tbody></table>
+  <p class="mono" style="color:var(--hot);font-size:17px">Leyendo de abajo arriba: 13 = 1101</p>
+  <p><b>Método 2: restar pesos.</b> Busque el mayor peso (8, 4, 2, 1) que cabe en el número, ponga un 1 en esa posición y réstelo. Siga con lo que queda; los pesos que no caben llevan un 0.</p>
+  <p class="mono" style="color:var(--hot);font-size:17px">13 = 8 + 4 + 1 → 1·8 + 1·4 + 0·2 + 1·1 → 1101</p>`}
+};
+function mountCalc(){
+ const el=$('#calcBool'); let v={A:1,B:0,C:1};
+ const draw=()=>{ const {A,B,C}=v, and=A&B, or=A|B;
+  el.innerHTML=`<div class="simin">${['A','B','C'].map(k=>`<button type="button" class="tgl" data-k="${k}" aria-pressed="${v[k]?'true':'false'}"><span class="sw"></span><span>${k} = <span class="v">${v[k]}</span></span></button>`).join('')}</div>
+   <div class="mono" style="font-size:18px;line-height:2;background:#07101a;border:1px solid #243a54;border-radius:10px;padding:10px 14px;overflow-x:auto">
+    A · B = ${A} · ${B} = <b style="color:var(--hot)">${and}</b><br>
+    A + B = ${A} + ${B} = <b style="color:var(--hot)">${or}</b>${A&&B?' <span style="color:#ffd978">← 1 + 1 = 1</span>':''}<br>
+    ${N('A · B')} = ${N(`${A} · ${B}`)} = ${N(String(and))} = <b style="color:var(--hot)">${1-and}</b> <span style="color:var(--muted)">(NAND)</span><br>
+    ${N('A + B')} = ${N(`${A} + ${B}`)} = ${N(String(or))} = <b style="color:var(--hot)">${1-or}</b> <span style="color:var(--muted)">(NOR)</span><br>
+    ${N('A')} · ${N('B')} = ${1-A} · ${1-B} = <b style="color:var(--hot)">${(1-A)&(1-B)}</b> <span style="color:var(--muted)">(compárelo con la NAND)</span><br>
+    A · B + C = ${A} · ${B} + ${C} = ${and} + ${C} = <b style="color:var(--hot)">${and|C}</b></div>`;
+  el.querySelectorAll('.tgl').forEach(t=>t.onclick=()=>{ v[t.dataset.k]=1-v[t.dataset.k]; draw(); }); };
  draw();
 }
 function mountTT(){
