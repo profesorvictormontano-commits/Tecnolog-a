@@ -38,7 +38,7 @@ body{margin:0;min-height:100%;background:var(--room);color:var(--ink);font-famil
 svg{max-width:100%}
 button{font-family:inherit}
 :focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
-.ov{text-decoration:overline;text-decoration-thickness:1.6px}
+.ov{display:inline-block;border-top:1.6px solid currentColor;padding-top:1px;line-height:1.12;text-decoration:none}
 .mono{font-family:var(--f-mono)}
 main{flex:1;width:100%}
 .view{display:none}.view.on{display:block}
@@ -669,6 +669,94 @@ function twoLevelSVG(terms,n,kind,opt){
 }
 const termsFromStr=s=>s.split('+').map(t=>t.trim()).filter(Boolean).map(t=>{ const r=[]; for(let i=0;i<t.length;i++){ if(/[A-D]/.test(t[i])){ const neg=t[i+1]==="'"; r.push({v:t[i],neg}); } } return r; });
 
+
+/* ---------- Simplificación mínima con salidas indiferentes (X) ---------- */
+function minimalCoverX(ones,n,dc){
+  dc=dc||[]; const allow=new Set([...ones,...dc]);
+  if(!ones.length) return {terms:[],cubes:[],str:'0',lits:0};
+  const imps=[];
+  const rec=(k,cube)=>{ if(k===n){ const cells=[]; for(let i=0;i<(1<<n);i++) if(cube.every((b,j)=>b===null||((i>>(n-1-j))&1)===b)) cells.push(i);
+      if(cells.every(x=>allow.has(x))&&cells.some(x=>ones.includes(x))) imps.push({cube:cube.slice(),cells,lits:cube.filter(b=>b!==null).length}); return; }
+    for(const b of [0,1,null]){ cube.push(b); rec(k+1,cube); cube.pop(); } };
+  rec(0,[]);
+  if(imps.some(p=>p.lits===0)) return {terms:[[]],cubes:[imps.find(p=>p.lits===0).cells],str:'1',lits:0};
+  const primes=imps.filter(a=>!imps.some(b=>b.cells.length>a.cells.length&&a.cells.every(x=>b.cells.includes(x))));
+  let best=null;
+  const search=(chosen,covered,lit)=>{
+    if(best&&(lit>best.lit||(lit===best.lit&&chosen.length>=best.ch.length))) return;
+    const un=ones.find(x=>!covered.has(x));
+    if(un===undefined){ best={ch:chosen.slice(),lit}; return; }
+    primes.filter(p=>p.cells.includes(un)).sort((a,b)=>b.cells.length-a.cells.length).forEach(p=>{ const nc=new Set(covered); p.cells.forEach(x=>nc.add(x)); chosen.push(p); search(chosen,nc,lit+p.lits); chosen.pop(); });
+  };
+  search([],new Set(),0);
+  best.ch.sort((a,b)=>termStr(cubeTerm(a.cube)).localeCompare(termStr(cubeTerm(b.cube))));
+  const terms=best.ch.map(p=>cubeTerm(p.cube));
+  return {terms,cubes:best.ch.map(p=>p.cells),str:terms.map(termStr).join(' + '),lits:best.lit};
+}
+/* Producto de sumas mínimo: se simplifica la función negada y se complementa cada término */
+function minimalPOS(ones,n,dc){
+  dc=dc||[]; const zeros=[...Array(1<<n).keys()].filter(i=>!ones.includes(i)&&!dc.includes(i));
+  const z=minimalCoverX(zeros,n,dc);
+  const factors=z.terms.map(t=>t.map(l=>({v:l.v,neg:!l.neg})));
+  return {factors,cubes:z.cubes,str:factors.map(f=>f.length>1?'('+f.map(l=>l.v+(l.neg?"'":'')).join(' + ')+')':f.map(l=>l.v+(l.neg?"'":'')).join('')).join(''),lits:z.lits};
+}
+const litH=l=>l.neg?OV(l.v):l.v;
+/* Expresiones con doble negación para NAND y NOR */
+function nandExprH(terms){
+  if(terms.length===1){ const t=terms[0]; return t.length===1?litH(t[0]):OV(OV(t.map(litH).join('·'))); }
+  return OV(terms.map(t=>t.length===1?(t[0].neg?t[0].v:OV(t[0].v)):OV(t.map(litH).join('·'))).join(' · '));
+}
+function norExprH(factors){
+  if(factors.length===1){ const f=factors[0]; return f.length===1?litH(f[0]):OV(OV(f.map(litH).join(' + '))); }
+  return OV(factors.map(f=>f.length===1?(f[0].neg?f[0].v:OV(f[0].v)):OV(f.map(litH).join(' + '))).join(' + '));
+}
+function sumH(terms){ return terms.map(t=>t.map(litH).join('·')).join(' + '); }
+function prodH(factors){ return factors.map(f=>f.length>1?'('+f.map(litH).join(' + ')+')':litH(f[0])).join('·'); }
+
+/* ---------- Circuito solo con NAND (desde suma de productos) o solo con NOR (desde producto de sumas) ----------
+   Los inversores se dibujan como puertas del mismo tipo con las dos entradas unidas. */
+function universalSVG(groups,n,kind){
+  const st='#c9d7e3', mono="font-family:'Share Tech Mono',monospace";
+  const single=groups.length===1;
+  // literales que necesitan inversor
+  const need=new Set();
+  groups.forEach(g=>{ if(g.length>=2) g.forEach(l=>{ if(l.neg) need.add(l.v); });
+    else if(g.length===1){ const l=g[0]; if(single?l.neg:!l.neg) need.add(l.v); } });
+  const inv=VN.slice(0,n).filter(v=>need.has(v));
+  const bx=k=>18+k*24, xInv=18+n*24+24, nb=j=>xInv+82+j*22;
+  let wires='',dots='',gates='',labels='';
+  const busOf=(v,neg)=>neg?nb(inv.indexOf(v)):bx(VN.indexOf(v));
+  inv.forEach((v,j)=>{ const y=10+j*44, g=shapeGate(kind,xInv,y,30), b=bx(VN.indexOf(v));
+    [y+10,y+20].forEach(py=>{ wires+=`<line x1="${b}" y1="${py}" x2="${g.pinX}" y2="${py}" stroke="${st}" stroke-width="2"/>`; dots+=`<circle cx="${b}" cy="${py}" r="3" fill="${st}"/>`; });
+    gates+=g.svg; wires+=`<polyline points="${g.outX},${g.outY} ${nb(j)},${g.outY}" fill="none" stroke="${st}" stroke-width="2"/>`;
+    labels+=`<text x="${nb(j)+4}" y="${g.outY-4}" style="${mono};font-size:12px" fill="#ffe3a8">${v}</text><line x1="${nb(j)+4}" y1="${g.outY-15}" x2="${nb(j)+11}" y2="${g.outY-15}" stroke="#ffe3a8" stroke-width="1.2"/>`; });
+  const x1=(inv.length?nb(inv.length-1):xInv)+48;
+  let y=Math.max(18,10+inv.length*44+8); const outs=[];
+  groups.forEach(g=>{
+    if(g.length>=2){ const h=Math.max(40,g.length*15), q=shapeGate(kind,x1,y,h); gates+=q.svg;
+      g.forEach((l,k)=>{ const py=y+h*(k+1)/(g.length+1), sx=busOf(l.v,l.neg); wires+=`<line x1="${sx}" y1="${py}" x2="${q.pinX}" y2="${py}" stroke="${st}" stroke-width="2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3" fill="${st}"/>`; });
+      outs.push({x:q.outX,y:q.outY}); y+=h+14; }
+    else { const l=g[0], neg=single?l.neg:!l.neg, py=y+12, sx=busOf(l.v,neg);
+      wires+=`<line x1="${sx}" y1="${py}" x2="${x1+64}" y2="${py}" stroke="${st}" stroke-width="2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3" fill="${st}"/>`; outs.push({x:x1+64,y:py,lit:true}); y+=24+14; }
+  });
+  const H=Math.max(y+8,10+inv.length*44+20);
+  const x2=x1+150; let sx,sy;
+  if(single&&outs[0].lit){ sx=outs[0].x; sy=outs[0].y; }
+  else if(single){ const o=outs[0], q=shapeGate(kind,x2,o.y-15,30); gates+=q.svg;
+    [o.y-5,o.y+5].forEach(py=>{ wires+=`<polyline points="${o.x},${o.y} ${q.pinX-12},${o.y} ${q.pinX-12},${py} ${q.pinX},${py}" fill="none" stroke="${st}" stroke-width="2"/>`; });
+    sx=q.outX; sy=q.outY; }
+  else { const h2=Math.max(40,outs.length*15), y2=Math.max(14,(outs[0].y+outs[outs.length-1].y)/2-h2/2), q=shapeGate(kind,x2,y2,h2); gates+=q.svg;
+    outs.forEach((o,k)=>{ const py=y2+h2*(k+1)/(outs.length+1), mx=q.pinX-16-((k%4)*7);
+      wires+=`<polyline points="${o.x},${o.y} ${mx},${o.y} ${mx},${py} ${q.pinX},${py}" fill="none" stroke="${st}" stroke-width="2"/>`; });
+    sx=q.outX; sy=q.outY; }
+  const W=Math.max(sx+60,x2+110);
+  for(let k=0;k<n;k++){ wires=`<line x1="${bx(k)}" y1="2" x2="${bx(k)}" y2="${H}" stroke="${st}" stroke-width="2"/>`+wires; labels+=`<text x="${bx(k)}" y="-2" text-anchor="middle" style="${mono};font-size:14px" fill="#ffe3a8">${VN[k]}</text>`; }
+  inv.forEach((v,j)=>{ const oy=10+j*44+15; wires+=`<line x1="${nb(j)}" y1="${oy}" x2="${nb(j)}" y2="${H}" stroke="${st}" stroke-width="2"/>`; });
+  wires+=`<line x1="${sx}" y1="${sy}" x2="${W-26}" y2="${sy}" stroke="#ffb627" stroke-width="3"/>`;
+  labels+=`<text x="${W-20}" y="${sy+6}" style="${mono};font-size:18px" fill="#ffb627">S</text>`;
+  return `<svg viewBox="0 -16 ${W} ${H+22}" role="img" aria-label="Circuito solo con puertas ${kind.toUpperCase()}">${wires}${dots}${gates}${labels}</svg>`;
+}
+
 /* ---------- Teoría ---------- */
 const TEORIA=()=>`
  <div class="card"><h3>¿Qué es un mapa de Karnaugh?</h3>
@@ -695,10 +783,40 @@ const TEORIA=()=>`
   <li>Las <b>cuatro esquinas</b> forman un grupo válido.</li></ul></div></div>
  <h4 style="color:var(--cyan);margin:12px 0 6px">Tipos de agrupamientos</h4>
  <div class="g2" id="tiposAg"></div></div>
+
+ <div class="card"><h3>Implementación solo con puertas NAND o solo con puertas NOR</h3>
+ <p>Las puertas NAND y NOR son <b>universales</b>: con un solo tipo de puerta se puede montar cualquier circuito. Los fabricantes lo agradecen, porque un chip como el 7400 trae cuatro NAND y sale más barato usar siempre el mismo. Para conseguirlo usamos dos herramientas: la <b>doble negación</b> (${OV(OV('X'))} = X, negar dos veces no cambia nada) y las <b>leyes de De Morgan</b>.</p>
+ <div class="g2">
+  <div class="mini"><h4>La NOT con una NAND</h4><p>Si unimos las dos entradas de una NAND y metemos la misma variable: ${OV('A·A')} = ${OV('A')} (idempotencia). <b>Una NAND con las entradas unidas es una NOT.</b></p><div id="notNand"></div></div>
+  <div class="mini"><h4>La NOT con una NOR</h4><p>Igual con una NOR: ${OV('A + A')} = ${OV('A')}. <b>Una NOR con las entradas unidas es una NOT.</b></p><div id="notNor"></div></div>
+ </div>
+ <h4 style="color:var(--cyan);margin:14px 0 6px">Método para pasar a solo NAND (desde la suma de productos)</h4>
+ <ol>
+  <li>Simplifique la función como <b>suma de productos</b> (por ejemplo, con Karnaugh).</li>
+  <li>Aplique la <b>doble negación</b> a toda la función: S = ${OV(OV('S'))}. No cambia nada, solo prepara la expresión.</li>
+  <li>Aplique <b>De Morgan</b> a la barra de abajo: la suma negada se convierte en un <b>producto de términos negados</b>.</li>
+  <li>Cada término negado es una <b>NAND</b> de sus variables, y la barra de arriba sobre el producto es la <b>NAND final</b>.</li>
+  <li>Las variables negadas se obtienen con <b>NAND de entradas unidas</b>. Si un término tiene una sola variable, entra negado en la NAND final.</li>
+ </ol>
+ <div class="expr" id="exNand"></div>
+ <div class="circ" id="cNand"></div>
+ <h4 style="color:var(--cyan);margin:14px 0 6px">Método para pasar a solo NOR (desde el producto de sumas)</h4>
+ <ol>
+  <li>Simplifique la función como <b>producto de sumas</b>: agrupe los <b>ceros</b> del mapa y niegue cada término (o use maxtérminos).</li>
+  <li>Aplique la <b>doble negación</b>: S = ${OV(OV('S'))}.</li>
+  <li>Aplique <b>De Morgan</b> a la barra de abajo: el producto negado se convierte en una <b>suma de sumas negadas</b>.</li>
+  <li>Cada suma negada es una <b>NOR</b> de sus variables, y la barra de arriba sobre la suma es la <b>NOR final</b>.</li>
+  <li>Las variables negadas se obtienen con <b>NOR de entradas unidas</b>.</li>
+ </ol>
+ <div class="expr" id="exNor"></div>
+ <div class="circ" id="cNor"></div>
+ <div class="fact"><b>Regla rápida:</b> un circuito AND-OR (suma de productos) se convierte en NAND-NAND cambiando todas sus puertas por NAND, y un circuito OR-AND (producto de sumas) se convierte en NOR-NOR cambiando todas sus puertas por NOR. Si solo dispone de <b>puertas de dos entradas</b>, aplique la doble negación por partes: A·B·C = ${OV(OV('A·B'))}·C, es decir, una NAND, su inversión y otra NAND.</div></div>
  <div class="card"><h3>Laboratorio de Karnaugh <small>· pulse casillas para poner o quitar unos</small></h3>
  <div class="tabs" id="labN"><button class="tab" type="button" data-n="3" aria-selected="false">3 variables</button><button class="tab" type="button" data-n="4" aria-selected="true">4 variables</button></div>
  <div class="g2"><div id="labMap"></div><div id="labOut"></div></div>
- <div class="circ" id="labCirc" style="margin-top:10px"></div></div>`;
+ <div class="tabs" id="labKind" style="margin-top:10px"><button class="tab" type="button" data-k="sop" aria-selected="true">AND, OR y NOT</button><button class="tab" type="button" data-k="nand" aria-selected="false">Solo NAND</button><button class="tab" type="button" data-k="nor" aria-selected="false">Solo NOR</button></div>
+ <p class="mono" id="labExpr" style="color:var(--hot);font-size:17px"></p>
+ <div class="circ" id="labCirc"></div></div>`;
 const TIPOS=[
  {t:'Pareja (2 casillas): desaparece 1 variable',n:4,ones:[5,7]},
  {t:'Cuarteto en línea (4): desaparecen 2 variables',n:4,ones:[4,5,7,6]},
@@ -970,9 +1088,15 @@ function groupExplain(cells,n){
  return `${cells.length} ${cells.length===1?'casilla':'casillas'}. ${ch.length?`Cambia${ch.length>1?'n':''} ${ch.join(' y ')}: desaparece${ch.length>1?'n':''}. `:''}${st.length?`Se mantiene${st.length>1?'n':''} ${st.join(', ')}`:'No queda ninguna variable'} → <b style="color:var(--hot)">${H(termStr(cubeTerm(cube)))}</b>`;
 }
 function mountTeoria(){
+ const exT=termsFromStr("AB + A'C"), exO=[1,3,6,7], exP=minimalPOS(exO,3);
+ $('#notNand').innerHTML=universalSVG([[{v:'A',neg:true}]],1,'nand'); $('#notNor').innerHTML=universalSVG([[{v:'A',neg:true}]],1,'nor');
+ $('#exNand').innerHTML=`S = ${sumH(exT)} = ${OV(OV(sumH(exT)))} = ${nandExprH(exT)}`;
+ $('#cNand').innerHTML=universalSVG(exT,3,'nand');
+ $('#exNor').innerHTML=`S = ${prodH(exP.factors)} = ${OV(OV(prodH(exP.factors)))} = ${norExprH(exP.factors)}`;
+ $('#cNor').innerHTML=universalSVG(exP.factors,3,'nor');
  $('#tiposAg').innerHTML=TIPOS.map(t=>{ const cube=cubeOf(t.ones.slice().sort((a,b)=>a-b),t.n);
   return `<div class="mini"><h4>${t.t}</h4><div class="scroll">${kmapHTML(t.n,valsFrom(t.ones,t.n),{ro:true,groups:[{cells:t.ones}]})}</div><p class="mono">Término: <b style="color:var(--hot)">${H(termStr(cubeTerm(cube)))}</b></p></div>`; }).join('');
- let n=4, vals=valsFrom([0,2,5,7,8,10,13,15],4);
+ let n=4, vals=valsFrom([0,2,5,7,8,10,13,15],4), kind='sop';
  const draw=()=>{
   const ones=vals.map((v,i)=>v?i:-1).filter(i=>i>=0), sol=minimalSOP(ones,n);
   $('#labN').querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',+t.dataset.n===n?'true':'false'));
@@ -980,9 +1104,13 @@ function mountTeoria(){
   $('#labMap').querySelectorAll('td.kc').forEach(td=>td.onclick=()=>{ const i=+td.dataset.i; vals[i]=vals[i]?0:1; draw(); });
   $('#labOut').innerHTML=`<div class="mini"><h4>Función simplificada</h4><p class="expr">S = ${H(sol.str)}</p><p>${sol.terms.length} ${sol.terms.length===1?'grupo':'grupos'} · ${sol.lits} literales (con mintérminos serían ${ones.length} términos y ${ones.length*n} literales).</p>
    ${sol.cubes.length&&ones.length<(1<<n)?`<div class="glist">${sol.cubes.map((c,k)=>`<div class="gitem"><i style="background:${GCOL[k%GCOL.length]}"></i><span>${groupExplain(c,n)}</span></div>`).join('')}</div>`:''}</div>`;
-  $('#labCirc').innerHTML=sol.terms.length&&ones.length<(1<<n)?twoLevelSVG(sol.terms,n,'sop'):'<p style="color:var(--muted)">Con la salida siempre a 0 o siempre a 1 no hace falta ninguna puerta.</p>';
+  const trivial=!(sol.terms.length&&ones.length<(1<<n)); const pos=trivial?null:minimalPOS(ones,n);
+  $('#labKind').querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.k===kind?'true':'false'));
+  $('#labExpr').innerHTML=trivial?'':(kind==='sop'?`S = ${sumH(sol.terms)}`:kind==='nand'?`S = ${OV(OV(sumH(sol.terms)))} = ${nandExprH(sol.terms)}`:`S = ${prodH(pos.factors)} = ${OV(OV(prodH(pos.factors)))} = ${norExprH(pos.factors)}`);
+  $('#labCirc').innerHTML=trivial?'<p style="color:var(--muted)">Con la salida siempre a 0 o siempre a 1 no hace falta ninguna puerta.</p>':(kind==='sop'?twoLevelSVG(sol.terms,n,'sop'):kind==='nand'?universalSVG(sol.terms,n,'nand'):universalSVG(pos.factors,n,'nor'));
  };
  $('#labN').querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ n=+t.dataset.n; vals=Array(1<<n).fill(0); draw(); });
+ $('#labKind').querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ kind=t.dataset.k; draw(); });
  draw();
 }
 function mountResueltos(body){
@@ -994,7 +1122,11 @@ function mountResueltos(body){
    `<h4>Paso 2 · Pasamos los unos al mapa</h4><p>Cada fila de la tabla tiene su casilla (el número pequeño). Fíjese en el orden Gray de filas y columnas.</p><div class="scroll">${kmapHTML(n,vals,{ro:true})}</div>`,
    `<h4>Paso 3 · Agrupamos</h4><p>Hacemos los grupos más grandes posibles y el menor número de ellos:</p><div class="scroll">${kmapHTML(n,vals,{ro:true,groups:sol.cubes.map(c=>({cells:c}))})}</div><div class="glist">${sol.cubes.map((c,j)=>`<div class="gitem"><i style="background:${GCOL[j%GCOL.length]}"></i><span>Grupo ${j+1}: ${groupExplain(c,n)}</span></div>`).join('')}</div>`,
    `<h4>Paso 4 · Función simplificada</h4><div class="expr">S = ${H(sol.str)}</div><p>Con mintérminos tendríamos ${r.ones.length} términos y ${r.ones.length*n} literales; con el mapa, ${sol.terms.length} ${sol.terms.length===1?'término':'términos'} y ${sol.lits} literales.</p>`,
-   `<h4>Paso 5 · Circuito con puertas lógicas</h4><p>Una puerta NOT por cada variable negada (en el bus de la izquierda), una AND por cada término de más de una variable y una OR que los suma.</p><div class="circ">${twoLevelSVG(sol.terms,n,'sop')}</div><p style="color:var(--muted);font-size:14.5px">${r.ref}</p>`
+   `<h4>Paso 5 · Circuito con puertas lógicas</h4><p>Una puerta NOT por cada variable negada (en el bus de la izquierda), una AND por cada término de más de una variable y una OR que los suma.</p><div class="circ">${twoLevelSVG(sol.terms,n,'sop')}</div>`,
+   (()=>{ const pos=minimalPOS(r.ones,n); return `<h4>Paso 6 · Solo con puertas NAND o solo con puertas NOR</h4>
+    <p><b>Solo NAND</b> (doble negación de la suma de productos y De Morgan):</p><div class="expr">S = ${OV(OV(sumH(sol.terms)))} = ${nandExprH(sol.terms)}</div><div class="circ">${universalSVG(sol.terms,n,'nand')}</div>
+    <p style="margin-top:12px"><b>Solo NOR</b> (agrupamos los ceros para obtener el producto de sumas, doble negación y De Morgan):</p><div class="expr">S = ${prodH(pos.factors)} = ${OV(OV(prodH(pos.factors)))} = ${norExprH(pos.factors)}</div><div class="circ">${universalSVG(pos.factors,n,'nor')}</div>
+    <p>Las variables negadas se obtienen con puertas del mismo tipo con las dos entradas unidas.</p><p style="color:var(--muted);font-size:14.5px">${r.ref}</p>`; })()
   ];
   const draw=()=>{ $('#resPanel').innerHTML=`<div class="card"><h3>${r.t}</h3><p>${r.stmt}</p>${steps.slice(0,k).map(s=>`<div class="stepbox">${s}</div>`).join('')}
    <div class="bacts">${k<steps.length?`<button class="btn go" type="button" id="stepNext">Ver el siguiente paso</button><button class="btn ghost" type="button" id="stepAll">Ver todos los pasos</button>`:(i<RES_K.length-1?`<button class="btn" type="button" id="resNext">Siguiente ejercicio resuelto ▸</button>`:'')}</div></div>`;

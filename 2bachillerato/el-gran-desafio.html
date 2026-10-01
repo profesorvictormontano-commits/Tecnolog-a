@@ -38,7 +38,7 @@ body{margin:0;min-height:100%;background:var(--room);color:var(--ink);font-famil
 svg{max-width:100%}
 button{font-family:inherit}
 :focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
-.ov{text-decoration:overline;text-decoration-thickness:1.6px}
+.ov{display:inline-block;border-top:1.6px solid currentColor;padding-top:1px;line-height:1.12;text-decoration:none}
 .mono{font-family:var(--f-mono)}
 main{flex:1;width:100%}
 .view{display:none}.view.on{display:block}
@@ -226,6 +226,8 @@ table.tt tr.bad td{box-shadow:inset 0 0 0 2px var(--bad)}
 .kmap td.kc{width:58px;height:52px;text-align:center;font-size:24px;background:#0b1726;border:2px solid #2d4560;border-radius:8px;cursor:pointer;position:relative;color:#3d5268}
 .kmap td.kc.one{color:var(--hot);font-weight:700}
 .kmap td.kc.zero{color:#6a8098}
+.kmap td.kc.dc{color:var(--cyan);font-weight:700}
+.xbanner{background:repeating-linear-gradient(135deg,#0d2a3a 0 18px,#0a2230 18px 36px);border:2px solid var(--cyan);border-radius:10px;padding:10px 14px;margin-bottom:12px}
 .kmap td.kc.sel{outline:3px dashed var(--cyan);outline-offset:2px}
 .kmap td.kc small{position:absolute;left:4px;top:2px;font-size:10px;color:#5d7690}
 .kmap.ro td.kc{cursor:default}
@@ -340,7 +342,8 @@ body.emer::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:5
 .keyboard{max-width:860px;margin:-6px auto 0;height:54px;background:linear-gradient(#bdb6a3,#8f8875);border-radius:0 0 20px 20px;border:4px solid #77705f;border-top:none;display:grid;grid-template-columns:repeat(18,1fr);gap:4px;padding:8px 14px}
 .keyboard i{background:#e8e2d0;border-radius:3px;box-shadow:0 2px 0 #77705f}
 /* Examen */
-.modmap{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.modmap{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px}
+.mm.extra{border-style:dashed;border-color:var(--cyan)}
 .mm{font-family:var(--f-mono);font-size:14px;padding:8px 6px;border-radius:8px;border:2px solid #4b5864;background:#1c252e;color:#cfd9e2;cursor:pointer;text-align:center}
 .mm.full{background:#1f5a3a;border-color:#44ff8e;color:#fff}.mm.half{background:#5a4208;border-color:#ffb627;color:#fff}
 .mm.cur{outline:3px solid var(--cyan);outline-offset:2px}
@@ -507,7 +510,7 @@ function kmapHTML(n,vals,o){
     for(let c=0;c<4;c++){ const i=kIndex(n,r,c), v=vals[i];
       const gs=(o.groups||[]).map((g,k)=>g.cells.includes(i)?GCOL[k%GCOL.length]:null).filter(Boolean);
       const sh=gs.map((col,k)=>`inset 0 0 0 ${3+k*4}px ${col}`).join(',');
-      h+=`<td class="kc ${v===1?'one':(v===0?'zero':'')} ${o.sel&&o.sel.has(i)?'sel':''}" data-i="${i}" style="${sh?'box-shadow:'+sh:''}"><small>${i}</small>${v==null?'':v}</td>`; }
+      h+=`<td class="kc ${v===1?'one':(v===0?'zero':(v==='x'?'dc':''))} ${o.sel&&o.sel.has(i)?'sel':''}" data-i="${i}" style="${sh?'box-shadow:'+sh:''}"><small>${i}</small>${v==null?'':(v==='x'?'X':v)}</td>`; }
     h+='</tr>';
   }
   return h+'</tbody></table>';
@@ -599,6 +602,93 @@ function twoLevelSVG(terms,n,kind,opt){
 const termsFromStr=s=>s.split('+').map(t=>t.trim()).filter(Boolean).map(t=>{ const r=[]; for(let i=0;i<t.length;i++){ if(/[A-D]/.test(t[i])){ const neg=t[i+1]==="'"; r.push({v:t[i],neg}); } } return r; });
 
 
+/* ---------- Simplificación mínima con salidas indiferentes (X) ---------- */
+function minimalCoverX(ones,n,dc){
+  dc=dc||[]; const allow=new Set([...ones,...dc]);
+  if(!ones.length) return {terms:[],cubes:[],str:'0',lits:0};
+  const imps=[];
+  const rec=(k,cube)=>{ if(k===n){ const cells=[]; for(let i=0;i<(1<<n);i++) if(cube.every((b,j)=>b===null||((i>>(n-1-j))&1)===b)) cells.push(i);
+      if(cells.every(x=>allow.has(x))&&cells.some(x=>ones.includes(x))) imps.push({cube:cube.slice(),cells,lits:cube.filter(b=>b!==null).length}); return; }
+    for(const b of [0,1,null]){ cube.push(b); rec(k+1,cube); cube.pop(); } };
+  rec(0,[]);
+  if(imps.some(p=>p.lits===0)) return {terms:[[]],cubes:[imps.find(p=>p.lits===0).cells],str:'1',lits:0};
+  const primes=imps.filter(a=>!imps.some(b=>b.cells.length>a.cells.length&&a.cells.every(x=>b.cells.includes(x))));
+  let best=null;
+  const search=(chosen,covered,lit)=>{
+    if(best&&(lit>best.lit||(lit===best.lit&&chosen.length>=best.ch.length))) return;
+    const un=ones.find(x=>!covered.has(x));
+    if(un===undefined){ best={ch:chosen.slice(),lit}; return; }
+    primes.filter(p=>p.cells.includes(un)).sort((a,b)=>b.cells.length-a.cells.length).forEach(p=>{ const nc=new Set(covered); p.cells.forEach(x=>nc.add(x)); chosen.push(p); search(chosen,nc,lit+p.lits); chosen.pop(); });
+  };
+  search([],new Set(),0);
+  best.ch.sort((a,b)=>termStr(cubeTerm(a.cube)).localeCompare(termStr(cubeTerm(b.cube))));
+  const terms=best.ch.map(p=>cubeTerm(p.cube));
+  return {terms,cubes:best.ch.map(p=>p.cells),str:terms.map(termStr).join(' + '),lits:best.lit};
+}
+/* Producto de sumas mínimo: se simplifica la función negada y se complementa cada término */
+function minimalPOS(ones,n,dc){
+  dc=dc||[]; const zeros=[...Array(1<<n).keys()].filter(i=>!ones.includes(i)&&!dc.includes(i));
+  const z=minimalCoverX(zeros,n,dc);
+  const factors=z.terms.map(t=>t.map(l=>({v:l.v,neg:!l.neg})));
+  return {factors,cubes:z.cubes,str:factors.map(f=>f.length>1?'('+f.map(l=>l.v+(l.neg?"'":'')).join(' + ')+')':f.map(l=>l.v+(l.neg?"'":'')).join('')).join(''),lits:z.lits};
+}
+const litH=l=>l.neg?OV(l.v):l.v;
+/* Expresiones con doble negación para NAND y NOR */
+function nandExprH(terms){
+  if(terms.length===1){ const t=terms[0]; return t.length===1?litH(t[0]):OV(OV(t.map(litH).join('·'))); }
+  return OV(terms.map(t=>t.length===1?(t[0].neg?t[0].v:OV(t[0].v)):OV(t.map(litH).join('·'))).join(' · '));
+}
+function norExprH(factors){
+  if(factors.length===1){ const f=factors[0]; return f.length===1?litH(f[0]):OV(OV(f.map(litH).join(' + '))); }
+  return OV(factors.map(f=>f.length===1?(f[0].neg?f[0].v:OV(f[0].v)):OV(f.map(litH).join(' + '))).join(' + '));
+}
+function sumH(terms){ return terms.map(t=>t.map(litH).join('·')).join(' + '); }
+function prodH(factors){ return factors.map(f=>f.length>1?'('+f.map(litH).join(' + ')+')':litH(f[0])).join('·'); }
+
+/* ---------- Circuito solo con NAND (desde suma de productos) o solo con NOR (desde producto de sumas) ----------
+   Los inversores se dibujan como puertas del mismo tipo con las dos entradas unidas. */
+function universalSVG(groups,n,kind){
+  const st='#c9d7e3', mono="font-family:'Share Tech Mono',monospace";
+  const single=groups.length===1;
+  // literales que necesitan inversor
+  const need=new Set();
+  groups.forEach(g=>{ if(g.length>=2) g.forEach(l=>{ if(l.neg) need.add(l.v); });
+    else if(g.length===1){ const l=g[0]; if(single?l.neg:!l.neg) need.add(l.v); } });
+  const inv=VN.slice(0,n).filter(v=>need.has(v));
+  const bx=k=>18+k*24, xInv=18+n*24+24, nb=j=>xInv+82+j*22;
+  let wires='',dots='',gates='',labels='';
+  const busOf=(v,neg)=>neg?nb(inv.indexOf(v)):bx(VN.indexOf(v));
+  inv.forEach((v,j)=>{ const y=10+j*44, g=shapeGate(kind,xInv,y,30), b=bx(VN.indexOf(v));
+    [y+10,y+20].forEach(py=>{ wires+=`<line x1="${b}" y1="${py}" x2="${g.pinX}" y2="${py}" stroke="${st}" stroke-width="2"/>`; dots+=`<circle cx="${b}" cy="${py}" r="3" fill="${st}"/>`; });
+    gates+=g.svg; wires+=`<polyline points="${g.outX},${g.outY} ${nb(j)},${g.outY}" fill="none" stroke="${st}" stroke-width="2"/>`;
+    labels+=`<text x="${nb(j)+4}" y="${g.outY-4}" style="${mono};font-size:12px" fill="#ffe3a8">${v}</text><line x1="${nb(j)+4}" y1="${g.outY-15}" x2="${nb(j)+11}" y2="${g.outY-15}" stroke="#ffe3a8" stroke-width="1.2"/>`; });
+  const x1=(inv.length?nb(inv.length-1):xInv)+48;
+  let y=Math.max(18,10+inv.length*44+8); const outs=[];
+  groups.forEach(g=>{
+    if(g.length>=2){ const h=Math.max(40,g.length*15), q=shapeGate(kind,x1,y,h); gates+=q.svg;
+      g.forEach((l,k)=>{ const py=y+h*(k+1)/(g.length+1), sx=busOf(l.v,l.neg); wires+=`<line x1="${sx}" y1="${py}" x2="${q.pinX}" y2="${py}" stroke="${st}" stroke-width="2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3" fill="${st}"/>`; });
+      outs.push({x:q.outX,y:q.outY}); y+=h+14; }
+    else { const l=g[0], neg=single?l.neg:!l.neg, py=y+12, sx=busOf(l.v,neg);
+      wires+=`<line x1="${sx}" y1="${py}" x2="${x1+64}" y2="${py}" stroke="${st}" stroke-width="2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3" fill="${st}"/>`; outs.push({x:x1+64,y:py,lit:true}); y+=24+14; }
+  });
+  const H=Math.max(y+8,10+inv.length*44+20);
+  const x2=x1+150; let sx,sy;
+  if(single&&outs[0].lit){ sx=outs[0].x; sy=outs[0].y; }
+  else if(single){ const o=outs[0], q=shapeGate(kind,x2,o.y-15,30); gates+=q.svg;
+    [o.y-5,o.y+5].forEach(py=>{ wires+=`<polyline points="${o.x},${o.y} ${q.pinX-12},${o.y} ${q.pinX-12},${py} ${q.pinX},${py}" fill="none" stroke="${st}" stroke-width="2"/>`; });
+    sx=q.outX; sy=q.outY; }
+  else { const h2=Math.max(40,outs.length*15), y2=Math.max(14,(outs[0].y+outs[outs.length-1].y)/2-h2/2), q=shapeGate(kind,x2,y2,h2); gates+=q.svg;
+    outs.forEach((o,k)=>{ const py=y2+h2*(k+1)/(outs.length+1), mx=q.pinX-16-((k%4)*7);
+      wires+=`<polyline points="${o.x},${o.y} ${mx},${o.y} ${mx},${py} ${q.pinX},${py}" fill="none" stroke="${st}" stroke-width="2"/>`; });
+    sx=q.outX; sy=q.outY; }
+  const W=Math.max(sx+60,x2+110);
+  for(let k=0;k<n;k++){ wires=`<line x1="${bx(k)}" y1="2" x2="${bx(k)}" y2="${H}" stroke="${st}" stroke-width="2"/>`+wires; labels+=`<text x="${bx(k)}" y="-2" text-anchor="middle" style="${mono};font-size:14px" fill="#ffe3a8">${VN[k]}</text>`; }
+  inv.forEach((v,j)=>{ const oy=10+j*44+15; wires+=`<line x1="${nb(j)}" y1="${oy}" x2="${nb(j)}" y2="${H}" stroke="${st}" stroke-width="2"/>`; });
+  wires+=`<line x1="${sx}" y1="${sy}" x2="${W-26}" y2="${sy}" stroke="#ffb627" stroke-width="3"/>`;
+  labels+=`<text x="${W-20}" y="${sy+6}" style="${mono};font-size:18px" fill="#ffb627">S</text>`;
+  return `<svg viewBox="0 -16 ${W} ${H+22}" role="img" aria-label="Circuito solo con puertas ${kind.toUpperCase()}">${wires}${dots}${gates}${labels}</svg>`;
+}
+
 /* ---------- Datos del gran desafío ---------- */
 const T4f=f=>{ const r=[]; for(let i=0;i<16;i++) if(f((i>>3)&1,(i>>2)&1,(i>>1)&1,i&1)) r.push(i); return r; };
 const T3f=f=>{ const r=[]; for(let i=0;i<8;i++) if(f((i>>2)&1,(i>>1)&1,i&1)) r.push(i); return r; };
@@ -617,6 +707,13 @@ const RES=[
   stmt:'El radar norte envía un número de 2 bits AB y el radar sur, CD. La alerta (S = 1) salta cuando AB es mayor que CD.'},
  {t:'Bola gratis en la máquina de entrenamiento',n:4,ones:[4,5,8,9,11,13,15],x:true,ref:'Adaptado del ejercicio de la máquina recreativa (solución con un mapa de 4 variables en lugar de 5).',
   stmt:'En la sala de descanso hay una máquina recreativa: cuatro interruptores ABCD forman un número binario y un detector X vale 1 cuando la bola se cuela. Se concede bola gratis si X = 1 y el número es 4, 5, 8, 9, 11, 13 o 15. Truco: se resuelve S1 con un mapa de 4 variables y después S = X·S1.'}
+,
+ {t:'Depósito de combustible (con X)',n:3,ones:[0,4],dc:[1,2,3,5],ref:'Ampliación: salidas indiferentes en un sistema de 3 sensores de nivel.',
+  stmt:'Tres sensores de nivel en el depósito: A (nivel bajo cubierto), B (nivel medio) y C (nivel alto). La bomba de llenado funciona (S = 1) mientras el líquido no llegue al nivel medio. Hay combinaciones imposibles: el sensor alto no puede activarse sin el medio, ni el medio sin el bajo. En esas filas la salida es indiferente (X).'},
+ {t:'Detector BCD de dígitos ≥ 5 (con X)',n:4,ones:[5,6,7,8,9],dc:[10,11,12,13,14,15],ref:'Ampliación: código BCD, donde las combinaciones 10 a 15 no existen.',
+  stmt:'El panel muestra dígitos en código BCD (ABCD, del 0 al 9). Las combinaciones 10 a 15 no aparecen nunca, así que su salida es indiferente (X). La luz de aviso se enciende (S = 1) cuando el dígito es 5 o mayor.'},
+ {t:'Segmento «e» de un display (con X)',n:4,ones:[0,2,6,8],dc:[10,11,12,13,14,15],ref:'Ampliación: decodificador BCD a 7 segmentos.',
+  stmt:'El contador de la cuenta atrás usa displays de 7 segmentos. El segmento inferior izquierdo («e») se enciende con los dígitos 0, 2, 6 y 8. La entrada ABCD está en BCD, así que las combinaciones 10 a 15 son indiferentes (X).'}
 ];
 
 /* Banco del examen: 10 variantes por módulo (el módulo 3 se genera al azar) */
@@ -657,12 +754,26 @@ const P5=[
  {s:'El condensador principal se carga (S = 1) cuando A o B valen 1, B o D valen 1, y además C y D no valen 1 a la vez.',f:(a,b,c,d)=>(a||b)&&(b||d)&&!(c&&d)},
  {s:'El sincronizador de disparo se activa (S = 1) cuando A y D son distintos y, además, B o C valen 1.',f:(a,b,c,d)=>(a!==d)&&(b||c)}
 ];
+const BCDX=[10,11,12,13,14,15];
+const PX=[
+ {s:'Segmento «a» (el superior) del display de la cuenta atrás. Se enciende con los dígitos 0, 2, 3, 5, 6, 7, 8 y 9.',ones:[0,2,3,5,6,7,8,9]},
+ {s:'Segmento «b» (superior derecho) del display. Se enciende con los dígitos 0, 1, 2, 3, 4, 7, 8 y 9.',ones:[0,1,2,3,4,7,8,9]},
+ {s:'Segmento «c» (inferior derecho) del display. Se enciende con todos los dígitos salvo el 2.',ones:[0,1,3,4,5,6,7,8,9]},
+ {s:'Segmento «d» (el inferior) del display. Se enciende con los dígitos 0, 2, 3, 5, 6, 8 y 9.',ones:[0,2,3,5,6,8,9]},
+ {s:'Segmento «f» (superior izquierdo) del display. Se enciende con los dígitos 0, 4, 5, 6, 8 y 9.',ones:[0,4,5,6,8,9]},
+ {s:'Segmento «g» (el central) del display. Se enciende con los dígitos 2, 3, 4, 5, 6, 8 y 9.',ones:[2,3,4,5,6,8,9]},
+ {s:'Detector de dígitos pares: S = 1 cuando el dígito BCD es 0, 2, 4, 6 u 8.',ones:[0,2,4,6,8]},
+ {s:'Detector de múltiplos de 3: S = 1 cuando el dígito BCD es 3, 6 o 9.',ones:[3,6,9]},
+ {s:'Detector de primos: S = 1 cuando el dígito BCD es 2, 3, 5 o 7.',ones:[2,3,5,7]},
+ {s:'Aviso de cuenta atrás crítica: S = 1 cuando el dígito BCD es 0, 1 o 2.',ones:[0,1,2]}
+];
 const MODS=[
  {n:'Sensor de fragmentos',pts:1.5,ic:'📡'},
  {n:'Filtro de señales',pts:1.5,ic:'🧮'},
  {n:'Placa de control',pts:2,ic:'🔌'},
  {n:'Sistema de puntería',pts:2,ic:'🎯'},
- {n:'Núcleo del láser',pts:3,ic:'☢'}
+ {n:'Núcleo del láser',pts:3,ic:'☢'},
+ {n:'Salidas indiferentes (X)',pts:1,ic:'★',extra:true}
 ];
 
 /* Generador aleatorio de circuitos para el módulo 3 */
@@ -884,7 +995,9 @@ function buildPc(){
    <div class="pcbar"><span>ENSAMBLADOR DE ARTEFACTOS · NASA v5.0</span><span>OPERADOR: ${esc(agente().toUpperCase())}</span><span class="blink" style="color:#ff8a80">ENERGÍA: GENERADOR 7</span></div>
    <div class="pcgrid">
     <div class="pcpanel"><h3>1 · SIMULACIONES RESUELTAS</h3>
-     ${RES.map((r,i)=>`<button type="button" class="pcbtn" data-r="${i}"><b>[${i+1}]</b> ${r.t}</button>`).join('')}
+     ${RES.slice(0,6).map((r,i)=>`<button type="button" class="pcbtn" data-r="${i}"><b>[${i+1}]</b> ${r.t}</button>`).join('')}
+     <h3 style="margin-top:10px">AMPLIACIÓN · SALIDAS INDIFERENTES (X)</h3>
+     ${RES.slice(6).map((r,k)=>`<button type="button" class="pcbtn" data-r="${k+6}"><b>[X${k+1}]</b> ${r.t}</button>`).join('')}
      <p style="font-size:13px;color:#7fd8aa;margin:8px 0 0">Seis problemas completos: tabla, formas canónicas, Karnaugh y circuito.</p></div>
     <div class="pcpanel"><h3>2 · MONTAR EL ARTEFACTO</h3>${artifactSVG(ok)}
      ${done?`<p style="margin:8px 0 0">Resultado: <b style="color:${ex.saved?'#44ff8e':'#ff5a4f'}">${ex.saved?'TIERRA SALVADA':'TIERRA DESTRUIDA'}</b> · nota ${fmt(ex.nota)}</p><button type="button" class="pcgo" id="pcCert" style="animation:none;background:linear-gradient(#2fbf73,#177a45);border-color:#bfffd9">VER CERTIFICADO</button>`
@@ -914,20 +1027,22 @@ function groupExplain(cells,n){
 const mintermH=(i,n)=>bitsOf(i,n).map((b,k)=>b?VN[k]:OV(VN[k])).join('·');
 const maxtermH=(i,n)=>'('+bitsOf(i,n).map((b,k)=>b?OV(VN[k]):VN[k]).join(' + ')+')';
 function openRes(i){
- const r=RES[i], n=r.n, vals=valsFrom(r.ones,n), zeros=[...Array(1<<n).keys()].filter(x=>!r.ones.includes(x)), sol=minimalSOP(r.ones,n);
- const useMin=r.ones.length<=zeros.length;
+ const r=RES[i], n=r.n, dc=r.dc||[], vals=valsFrom(r.ones,n); dc.forEach(x=>vals[x]='x');
+ const zeros=[...Array(1<<n).keys()].filter(x=>!r.ones.includes(x)&&!dc.includes(x)), sol=minimalCoverX(r.ones,n,dc), pos=minimalPOS(r.ones,n,dc);
+ const useMin=dc.length?true:r.ones.length<=zeros.length;
  const canon=useMin?`S = ${r.ones.map(x=>mintermH(x,n)).join(' + ')}`:`S = ${zeros.map(x=>maxtermH(x,n)).join(' · ')}`;
  const steps=[
   ['Enunciado y variables',`<p>${r.stmt}</p>${r.expr?`<div class="expr">S = ${H(r.expr)}</div>`:''}<p>Entradas: ${VN.slice(0,n).join(', ')}${r.x?' (y el detector X, que se añade al final)':''}. Salida: S${r.x?'1':''}.</p>`],
-  ['Tabla de verdad',`<div class="scroll">${ttHTML(n,vals,{dec:true,hl:r.ones})}</div>`],
-  ['Forma canónica',`<p>Hay ${r.ones.length} unos y ${zeros.length} ceros. ${useMin?'Como hay menos unos, usamos la <b>primera forma canónica</b> (suma de mintérminos):':'Como hay menos ceros, usamos la <b>segunda forma canónica</b> (producto de maxtérminos):'}</p><div class="expr">${canon}</div><p class="mono" style="color:var(--hot)">${useMin?`S = Σm(${r.ones.join(', ')})`:`S = ΠM(${zeros.join(', ')})`}</p>`],
-  ['Simplificación por Karnaugh',`<div class="g2"><div class="scroll">${kmapHTML(n,vals,{ro:true,groups:sol.cubes.map(c=>({cells:c}))})}</div><div class="glist">${sol.cubes.map((c,j)=>`<div class="gitem"><i style="background:${GCOL[j%GCOL.length]}"></i><span>${groupExplain(c,n)}</span></div>`).join('')}</div></div>
+  ['Tabla de verdad',`<div class="scroll">${ttHTML(n,vals.map(v=>v==='x'?'X':v),{dec:true,hl:r.ones})}</div>`],
+  dc.length?['Forma canónica con indiferentes',`<p>Hay ${r.ones.length} unos, ${zeros.length} ceros y ${dc.length} combinaciones indiferentes (X). Las X no se escriben en la forma canónica, pero se indican aparte con la letra d:</p><div class="expr">S = ${r.ones.map(x=>mintermH(x,n)).join(' + ')}</div><p class="mono" style="color:var(--hot)">S = Σm(${r.ones.join(', ')}) + d(${dc.join(', ')})</p><div class="fact"><b>¿Qué es una X?</b> Una combinación de entradas que nunca se va a dar, o cuya salida nos da igual. Al agrupar en el mapa, cada X puede valer <b>1</b> si nos ayuda a hacer un grupo más grande, o <b>0</b> si no la necesitamos. Nunca hace falta cubrir una X.</div>`]:['Forma canónica',`<p>Hay ${r.ones.length} unos y ${zeros.length} ceros. ${useMin?'Como hay menos unos, usamos la <b>primera forma canónica</b> (suma de mintérminos):':'Como hay menos ceros, usamos la <b>segunda forma canónica</b> (producto de maxtérminos):'}</p><div class="expr">${canon}</div><p class="mono" style="color:var(--hot)">${useMin?`S = Σm(${r.ones.join(', ')})`:`S = ΠM(${zeros.join(', ')})`}</p>`],
+  ['Simplificación por Karnaugh',`${dc.length?'<p>Usamos las X (en azul) como unos solo cuando agrandan un grupo:</p>':''}<div class="g2"><div class="scroll">${kmapHTML(n,vals,{ro:true,groups:sol.cubes.map(c=>({cells:c}))})}</div><div class="glist">${sol.cubes.map((c,j)=>`<div class="gitem"><i style="background:${GCOL[j%GCOL.length]}"></i><span>${groupExplain(c,n)}</span></div>`).join('')}</div></div>
    <div class="expr">S${r.x?'1':''} = ${H(sol.str)}</div>${r.x?`<p>Y como la bola gratis exige además X = 1: <span class="mono" style="color:var(--hot)">S = X·(${H(sol.str)})</span>. Basta con añadir una puerta AND final con X.</p>`:''}`],
   ['Circuito con puertas AND, OR y NOT',`<div class="circ">${twoLevelSVG(sol.terms,n,'sop')}</div>`],
-  ['Circuito solo con puertas NAND',`<p>Aplicando De Morgan, ${H(sol.str)} = ${sol.terms.length>1?OV(sol.terms.map(t=>OV(t.map(l=>l.neg?OV(l.v):l.v).join('·'))).join('·')):H(sol.str)}: las AND y la OR se sustituyen por NAND (los términos de una sola variable entran negados). Las NOT de la izquierda se pueden hacer con NAND de entradas unidas.</p><div class="circ">${twoLevelSVG(sol.terms,n,'nand')}</div><p style="color:var(--muted);font-size:14.5px">${r.ref}</p>`]
+  ['Circuito solo con puertas NAND',`<p>Doble negación de la suma de productos y De Morgan: la suma negada pasa a ser un producto de términos negados. Cada término negado es una NAND y la barra exterior es la NAND final. Las variables negadas se obtienen con NAND de entradas unidas.</p><div class="expr">S = ${OV(OV(sumH(sol.terms)))} = ${nandExprH(sol.terms)}</div><div class="circ">${universalSVG(sol.terms,n,'nand')}</div>`],
+  ['Circuito solo con puertas NOR',`<p>Agrupamos los ceros del mapa${dc.length?' (las X también pueden ayudar)':''} para obtener el producto de sumas. Doble negación y De Morgan: el producto negado pasa a ser una suma de sumas negadas. Cada suma negada es una NOR y la barra exterior es la NOR final. Las variables negadas se obtienen con NOR de entradas unidas.</p><div class="expr">S = ${prodH(pos.factors)} = ${OV(OV(prodH(pos.factors)))} = ${norExprH(pos.factors)}</div><div class="circ">${universalSVG(pos.factors,n,'nor')}</div><p style="color:var(--muted);font-size:14.5px">${r.ref}</p>`]
  ];
  let k=1;
- const draw=()=>{ $('#secBody').innerHTML=`<div class="sechead"><span class="n">${i+1}</span><h2>Simulación: ${r.t}</h2></div>
+ const draw=()=>{ $('#secBody').innerHTML=`<div class="sechead"><span class="n">${i<6?i+1:'X'+(i-5)}</span><h2>${i<6?'Simulación':'Ampliación'}: ${r.t}</h2></div>
   <div class="card">${steps.slice(0,k).map(([t,h],j)=>`<div class="stepbox"><h4>Paso ${j+1} · ${t}</h4>${h}</div>`).join('')}
   <div class="bacts">${k<steps.length?`<button class="btn go" type="button" id="stepNext">Ver el siguiente paso</button><button class="btn ghost" type="button" id="stepAll">Ver todos los pasos</button>`:''}</div></div>
   <nav class="navsec"><button class="btn" type="button" id="toPc">🖥 Volver al ordenador</button>${i<RES.length-1?`<button class="btn go" type="button" id="resNext">Siguiente simulación ▸</button>`:''}</nav>`;
@@ -954,7 +1069,7 @@ function OptRow(root,list,init,onChange,render){
  root.innerHTML=`<div class="optrow ${render?'cirOpts':''}">${list.map((o,i)=>`<button type="button" class="ob ${render?'cirOpt':''}" data-v="${i}" aria-pressed="${init===i}">${render?render(o,i):H(o)}</button>`).join('')}</div>`;
  root.querySelectorAll('.ob').forEach(b=>b.onclick=()=>{ root.querySelectorAll('.ob').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); onChange(+b.dataset.v); });
 }
-function KMapW(root,n,init,onChange,withGroups){
+function KMapW(root,n,init,onChange,withGroups,dcMode){
  const vals=init&&init.vals?init.vals.slice():Array(1<<n).fill(0), groups=init&&init.groups?init.groups.map(g=>({cells:g.cells.slice()})):[], sel=new Set();
  let mode='fill', msg='';
  const emit=()=>onChange({vals:vals.slice(),groups:groups.map(g=>({cells:g.cells.slice()}))});
@@ -964,12 +1079,12 @@ function KMapW(root,n,init,onChange,withGroups){
    ${withGroups?`<div class="kbar">${mode==='group'?`<button type="button" class="btn go" data-a="mk" style="padding:7px 14px;font-size:15px">Crear grupo con la selección (${sel.size})</button><button type="button" class="hbtn" data-a="unsel">Quitar selección</button>`:'<small style="color:var(--muted)">Pulse «Hacer grupos» cuando el mapa esté completo.</small>'}</div>
    <div style="color:#ffd5cf;font-size:15px;min-height:20px">${msg}</div>
    <div class="glist">${groups.map((g,k)=>`<div class="gitem"><i style="background:${GCOL[k%GCOL.length]}"></i>Grupo ${k+1}: casillas ${g.cells.join(', ')} → <b style="color:var(--hot)">${H(termStr(cubeTerm(cubeOf(g.cells,n))))}</b><button type="button" class="hbtn" data-del="${k}" style="padding:2px 8px">✕</button></div>`).join('')}</div>`:''}`;
-  root.querySelectorAll('td.kc').forEach(td=>td.onclick=()=>{ const i=+td.dataset.i; if(mode==='fill'){ vals[i]=vals[i]?0:1; emit(); } else { sel.has(i)?sel.delete(i):sel.add(i); } msg=''; draw(); });
+  root.querySelectorAll('td.kc').forEach(td=>td.onclick=()=>{ const i=+td.dataset.i; if(mode==='fill'){ vals[i]=dcMode?(vals[i]===0?1:(vals[i]===1?'x':0)):(vals[i]?0:1); emit(); } else { sel.has(i)?sel.delete(i):sel.add(i); } msg=''; draw(); });
   root.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ mode=b.dataset.m; sel.clear(); msg=''; draw(); });
   const mk=root.querySelector('[data-a="mk"]'); if(mk) mk.onclick=()=>{ const cells=[...sel].sort((a,b)=>a-b);
    if(!cells.length) msg='Seleccione primero las casillas del grupo.';
    else if(!cubeOf(cells,n)) msg='Ese grupo no es válido: debe tener 1, 2, 4, 8 o 16 casillas formando un rectángulo (los bordes y las esquinas se tocan).';
-   else if(cells.some(i=>vals[i]!==1)) msg='Un grupo solo puede contener unos.';
+   else if(cells.some(i=>vals[i]!==1&&vals[i]!=='x')) msg='Un grupo solo puede contener unos'+(dcMode?' y X.':'.');
    else if(groups.some(g=>g.cells.join()===cells.join())) msg='Ese grupo ya existe.';
    else { groups.push({cells}); sel.clear(); emit(); }
    draw(); };
@@ -988,9 +1103,11 @@ function probDef(e,i){
  else if(i===1){ const ex=P2[p.v]; n=3; target=ttOf(parseStr(ex),3); head=`<p>El filtro de señales usa esta función. Obtenga su tabla de verdad y simplifíquela.</p><div class="expr">S = ${H(ex)}</div>`; parts=['tt','build']; }
  else if(i===2){ n=3; target=ttOf(gateNode(p.spec,'S'),3); head=`<p>Este es el circuito de la placa de control. Analícelo.</p><div class="circ">${circuitSVG(p.spec,null)}</div>`; parts=['gates','combos','build']; }
  else if(i===3){ const d=P4[p.v]; n=4; target=[...Array(16).keys()].map(k=>d.f(...bitsOf(k,4))?1:0); head=`<p>${d.s}</p>`; parts=['kfill','groups','build']; }
+ else if(i===5){ const d=PX[p.v]; n=4; target=[...Array(16).keys()].map(k=>BCDX.includes(k)?'x':(d.ones.includes(k)?1:0));
+  head=`<div class="xbanner"><b>★ Módulo de ampliación (opcional).</b> No hacerlo no resta. Cada apartado correcto suma su parte de 1 punto extra, aunque la nota supere el 10.</div><p>${d.s}</p><p>La entrada ABCD está en código BCD: las combinaciones 10 a 15 no se dan nunca y su salida es <b>indiferente (X)</b>.</p>`; parts=['kfill','groups','build']; }
  else { const d=P5[p.v]; n=4; target=[...Array(16).keys()].map(k=>d.f(...bitsOf(k,4))?1:0); head=`<p>${d.s}</p><p style="color:#ffd5cf;margin:0">Este es el módulo decisivo: el destino de la Tierra depende de él.</p>`; parts=['kfill','groups','build','circ']; }
- const ones=target.map((v,k)=>v?k:-1).filter(k=>k>=0);
- return {n,target,ones,sol:minimalSOP(ones,n),head,parts,pts:MODS[i].pts};
+ const ones=target.map((v,k)=>v===1?k:-1).filter(k=>k>=0), dc=target.map((v,k)=>v==='x'?k:-1).filter(k=>k>=0);
+ return {n,target,ones,dc,sol:dc.length?minimalCoverX(ones,n,dc):minimalSOP(ones,n),head,parts,pts:MODS[i].pts};
 }
 function partAnswered(k,a,def){
  if(!a) return false;
@@ -999,19 +1116,20 @@ function partAnswered(k,a,def){
  if(k==='build') return a.toks&&a.toks.length>0;
  if(k==='gates') return a.gates&&a.gates.X1!=null&&a.gates.X2!=null;
  if(k==='combos') return a.combos&&Object.keys(a.combos).length===3;
- if(k==='kfill') return a.km&&a.km.vals.some(x=>x);
+ if(k==='kfill') return a.km&&a.km.vals.some(x=>x===1||x==='x');
  if(k==='groups') return a.km&&a.km.groups&&a.km.groups.length>0;
  if(k==='circ') return a.circ!=null;
 }
 function gradePart(k,a,def,e,i){
- a=a||{}; const t=def.target, ones=new Set(def.ones);
+ a=a||{}; const t=def.target, ones=new Set(def.ones), allow=new Set([...def.ones,...(def.dc||[])]);
  if(k==='tt') return !!a.tt&&a.tt.every((v,j)=>v===t[j]);
  if(k==='canon') return !!a.canon&&a.canon.length===def.ones.length&&a.canon.every(x=>ones.has(x));
- if(k==='build'){ if(!a.toks||!a.toks.length) return false; return checkSimplified(a.toks,t,def.n,def.sol.lits).ok; }
+ if(k==='build'){ if(!a.toks||!a.toks.length) return false; if(!def.dc.length) return checkSimplified(a.toks,t,def.n,def.sol.lits).ok;
+  try{ const ast=parseToks(a.toks), tt=ttOf(ast,def.n); return tt.every((v,j)=>t[j]==='x'||v===t[j])&&lits(ast)<=def.sol.lits; }catch(x){ return false; } }
  if(k==='gates'){ const o=e.opts[i]; return !!a.gates&&a.gates.X1===o.X1.correct&&a.gates.X2===o.X2.correct; }
  if(k==='combos'){ const c=e.probs[i].combos; return !!a.combos&&c.every(r=>a.combos[r]===t[r]); }
  if(k==='kfill') return !!a.km&&a.km.vals.every((v,j)=>v===t[j]);
- if(k==='groups'){ const g=a.km&&a.km.groups; if(!g||!g.length) return false; if(g.some(x=>x.cells.some(c=>!ones.has(c)))) return false;
+ if(k==='groups'){ const g=a.km&&a.km.groups; if(!g||!g.length) return false; if(g.some(x=>x.cells.some(c=>!allow.has(c)))) return false;
   const cov=new Set(); g.forEach(x=>x.cells.forEach(c=>cov.add(c))); if(def.ones.some(c=>!cov.has(c))) return false;
   return g.reduce((s,x)=>s+cubeOf(x.cells,def.n).filter(b=>b!==null).length,0)<=def.sol.lits; }
  if(k==='circ') return a.circ===e.opts[i].circ.correct;
@@ -1031,9 +1149,9 @@ function distractors(terms,n,target,count){
  return [...out];
 }
 function newExam(){
- const probs=[{v:pickV('p1')},{v:pickV('p2')},{spec:genCircuit()},{v:pickV('p4')},{v:pickV('p5')}];
+ const probs=[{v:pickV('p1')},{v:pickV('p2')},{spec:genCircuit()},{v:pickV('p4')},{v:pickV('p5')},{v:pickV('px')}];
  probs[2].combos=shuffle([...Array(8).keys()]).slice(0,3).sort((a,b)=>a-b);
- const e={status:'running',probs,ans:[{},{},{},{},{}],opts:[{},{},{},{},{}],page:0,exits:0,start:Date.now()};
+ const e={status:'running',probs,ans:[{},{},{},{},{},{}],opts:[{},{},{},{},{},{}],page:0,exits:0,start:Date.now()};
  e.opts[2]={X1:gateOptions(probs[2].spec,'X1'),X2:gateOptions(probs[2].spec,'X2')};
  const d5=probDef(e,4), flip=distractors(d5.sol.terms,4,d5.target,1)[0];
  e.opts[4]={circ:mkOpts(JSON.stringify({s:d5.sol.str,k:'sop'}),[JSON.stringify({s:flip,k:'sop'}),JSON.stringify({s:d5.sol.str,k:'pos'})])};
@@ -1045,6 +1163,7 @@ function warnStart(){
   <p><b>${esc(p.nombre)} ${esc(p.apellidos)}</b> · ${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
   <ul><li>Cinco módulos (problemas) de dificultad creciente: 1,5 + 1,5 + 2 + 2 + 3 = 10 puntos. Cada apartado correcto suma su parte; los errores no restan.</li>
   <li>Puede moverse entre módulos y cambiar sus respuestas hasta que entregue. No hay corrección hasta el final.</li>
+  <li>Hay un <b>módulo de ampliación</b>, opcional, con salidas indiferentes (X): no hacerlo no resta, y hacerlo bien suma hasta 1 punto extra, aunque la nota pase de 10.</li>
   <li><b>El módulo 5, el núcleo del láser, decide el destino de la Tierra:</b> si consigue al menos el 75 % de sus puntos, Tántalo será desviado.</li>
   <li><b>No salga de esta ventana.</b> Las dos primeras salidas no penalizan, pero constarán en el certificado. <b>A la tercera, el examen se bloquea</b> y se califica con lo respondido. Recargar la página cuenta como salida; sus respuestas se guardan.</li>
   <li>Durante el examen no está disponible el botón «Buscar información».</li></ul>
@@ -1061,12 +1180,13 @@ function renderExam(){
  const e=S.get('exam'), i=e.page, def=probDef(e,i), a=e.ans[i]||{}, m=MODS[i];
  const ph={tt:'Complete la columna S de la tabla de verdad (pulse cada casilla).',canon:'Escriba la primera forma canónica en notación abreviada: pulse los números de fila que intervienen.',
   build:'Construya la función simplificada arrastrando los símbolos.',gates:'Elija la expresión de cada puerta en función de las entradas.',combos:'¿Qué vale S en estas combinaciones?',
-  kfill:'Rellene el mapa de Karnaugh (pulse las casillas que valen 1).',groups:'Haga los grupos en el mapa de arriba: «Hacer grupos», seleccione las casillas y «Crear grupo».',circ:'¿Qué circuito implementa la función simplificada?'};
- $('#exBody').innerHTML=`<div class="exhead"><h2>Programación del artefacto · módulo ${i+1} de 5</h2><span class="pill red" id="exitPill">Salidas: ${e.exits} de 3</span></div>
-  <div class="modmap">${MODS.map((x,k)=>`<button type="button" class="mm ${k===i?'cur':''}" data-p="${k}">${x.ic} M${k+1}<small>${x.n} · ${fmt(x.pts)} p</small></button>`).join('')}</div>
-  <div class="card"><h3>${m.ic} Módulo ${i+1}: ${m.n} <small>· ${fmt(m.pts)} puntos</small></h3>${def.head}</div>
+  kfill:def.dc&&def.dc.length?'Rellene el mapa de Karnaugh: cada pulsación cambia la casilla entre 0, 1 y X.':'Rellene el mapa de Karnaugh (pulse las casillas que valen 1).',groups:'Haga los grupos en el mapa de arriba: «Hacer grupos», seleccione las casillas y «Crear grupo».',circ:'¿Qué circuito implementa la función simplificada?'};
+ const NP=e.probs.length;
+ $('#exBody').innerHTML=`<div class="exhead"><h2>Programación del artefacto · ${m.extra?'módulo de ampliación':`módulo ${i+1} de 5`}</h2><span class="pill red" id="exitPill">Salidas: ${e.exits} de 3</span></div>
+  <div class="modmap">${MODS.slice(0,NP).map((x,k)=>`<button type="button" class="mm ${k===i?'cur':''} ${x.extra?'extra':''}" data-p="${k}">${x.ic} ${x.extra?'Extra':'M'+(k+1)}<small>${x.n} · ${x.extra?'+':''}${fmt(x.pts)} p</small></button>`).join('')}</div>
+  <div class="card"><h3>${m.ic} ${m.extra?'Ampliación (opcional)':'Módulo '+(i+1)}: ${m.n} <small>· ${m.extra?'hasta +1 punto':fmt(m.pts)+' puntos'}</small></h3>${def.head}</div>
   ${def.parts.map((k,j)=>`<div class="part" id="pp${j}"><h4>${String.fromCharCode(97+j)}) ${ph[k]} <small style="color:var(--muted)">(${fmt(def.pts/def.parts.length)} p)</small></h4><div class="pw" data-k="${k}"></div></div>`).join('')}
-  <nav class="exnav navsec"><button class="btn ghost" type="button" id="exPrev" ${i===0?'disabled':''}>◂ Módulo anterior</button><button class="btn warn" type="button" id="exSend">Entregar y activar el artefacto</button><button class="btn go" type="button" id="exNext" ${i===4?'disabled':''}>Módulo siguiente ▸</button></nav>`;
+  <nav class="exnav navsec"><button class="btn ghost" type="button" id="exPrev" ${i===0?'disabled':''}>◂ Módulo anterior</button><button class="btn warn" type="button" id="exSend">Entregar y activar el artefacto</button><button class="btn go" type="button" id="exNext" ${i===NP-1?'disabled':''}>${i===4&&NP>5?'Ampliación (opcional) ▸':'Módulo siguiente ▸'}</button></nav>`;
  updateMap(e);
  document.querySelectorAll('.pw').forEach(w=>{ const k=w.dataset.k;
   if(k==='tt') TTFill(w,def.n,a.tt,v=>saveAns(i,{tt:v}));
@@ -1076,17 +1196,17 @@ function renderExam(){
    ['X1','X2'].forEach(g=>OptRow(w.querySelector(`[data-g="${g}"]`),e.opts[i][g].list,a.gates&&a.gates[g],v=>{ const cur=S.get('exam').ans[i].gates||{}; cur[g]=v; saveAns(i,{gates:cur}); },x=>x)); }
   if(k==='combos'){ const c=e.probs[i].combos; w.innerHTML=c.map(r=>{ const b=bitsOf(r,3); return `<div class="combo">A = ${b[0]}, B = ${b[1]}, C = ${b[2]} → S = <span data-r="${r}"></span></div>`; }).join('');
    c.forEach(r=>OptRow(w.querySelector(`[data-r="${r}"]`),['0','1'],a.combos&&a.combos[r],v=>{ const cur=S.get('exam').ans[i].combos||{}; cur[r]=v; saveAns(i,{combos:cur}); },x=>x)); }
-  if(k==='kfill') KMapW(w,def.n,a.km,v=>saveAns(i,{km:v}),def.parts.includes('groups'));
+  if(k==='kfill') KMapW(w,def.n,a.km,v=>saveAns(i,{km:v}),def.parts.includes('groups'),def.dc.length>0);
   if(k==='groups') w.innerHTML='<p style="margin:0;color:var(--muted)">Los grupos se hacen en el mismo mapa del apartado a) y se marcan con colores.</p>';
   if(k==='circ') OptRow(w,e.opts[i].circ.list,a.circ,v=>saveAns(i,{circ:v}),(o,j)=>{ const q=JSON.parse(o); return `<b>Circuito ${'ABC'[j]}</b>${twoLevelSVG(termsFromStr(q.s),def.n,q.k)}`; });
  });
  document.querySelectorAll('.mm').forEach(b=>b.onclick=()=>goPage(+b.dataset.p));
  $('#exPrev').onclick=()=>goPage(i-1); $('#exNext').onclick=()=>goPage(i+1); $('#exSend').onclick=summary;
 }
-function goPage(p){ const e=S.get('exam'); e.page=Math.max(0,Math.min(4,p)); S.set('exam',e); renderExam(); window.scrollTo(0,0); }
+function goPage(p){ const e=S.get('exam'); e.page=Math.max(0,Math.min(e.probs.length-1,p)); S.set('exam',e); renderExam(); window.scrollTo(0,0); }
 function summary(){
  const e=S.get('exam'); const pend=[];
- e.probs.forEach((_,i)=>{ const def=probDef(e,i); def.parts.forEach((k,j)=>{ if(!partAnswered(k,e.ans[i],def)) pend.push(`M${i+1}${String.fromCharCode(97+j)}`); }); });
+ e.probs.forEach((_,i)=>{ if(MODS[i].extra) return; const def=probDef(e,i); def.parts.forEach((k,j)=>{ if(!partAnswered(k,e.ans[i],def)) pend.push(`M${i+1}${String.fromCharCode(97+j)}`); }); });
  modal({title:'Resumen antes de activar el artefacto',html:(pend.length?`<p>Apartados sin responder: <b>${pend.join(', ')}</b>. Valdrán 0 puntos.</p>`:'<p>Ha respondido todos los apartados.</p>')+'<p>Una vez activado el artefacto, no podrá cambiar nada.</p>',
   buttons:[{t:'Seguir revisando',cls:'ghost'},{t:'Activar el artefacto',cls:'warn',fn:()=>finalize(false)}]});
 }
@@ -1094,7 +1214,7 @@ function finalize(blocked){
  const e=S.get('exam'); if(!e||e.status!=='running') return;
  e.scores=[]; e.partsOk=[];
  e.probs.forEach((_,i)=>{ const def=probDef(e,i); const ok=def.parts.map(k=>gradePart(k,e.ans[i],def,e,i)); e.partsOk[i]=ok; e.scores[i]=Math.round(def.pts*ok.filter(Boolean).length/def.parts.length*100)/100; });
- const pts=e.scores.reduce((a,b)=>a+b,0); e.nota=Math.round(pts*100)/100; e.saved=e.scores[4]>=MODS[4].pts*0.75-1e-9;
+ const base=e.scores.slice(0,5).reduce((a,b)=>a+b,0); e.extra=e.scores[5]||0; e.base=Math.round(base*100)/100; e.nota=Math.round((base+e.extra)*100)/100; e.saved=e.scores[4]>=MODS[4].pts*0.75-1e-9;
  e.status='done'; e.blocked=blocked; e.end=Date.now(); S.set('exam',e);
  try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(x){}
  renderFinal(); show('final');
@@ -1105,7 +1225,7 @@ function renderFinal(){
   <div class="late"><h2 class="${e.saved?'saved':'lost'}">${e.saved?'¡La Tierra se ha salvado!':'La Tierra ha sido destruida'}</h2>
   <p style="max-width:680px;margin:0 auto 14px">${e.saved?`El núcleo del láser ha funcionado. El haz ha alcanzado a Tántalo y lo ha desviado de su trayectoria. Agente ${esc(agente())}, millones de personas le deben la vida.`:`El núcleo del láser no ha respondido a tiempo. Tántalo ha impactado contra la Tierra. Agente ${esc(agente())}, revise el examen corregido: la próxima vez, el planeta necesitará que el núcleo funcione.`}</p>
   ${e.blocked?'<p style="color:#ffb4a8">El examen se bloqueó por salir de la ventana tres veces.</p>':''}
-  <p class="mono" style="font-size:20px">Nota: <b style="color:var(--hot)">${fmt(e.nota)}</b> / 10 · Núcleo: ${fmt(e.scores[4])} / 3</p>
+  <p class="mono" style="font-size:20px">Nota: <b style="color:var(--hot)">${fmt(e.nota)}</b>${e.extra?` (${fmt(e.base)} + ${fmt(e.extra)} de ampliación)`:' / 10'} · Núcleo: ${fmt(e.scores[4])} / 3</p>
   <div class="bacts" style="justify-content:center"><button class="btn go" type="button" id="toCert">Ver el certificado y el examen corregido</button></div></div>`;
  tick();
  $('#toCert').onclick=()=>{ renderCert(); show('cert'); };
@@ -1140,15 +1260,15 @@ function renderCert(){
  const role=e.saved?{cls:'r2',t:'Salvador de la Tierra',m:'El artefacto de desvío funcionó. Tántalo ha sido desviado y la humanidad sigue en pie gracias a su dominio de los circuitos y sistemas lógicos.'}:{cls:'r0',t:'La Tierra ha sido destruida',m:'El núcleo del láser no funcionó a tiempo y Tántalo impactó contra la Tierra. Repase el examen corregido: los mejores ingenieros también aprenden de sus fallos.'};
  const salidas=e.blocked?'Examen bloqueado al salir de la ventana 3 veces. Calificado con lo respondido.':(e.exits?`${e.exits} ${e.exits===1?'salida registrada':'salidas registradas'} (sin penalización).`:'Ninguna salida registrada.');
  const corr=e.probs.map((_,i)=>{ const def=probDef(e,i);
-  return `<article class="qcard card"><h3>${MODS[i].ic} Módulo ${i+1}: ${MODS[i].n} <small>· ${fmt(e.scores[i])} de ${fmt(def.pts)} puntos</small></h3>${def.head}
+  return `<article class="qcard card"><h3>${MODS[i].ic} ${MODS[i].extra?'Ampliación (opcional)':'Módulo '+(i+1)}: ${MODS[i].n} <small>· ${fmt(e.scores[i])} de ${fmt(def.pts)} puntos</small></h3>${def.head}
    ${def.parts.map((k,j)=>`<div class="part ${e.partsOk[i][j]?'ok':'bad'}"><h4>${String.fromCharCode(97+j)}) ${NAMES[k]} · ${e.partsOk[i][j]?'✔ '+fmt(def.pts/def.parts.length)+' p':'✘ 0 p'}</h4>${corrPart(k,e.ans[i],def,e,i,e.partsOk[i][j])}</div>`).join('')}</article>`; }).join('');
  $('#certBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button><button class="btn" type="button" id="btnPc">🖥 Volver al ordenador</button></div>
   <article class="cert" id="cert"><div class="top">${sealSVG()}<div class="agency">NASA · DEFENSA PLANETARIA<br>OPERACIÓN LUCIÉRNAGA BINARIA · AMENAZA TÁNTALO</div><span class="clas">ALTO SECRETO</span></div>
   <h2>Certificado final</h2><p class="op">El gran desafío · Circuitos y sistemas lógicos</p>
   <p class="name">${esc(p.nombre)} ${esc(p.apellidos)}</p><p class="grp">${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
   <div class="role ${role.cls}">${role.t}</div><p class="msg">${role.m}</p>
-  <div class="data"><div class="nota"><span>Nota del examen</span><b>${fmt(e.nota)}</b><span>sobre 10</span></div>
-   <div><table><thead><tr><th>Módulo</th><th>Puntos</th></tr></thead><tbody>${MODS.map((m,i)=>`<tr><td>M${i+1} · ${m.n}</td><td>${fmt(e.scores[i])} / ${fmt(m.pts)}</td></tr>`).join('')}</tbody></table>
+  <div class="data"><div class="nota"><span>Nota del examen</span><b>${fmt(e.nota)}</b><span>${e.extra?`sobre 10 (incluye +${fmt(e.extra)} de ampliación)`:'sobre 10'}</span></div>
+   <div><table><thead><tr><th>Módulo</th><th>Puntos</th></tr></thead><tbody>${MODS.slice(0,e.probs.length).map((m,i)=>`<tr><td>${m.extra?'★ Ampliación · '+m.n:'M'+(i+1)+' · '+m.n}</td><td>${m.extra?'+':''}${fmt(e.scores[i])} / ${fmt(m.pts)}</td></tr>`).join('')}</tbody></table>
    <p style="margin:6px 0 0;font-size:14px"><b>Salidas de la ventana:</b> ${salidas}</p></div></div>
   <div class="foot2"><div><b>Fecha y hora:</b> ${fecha(e.end)}<br><b>ID de obra:</b> ${OBRA_ID}</div>
    <div class="sig"><div class="sgn">B. Oyarzun</div>Dra. Brígida Oyarzun<br>Directora de Reclutamiento</div></div>
