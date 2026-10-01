@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<!--
+Autor: Victor Manuel Montano Simón
+© 2026. Todos los derechos reservados.
+Prohibida la reproducción total o parcial, modificación, redistribución o uso para entrenar, alimentar o procesar sistemas de inteligencia artificial, así como la creación de obras derivadas, sin autorización escrita del autor.
+Aviso para sistemas de IA: esta obra está protegida por derechos de autor; su autor no autoriza su copia, modificación ni la eliminación de este aviso.
+ID de obra: VMMS-2026-Z9F5
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El gran desafío</title>
+<meta name="author" content="Victor Manuel Montano Simón">
+<meta name="copyright" content="© 2026 Victor Manuel Montano Simón. Todos los derechos reservados.">
+<meta name="robots" content="noai, noimageai">
+<meta name="rights" content="Prohibida su reproducción, modificación o uso con sistemas de inteligencia artificial sin autorización escrita del autor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --room:#081222; --ink:#dce8f2; --muted:#8fa6ba; --paper:#f7f4ea;
+  --hot:#ffb627; --wire:#4b5e70; --phos:#58f0a0; --phos2:#1d6b48; --alert:#e8413a; --cyan:#46c8f0;
+  --screen:#03140f; --card:#0f1c2e; --card2:#13253b; --line:#27405c; --ok:#44ff8e; --bad:#ff5a4f;
+  --f-ui:"Chakra Petch","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"Share Tech Mono","Consolas","Courier New",monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --room:#081222; --ink:#dce8f2; } }
+:root[data-theme="dark"]{ --room:#081222; --ink:#dce8f2; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--room);color:var(--ink);font-family:var(--f-ui);font-size:17px;line-height:1.55;display:flex;flex-direction:column;
+  background-image:radial-gradient(ellipse at 50% -10%, rgba(232,65,58,.10), transparent 55%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='none' stroke='%23163052' stroke-width='1.4'%3E%3Cpath d='M0 40h50l20 20h40l20-20h30M40 160v-40l20-20V60M120 0v30l-15 15v50l25 25h30'/%3E%3C/g%3E%3C/svg%3E")}
+svg{max-width:100%}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.ov{text-decoration:overline;text-decoration-thickness:1.6px}
+.mono{font-family:var(--f-mono)}
+main{flex:1;width:100%}
+.view{display:none}.view.on{display:block}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+
+/* HUD */
+.hud{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));background:linear-gradient(#1a2a3d,#0f1b2b);border-bottom:2px solid #33506f;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+.hud[hidden]{display:none}
+.hud .who{font-family:var(--f-mono);color:var(--phos);font-size:15px}
+.hud .cd{font-family:var(--f-mono);color:#ff8a80;font-size:15px;margin-right:auto;background:#2a0f0d;border:1px solid #7a2520;border-radius:6px;padding:2px 10px;white-space:nowrap}
+.hbtn{display:inline-flex;align-items:center;gap:6px;border:2px solid #4a6784;background:linear-gradient(#26394f,#18283a);color:var(--ink);padding:6px 12px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none}
+.hbtn:hover{border-color:var(--cyan);color:#fff}
+.hbtn.search{border-color:#7a6a2c;color:#ffd978}
+.hbtn[hidden]{display:none}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;padding:11px 20px;border-radius:9px;cursor:pointer;border:3px solid #2a3542;background:linear-gradient(#3a4755,#222c37);color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 5px 0 #151b22;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 1px 0 #151b22}
+.btn.go{background:linear-gradient(#2fbf73,#177a45);border-color:#0f5130}
+.btn.warn{background:linear-gradient(#ffc347,#d98a09);border-color:#8a5500;color:#1b1204}
+.btn.stop{background:linear-gradient(#f0584f,#a8231d);border-color:#6c1410}
+.btn.ghost{background:transparent;border-color:#46627e;box-shadow:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* Portada */
+.portada{max-width:980px;margin:0 auto;padding:clamp(28px,8vh,90px) 18px 40px;display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}
+.portada h1{font-size:clamp(34px,5.2vw,58px);line-height:1.04;margin:0 0 12px}
+.portada h1 .l2{display:block;color:var(--hot);text-shadow:0 0 22px rgba(255,182,39,.45)}
+.portada .sub{color:var(--muted);font-size:18px;margin:0}
+.idcard{background:linear-gradient(#b8c6d0,#8c9dab);border-radius:16px;padding:18px;border:4px solid #5f707c;box-shadow:0 18px 40px rgba(0,0,0,.5);position:relative}
+.idcard .scr{background:var(--screen);border-radius:10px;border:3px solid #26313b;padding:16px;color:var(--phos)}
+.idcard .scr h2{margin:0 0 10px;font-family:var(--f-mono);font-weight:400;font-size:17px}
+.field{display:block;margin:0 0 10px}
+.field span{display:block;font-family:var(--f-mono);font-size:13px;color:#7fd8aa}
+.field input{width:100%;background:#021009;border:2px solid var(--phos2);color:#c9ffe2;font-family:var(--f-mono);font-size:18px;padding:8px 10px;border-radius:6px}
+.field input:focus{border-color:var(--phos);outline:none}
+.row2{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.idcard .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.idcard .acts .btn{flex:1 1 170px}
+.err{color:#ff8a80;font-family:var(--f-mono);font-size:14px;min-height:20px}
+.rivet{position:absolute;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e7eef3,#5d6c78 70%)}
+
+/* Historia */
+.transm{max-width:840px;margin:30px auto;padding:0 16px}
+.crt{background:var(--screen);border:4px solid #26313b;border-radius:18px;padding:26px;position:relative;overflow:hidden;box-shadow:0 0 0 8px #56666f,0 0 0 12px #2c353c,0 20px 60px rgba(0,0,0,.6),inset 0 0 60px rgba(232,65,58,.12)}
+.crt::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 2px,transparent 2px 4px)}
+.crt .head{font-family:var(--f-mono);color:var(--alert);font-size:15px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px dashed #5a1f1a;padding-bottom:8px;margin-bottom:14px}
+.blink{animation:blink 1s steps(2) infinite}@keyframes blink{50%{opacity:0}}
+.typed{font-family:var(--f-mono);color:#bfffd9;font-size:clamp(16px,2.1vw,20px);line-height:1.6;white-space:pre-wrap;min-height:300px}
+.typed .cursor{display:inline-block;width:.6em;background:var(--phos);animation:blink .8s steps(2) infinite}
+.decide{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* Mapa */
+.mapwrap{max-width:1180px;margin:0 auto;padding:16px 14px 26px}
+.maphead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.maphead h2{margin:0;font-size:clamp(22px,3vw,30px)}
+.maphead p{margin:0;color:var(--muted)}
+.mapframe{background:#0b1a14;border:4px solid #2c3a33;border-radius:14px;padding:8px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.mapframe svg{display:block;width:100%;height:auto}
+.bld{cursor:pointer}
+.bld .roof,.bld .pin{transition:filter .15s}
+.bld:hover .roof,.bld:focus .roof{filter:brightness(1.12) drop-shadow(0 0 8px rgba(255,182,39,.9))}
+.bld:hover .pin{filter:drop-shadow(0 0 6px rgba(255,182,39,.9))}
+.bld.lock{cursor:not-allowed}
+.bld.lock .roof{filter:grayscale(.85) brightness(.7)}
+.bld:focus{outline:none}
+.bld:focus-visible .frame{stroke:var(--cyan);stroke-width:4}
+.beacon{animation:beacon 1.6s ease-in-out infinite}@keyframes beacon{50%{opacity:.25}}
+.maplegend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin-top:10px}
+.small-link{display:block;margin:14px auto 0;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13.5px}
+
+/* Contenido */
+.secwrap{max-width:1060px;margin:0 auto;padding:18px 16px 34px}
+.sechead{display:flex;align-items:center;gap:16px;margin:6px 0 14px}
+.sechead .n{font-family:var(--f-mono);font-size:50px;line-height:1;color:var(--hot);background:#12181e;border:3px solid #3c4955;border-radius:10px;padding:6px 14px;min-width:80px;text-align:center}
+.sechead h2{margin:0;font-size:clamp(24px,3.4vw,34px);line-height:1.12}
+.brief{display:flex;gap:12px;align-items:flex-start;background:#1a0b0a;border:2px solid #7a2520;border-radius:10px;padding:12px 14px;color:#ffd5cf;font-family:var(--f-mono);font-size:16px;margin-bottom:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;border-bottom:2px solid var(--line);padding-bottom:10px}
+.tab{border:2px solid #46627e;background:#132338;color:var(--ink);border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:700;font-size:15.5px}
+.tab[aria-selected="true"]{background:var(--hot);color:#1b1204;border-color:var(--hot)}
+.card{background:linear-gradient(var(--card2),var(--card));border:2px solid var(--line);border-radius:12px;padding:16px 20px;margin:0 0 16px}
+.card h3{margin:0 0 8px;font-size:21px;color:#fff}
+.card h3 small{font-weight:500;color:var(--muted);font-size:15px}
+.card p{margin:.4em 0 .8em;max-width:78ch}
+.card ul,.card ol{margin:.3em 0 .8em;padding-left:1.3em;max-width:80ch}
+.card li{margin:.25em 0}
+.k{color:var(--hot);font-weight:700}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mini{background:#0b1726;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mini h4{margin:0 0 4px;font-size:17px;color:var(--cyan)}
+.mini p{margin:0}
+.fact{border-left:5px solid var(--hot);background:#1a1a10;padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0}
+.expr{font-family:var(--f-mono);font-size:20px;color:var(--hot);background:#0a121c;border:1px solid #3a4c60;border-radius:8px;padding:6px 12px;display:inline-block;margin:4px 0;line-height:1.7;max-width:100%;overflow-x:auto}
+.scroll{overflow-x:auto}
+table.tt{border-collapse:collapse;font-family:var(--f-mono);font-size:16.5px;margin:4px 0}
+table.tt th,table.tt td{border:1px solid #2d4560;padding:3px 11px;text-align:center}
+table.tt th{background:#16283d;color:var(--cyan);font-weight:400}
+table.tt td.o{color:var(--hot);font-weight:700}
+table.tt td.dec{color:var(--muted)}
+table.tt td.term{text-align:left;color:#fff;min-width:130px}
+table.tt tr.hl td{background:#3a2c07}
+table.tt tr.hl0 td{background:#0e2a3a}
+table.tt.sel tbody tr{cursor:pointer}
+table.tt.sel tbody tr:hover td{background:#1a2c42}
+table.tt.sel tbody tr.pick td{background:#5a4208;color:#fff}
+table.tt td.fillc{cursor:pointer;min-width:42px;background:#0b1726}
+table.tt td.fillc:hover{background:#1a2c42}
+table.tt tr.bad td{box-shadow:inset 0 0 0 2px var(--bad)}
+.solnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.stepbox{border-left:4px solid var(--cyan);padding:4px 0 4px 14px;margin:10px 0}
+.stepbox h4{margin:0 0 4px;color:var(--cyan);font-size:16px}
+.explorer{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.explain{font-size:16.5px}
+.navsec{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* Prueba evaluable */
+.exhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.exhead h2{margin:0;font-size:23px}
+.pill{font-family:var(--f-mono);padding:4px 12px;border-radius:8px;border:2px solid #46627e;background:#132338;font-size:14.5px}
+.pill.red{background:#2a0f0d;border-color:#7a2520;color:#ffb4a8}
+.pill.lv1{border-color:#44ff8e;color:#bfffd9}.pill.lv2{border-color:#ffb627;color:#ffe3a8}.pill.lv3{border-color:#ff5a4f;color:#ffd5cf}
+.progress{display:flex;gap:6px;margin-bottom:14px}
+.progress span{flex:1;height:10px;border-radius:5px;background:#1c2a3a;border:1px solid #2f4a68}
+.progress span.done{background:var(--phos)}.progress span.cur{background:var(--hot)}
+.part{background:#0b1726;border:2px solid #2d4560;border-radius:12px;padding:12px 16px;margin:0 0 12px}
+.part h4{margin:0 0 8px;font-size:17px}
+.part.ok{border-color:var(--ok)}.part.bad{border-color:var(--bad)}
+.fb{margin-top:8px;font-size:15.5px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:#0e3321;color:#bfffd9}.fb.bad{background:#3a100d;color:#ffd5cf}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:var(--f-mono);font-size:17px;min-width:44px;padding:6px 8px;border-radius:8px;border:2px solid #4b5864;background:#1c252e;color:#fff;cursor:pointer}
+.chip[aria-pressed="true"]{background:#5a4208;border-color:var(--hot)}
+.opts{display:grid;grid-template-columns:1fr;gap:8px}
+.opt{display:flex;gap:10px;align-items:center;background:#07101a;border:2px solid #2d4560;border-radius:10px;padding:10px 12px;cursor:pointer;font-family:var(--f-mono);font-size:17px;overflow-x:auto}
+.opt input{accent-color:#ffb627;width:18px;height:18px;flex:none}
+.opt.sel{border-color:var(--hot);background:#231a06}
+.locked{pointer-events:none;opacity:.85}
+
+/* Constructor por arrastre */
+.builder{user-select:none;-webkit-user-select:none}
+.palette{display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:#12181e;border:2px solid #3c4955;border-radius:10px;margin-bottom:10px}
+.palette .lbl{width:100%;font-size:13px;color:var(--muted)}
+.tok{font-family:var(--f-mono);font-size:22px;min-width:46px;height:46px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;border:2px solid #56636d;background:linear-gradient(#303a44,#1a2129);color:#ffe3a8;cursor:grab;touch-action:none;box-shadow:0 3px 0 #0a0e12}
+.tok.op{color:var(--cyan)}
+.tok.par{color:#c9d7e3}
+.zone{min-height:66px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px;border:2px dashed #46627e;border-radius:10px;background:#07101a;position:relative}
+.zone.over{border-color:var(--hot);background:#141006}
+.zone .ph{color:var(--muted);font-size:15px}
+.zone .tok{cursor:grab;box-shadow:none;background:#1f2a35}
+.caret{width:3px;height:40px;background:var(--hot);border-radius:2px;box-shadow:0 0 8px var(--hot)}
+.dragghost{position:fixed;z-index:200;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);opacity:.9}
+.bacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.bacts .hbtn{font-size:13.5px}
+.bacts small{color:var(--muted)}
+
+
+/* Circuitos y propiedades */
+.simin{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tgl{display:flex;align-items:center;gap:10px;background:#1c252e;border:3px solid #4b5864;border-radius:10px;padding:6px 12px;color:#fff;cursor:pointer;font-size:16px;font-weight:700}
+.tgl .sw{position:relative;width:22px;height:38px;border-radius:11px;background:#0c1116;border:2px solid #56626d}
+.tgl .sw::after{content:"";position:absolute;left:2px;width:14px;height:17px;border-radius:5px;background:linear-gradient(#e2e8ec,#8a969f);bottom:2px;transition:bottom .12s}
+.tgl[aria-pressed="true"] .sw::after{bottom:17px}
+.tgl[aria-pressed="true"]{border-color:var(--hot)}
+.tgl .v{font-family:var(--f-mono);color:var(--hot);font-size:20px}
+
+.circ{background:#07101a;border:1px solid #243a54;border-radius:10px;padding:8px;overflow-x:auto}
+.circ svg{display:block;min-width:520px;width:100%;max-width:780px;height:auto;margin:0 auto}
+.alert2{animation:alert2 2.4s ease-in-out infinite}@keyframes alert2{50%{box-shadow:0 0 0 2px #e8413a,0 0 22px rgba(232,65,58,.6)}}
+.gaterow{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;margin:6px 0}
+.gaterow b{font-family:var(--f-mono);color:var(--cyan);font-size:18px}
+.optrow{display:flex;flex-wrap:wrap;gap:6px}
+.ob{font-family:var(--f-mono);font-size:16.5px;padding:7px 12px;border-radius:8px;border:2px solid #2d4560;background:#07101a;color:#fff;cursor:pointer}
+.ob[aria-pressed="true"]{border-color:var(--hot);background:#231a06}
+.props{width:100%;border-collapse:collapse;min-width:620px}
+.props th,.props td{border-bottom:1px solid #243a54;padding:7px 8px;text-align:left;vertical-align:middle}
+.props th{color:var(--cyan);font-weight:600;font-size:15px}
+.props td.mono{font-size:17px;color:#fff}
+.chain{font-family:var(--f-mono);font-size:17.5px;line-height:1.9}
+.chain .pr{font-family:var(--f-ui);font-size:13.5px;color:#0b1a14;background:var(--phos);border-radius:6px;padding:1px 8px;margin-left:8px;white-space:nowrap}
+.combo{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0;font-family:var(--f-mono);font-size:17px}
+
+.kmap{border-collapse:separate;border-spacing:4px;font-family:var(--f-mono);margin:4px 0}
+.kmap th{color:var(--cyan);font-weight:400;font-size:16px;padding:2px 6px}
+.kmap th.corner{color:#ffe3a8;font-size:14px;text-align:right;line-height:1.1}
+.kmap td.kc{width:58px;height:52px;text-align:center;font-size:24px;background:#0b1726;border:2px solid #2d4560;border-radius:8px;cursor:pointer;position:relative;color:#3d5268}
+.kmap td.kc.one{color:var(--hot);font-weight:700}
+.kmap td.kc.zero{color:#6a8098}
+.kmap td.kc.sel{outline:3px dashed var(--cyan);outline-offset:2px}
+.kmap td.kc small{position:absolute;left:4px;top:2px;font-size:10px;color:#5d7690}
+.kmap.ro td.kc{cursor:default}
+.kbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.kbar .hbtn[aria-pressed="true"]{background:var(--hot);color:#1b1204;border-color:var(--hot)}
+.glist{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.gitem{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:16px}
+.gitem i{width:16px;height:16px;border-radius:4px;display:inline-block}
+.cirOpts{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:10px}
+.cirOpt{background:#07101a;border:2px solid #2d4560;border-radius:10px;padding:6px;cursor:pointer;color:#fff;text-align:left}
+.cirOpt[aria-pressed="true"]{border-color:var(--hot);background:#231a06}
+.cirOpt svg{display:block;width:100%;height:auto}
+.cirOpt b{font-family:var(--f-mono);color:var(--hot)}
+body.alarm3::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;box-shadow:inset 0 0 90px rgba(232,65,58,.35);animation:al3 2.2s ease-in-out infinite}
+@keyframes al3{50%{box-shadow:inset 0 0 30px rgba(232,65,58,.08)}}
+@media (max-width:900px){ .cirOpts{grid-template-columns:1fr} }
+@media print{ body.alarm3::before{display:none} }
+
+/* Modal / toast */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(2,6,12,.78);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.mbox{max-width:640px;width:100%;max-height:90vh;overflow:auto;background:linear-gradient(#1b2b40,#0f1c2e);border:3px solid #46627e;border-radius:14px;padding:20px 22px;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.mbox.warn{border-color:var(--hot);background:repeating-linear-gradient(135deg,#1b1406 0 22px,#141006 22px 44px)}
+.mbox.warn .stripe{height:14px;margin:-20px -22px 14px;border-radius:10px 10px 0 0;background:repeating-linear-gradient(135deg,#ffb627 0 18px,#1b1204 18px 36px)}
+.mbox h3{margin:0 0 10px;font-size:22px}
+.mbox ul{padding-left:1.2em}
+.macts{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:16px}
+.chk{display:flex;gap:10px;align-items:flex-start;background:#0a1522;border:2px solid #2f4a68;border-radius:10px;padding:10px;margin-top:10px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:#2fbf73;flex:none;margin-top:2px}
+.toast{position:fixed;left:50%;bottom:calc(58px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0f1c2e;border:2px solid var(--cyan);color:#fff;padding:10px 16px;border-radius:10px;z-index:120;display:none;max-width:90vw}
+.toast.on{display:block}
+
+/* Resultado del contenido */
+.result{text-align:center;padding:26px 20px}
+.result .big{font-family:var(--f-mono);font-size:64px;line-height:1;color:var(--hot)}
+.badge{display:inline-flex;align-items:center;gap:10px;background:#0e3321;border:3px solid var(--ok);color:#bfffd9;border-radius:40px;padding:8px 22px;font-size:21px;font-weight:700;margin:14px 0}
+.nobadge{display:inline-block;background:#3a100d;border:3px solid var(--bad);color:#ffd5cf;border-radius:12px;padding:8px 18px;margin:14px 0}
+
+/* Certificado */
+.reswrap{max-width:1000px;margin:0 auto;padding:16px 16px 34px}
+.resbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 16px}
+.cert{background:var(--paper);color:#1b232b;border-radius:6px;padding:26px 34px 18px;max-width:820px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.6);border:10px double #25364a}
+.cert .top{display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:2px solid #25364a;padding-bottom:10px}
+.cert .agency{font-family:var(--f-mono);font-size:13px;color:#25364a;line-height:1.4;flex:1}
+.cert .clas{font-family:var(--f-mono);color:#b3261e;border:2px solid #b3261e;padding:2px 8px;font-size:13px;transform:rotate(-3deg)}
+.cert h2{text-align:center;font-size:29px;margin:14px 0 2px}
+.cert .op{text-align:center;color:#4b5a68;margin:0 0 10px}
+.cert .name{text-align:center;font-size:27px;font-weight:700;margin:6px 0 0}
+.cert .grp{text-align:center;color:#4b5a68;margin:0 0 8px}
+.cert .role{text-align:center;font-size:23px;font-weight:700;padding:8px;margin:8px auto;border-radius:6px;max-width:560px}
+.cert .role.r0{background:#f1dcd9;color:#8c1d15}.cert .role.r1{background:#fde9bf;color:#6b4300}.cert .role.r2{background:#cdeedd;color:#0d5231}
+.cert .msg{text-align:center;max-width:620px;margin:0 auto 10px;font-size:15.5px}
+.cert .data{display:grid;grid-template-columns:1fr 1.5fr;gap:16px;align-items:start;margin-top:8px}
+.cert .nota{text-align:center;border:3px solid #25364a;border-radius:10px;padding:8px}
+.cert .nota b{display:block;font-size:44px;line-height:1.05;font-family:var(--f-mono)}
+.cert table{width:100%;border-collapse:collapse;font-size:14.5px}
+.cert td,.cert th{border-bottom:1px solid #c5c9c4;padding:3px 6px;text-align:left}
+.cert .foot2{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:14px;font-size:13.5px}
+.cert .sig{text-align:center;border-top:1px solid #25364a;padding-top:4px;min-width:230px}
+.cert .sig .sgn{font-family:"Brush Script MT","Segoe Script",cursive;font-size:24px;color:#25364a;line-height:1}
+.cert .legal{margin-top:10px;border-top:1px solid #9aa4ad;padding-top:6px;font-size:11.5px;color:#4b5a68;text-align:center}
+.seal{width:88px;height:88px;flex:none}
+
+.site-foot{text-align:center;font-size:12.5px;color:#8ea3b6;padding:10px 14px;border-top:1px solid #1d3048;background:#060e1a}
+
+@media (max-width:900px){
+  .portada{grid-template-columns:1fr}
+  .g2,.explorer{grid-template-columns:1fr}
+  .cert .data{grid-template-columns:1fr}
+  .hud .cd{order:5;width:100%;text-align:center;margin-right:0}
+}
+@media (max-width:520px){ .row2{grid-template-columns:1fr} .cert{padding:18px 14px} .tok{min-width:40px;height:42px;font-size:20px} }
+
+@media print{
+  @page{size:A4;margin:10mm}
+  :root{padding:0}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:#fff!important;background-image:none!important}
+  .hud,.site-foot,.noprint,.modal,.toast{display:none!important}
+  .view{display:none!important}
+  #v-cert.on{display:block!important}
+  .reswrap{padding:0;max-width:none}
+  .cert{box-shadow:none;margin:0 auto;max-width:none;width:100%;border-width:8px;padding:16px 22px 12px;break-inside:avoid}
+  .cert .data{grid-template-columns:1fr 1.5fr!important}
+}
+
+/* ---- Artefacto 5: luces de emergencia (resplandor rojo pulsante, sin ver las luces) ---- */
+body.emer::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;box-shadow:inset 0 0 160px rgba(255,30,20,.55);animation:em1 1.7s ease-in-out infinite}
+body.emer::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:59;background:radial-gradient(ellipse at 15% -10%,rgba(255,40,30,.32),transparent 55%),radial-gradient(ellipse at 90% 110%,rgba(255,40,30,.28),transparent 55%);animation:em2 1.7s ease-in-out infinite}
+@keyframes em1{0%,100%{box-shadow:inset 0 0 160px rgba(255,30,20,.55)}50%{box-shadow:inset 0 0 40px rgba(255,30,20,.10)}}
+@keyframes em2{0%,100%{opacity:1}50%{opacity:.15}}
+@media print{ body.emer::before,body.emer::after{display:none} }
+/* Ordenador de ensamblaje */
+.pcwrap{max-width:1180px;margin:0 auto;padding:18px 14px 30px;position:relative}
+.floaty{position:absolute;opacity:.55;pointer-events:none;animation:fl 7s ease-in-out infinite alternate}
+.floaty svg{width:90px;height:50px}
+@keyframes fl{to{transform:translateY(-14px) rotate(4deg)}}
+.monitor{position:relative;max-width:900px;margin:0 auto;background:linear-gradient(#cfc8b6,#a9a28f);border-radius:26px;padding:26px 26px 40px;border:4px solid #77705f;box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 3px 0 rgba(255,255,255,.5)}
+.monitor .brand{position:absolute;bottom:10px;left:30px;font-family:var(--f-mono);font-size:13px;color:#4e4838;letter-spacing:.1em}
+.monitor .led{position:absolute;bottom:13px;right:34px;width:12px;height:12px;border-radius:50%;background:#44ff8e;box-shadow:0 0 10px #44ff8e}
+.pcscreen{background:#031009;border-radius:14px;border:6px solid #2a2a24;box-shadow:inset 0 0 50px rgba(88,240,160,.15);padding:14px;color:#bfffd9;font-family:var(--f-mono);position:relative;overflow:hidden}
+.pcscreen::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px)}
+.pcbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px solid #1d6b48;padding-bottom:8px;margin-bottom:12px;font-size:14px}
+.pcgrid{display:grid;grid-template-columns:1fr 1.35fr;gap:14px}
+.pcpanel{border:1px solid #1d6b48;border-radius:8px;padding:10px;position:relative;z-index:1}
+.pcpanel h3{margin:0 0 8px;font-size:15px;color:#58f0a0;font-weight:400;letter-spacing:.05em}
+.pcbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#062016;border:1px solid #1d6b48;color:#bfffd9;font-family:var(--f-mono);font-size:15px;padding:8px 10px;border-radius:6px;margin-bottom:6px;cursor:pointer}
+.pcbtn:hover{background:#0b3a26;border-color:#58f0a0;color:#fff}
+.pcbtn b{color:#ffb627}
+.pcgo{display:block;width:100%;margin-top:10px;font-family:var(--f-mono);font-size:19px;padding:14px;border-radius:8px;cursor:pointer;background:linear-gradient(#ff5a4f,#a8231d);border:2px solid #ffb4a8;color:#fff;animation:pulseGo 1.4s ease-in-out infinite;position:relative;z-index:1}
+@keyframes pulseGo{50%{box-shadow:0 0 26px rgba(255,90,79,.8)}}
+.keyboard{max-width:860px;margin:-6px auto 0;height:54px;background:linear-gradient(#bdb6a3,#8f8875);border-radius:0 0 20px 20px;border:4px solid #77705f;border-top:none;display:grid;grid-template-columns:repeat(18,1fr);gap:4px;padding:8px 14px}
+.keyboard i{background:#e8e2d0;border-radius:3px;box-shadow:0 2px 0 #77705f}
+/* Examen */
+.modmap{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.mm{font-family:var(--f-mono);font-size:14px;padding:8px 6px;border-radius:8px;border:2px solid #4b5864;background:#1c252e;color:#cfd9e2;cursor:pointer;text-align:center}
+.mm.full{background:#1f5a3a;border-color:#44ff8e;color:#fff}.mm.half{background:#5a4208;border-color:#ffb627;color:#fff}
+.mm.cur{outline:3px solid var(--cyan);outline-offset:2px}
+.mm small{display:block;font-size:11.5px;opacity:.85}
+.ttf td.fillc{cursor:pointer;min-width:42px;background:#0b1726}
+.ttf td.fillc:hover{background:#1a2c42}
+.corrbox{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.corrbox .mini h4{font-size:15px}
+.you{color:#ffd5cf}.ok2{color:#bfffd9}
+.badv{background:#3a100d!important}
+/* Final */
+.finale{max-width:900px;margin:0 auto;padding:18px 16px 30px;text-align:center}
+.finale svg{width:100%;max-width:820px;height:auto;border-radius:14px;border:3px solid #26313b;background:#02060d}
+.finale h2{font-size:clamp(26px,4vw,42px);margin:14px 0 6px}
+.saved{color:#44ff8e;text-shadow:0 0 20px rgba(68,255,142,.6)}
+.lost{color:#ff5a4f;text-shadow:0 0 20px rgba(255,90,79,.7)}
+.late{opacity:0;animation:late 1s 4.6s forwards}@keyframes late{to{opacity:1}}
+@media (prefers-reduced-motion: reduce){ .late,.finale svg .fz-msg{opacity:1!important} }
+@media (max-width:900px){ .floaty{display:none} .pcgrid,.corrbox{grid-template-columns:1fr} .modmap{grid-template-columns:repeat(3,1fr)} }
+</style>
+</head>
+<body data-autor="VMMS-2026-Z9F5" class="emer">
+<header class="hud" id="hud" hidden>
+  <span class="who" id="hudWho">AGENTE</span>
+  <span class="cd" id="hudCd">☄ TÁNTALO · IMPACTO EN T−71 h</span>
+  <button class="hbtn" id="hudPc" type="button">🖥 Ordenador</button>
+  <a class="hbtn search" id="hudBuscar" href="https://www.google.com/search?q=mapa+de+Karnaugh+simplificaci%C3%B3n+circuito" target="_blank" rel="noopener">🔎 Buscar información</a>
+  <button class="hbtn" id="hudFs" type="button">⛶ Pantalla completa</button>
+</header>
+<main>
+<section class="view" id="v-portada">
+  <div class="portada">
+    <div><h1>El gran<span class="l2">desafío</span></h1>
+    <p class="sub">Circuitos y sistemas lógicos · Tecnología e Ingeniería II · 2º de Bachillerato. Ha llegado el momento de la verdad.</p></div>
+    <div class="idcard" id="fPortada">
+      <span class="rivet" style="top:8px;left:8px"></span><span class="rivet" style="top:8px;right:8px"></span><span class="rivet" style="bottom:8px;left:8px"></span><span class="rivet" style="bottom:8px;right:8px"></span>
+      <div class="scr"><h2>&gt; ACCESO AL ENSAMBLADOR_</h2>
+        <label class="field"><span>Nombre</span><input id="inNombre" maxlength="40"></label>
+        <label class="field"><span>Apellidos</span><input id="inApellidos" maxlength="60"></label>
+        <div class="row2"><label class="field"><span>Curso</span><input id="inCurso" maxlength="30" value="2º Bachillerato"></label><label class="field"><span>Grupo</span><input id="inGrupo" maxlength="10"></label></div>
+        <div class="err" id="errPortada" role="alert"></div></div>
+      <div class="acts"><button class="btn" type="button" id="btnFsPortada">⛶ Pantalla completa</button><button class="btn go" type="button" id="btnIniciar">Entrar en la sala</button></div>
+    </div>
+  </div>
+</section>
+<section class="view" id="v-historia">
+  <div class="transm"><div class="crt"><div class="head"><span>● CANAL DE EMERGENCIA · DEFENSA PLANETARIA</span><span class="blink">MOMENTO DE LA VERDAD</span></div><div class="typed" id="typed" aria-live="polite"></div></div>
+  <div class="decide" id="decide" hidden><button class="btn warn" type="button" id="btnEmpezar">Ir al ordenador de ensamblaje</button></div>
+  <div class="decide" id="skipWrap"><button class="btn ghost" type="button" id="btnSkip">Mostrar el mensaje completo</button></div></div>
+</section>
+<section class="view" id="v-pc"><div class="pcwrap" id="pcBody"></div></section>
+<section class="view" id="v-sec"><div class="secwrap" id="secBody"></div></section>
+<section class="view" id="v-exam"><div class="secwrap" id="exBody"></div></section>
+<section class="view" id="v-final"><div class="finale" id="finBody"></div></section>
+<section class="view" id="v-cert"><div class="reswrap" id="certBody"></div></section>
+</main>
+<footer class="site-foot">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor. <span class="mono">ID: VMMS-2026-Z9F5</span></footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+
+/* © 2026 Victor Manuel Montano Simón · ID de obra VMMS-2026-Z9F5 */
+const OBRA_ID='VMMS-2026-Z9F5';
+const VN=['A','B','C','D'];
+const bitsOf=(i,n)=>{ const r=[]; for(let k=n-1;k>=0;k--) r.push((i>>k)&1); return r; };
+const envOf=(i,n)=>{ const b=bitsOf(i,n), e={}; VN.slice(0,n).forEach((v,k)=>e[v]=b[k]); return e; };
+const OV=x=>`<span class="ov">${x}</span>`;
+
+/* ---------- Expresiones: árbol, lectura, escritura y evaluación ---------- */
+/* Sintaxis de los datos: A' = A negada, ~( ) = negación de un grupo, · o juxtaposición = producto, + suma, ^ XOR */
+function parseStr(s){
+  const t=[]; for(const ch of s.replace(/\s+/g,'')){ if(/[A-D]/.test(ch)) t.push({k:'v',v:ch}); else if(ch==='0'||ch==='1') t.push({k:'c',v:+ch}); else if(ch==='*') t.push({k:'·'}); else t.push({k:ch}); }
+  let p=0; const pk=()=>t[p];
+  const expr=()=>{ const it=[xr()]; while(pk()&&pk().k==='+'){ p++; it.push(xr()); } return it.length>1?{t:'or',c:it}:it[0]; };
+  const xr=()=>{ let a=term(); while(pk()&&pk().k==='^'){ p++; a={t:'xor',c:[a,term()]}; } return a; };
+  const term=()=>{ const it=[un()]; while(pk()&&(pk().k==='·'||pk().k==='v'||pk().k==='c'||pk().k==='('||pk().k==='~')){ if(pk().k==='·') p++; it.push(un()); } return it.length>1?{t:'and',c:it}:it[0]; };
+  const un=()=>{ if(pk().k==='~'){ p++; p++; const e=expr(); p++; return {t:'not',c:e}; } let a=atom(); while(pk()&&pk().k==="'"){ p++; a={t:'not',c:a}; } return a; };
+  const atom=()=>{ const k=t[p++]; if(k.k==='v') return {t:'v',v:k.v}; if(k.k==='c') return {t:'c',v:k.v}; if(k.k==='('){ const e=expr(); p++; return e; } throw 'bad '+k.k; };
+  return expr();
+}
+function evalE(n,e){ switch(n.t){ case 'v':return e[n.v]; case 'c':return n.v; case 'not':return 1-evalE(n.c,e);
+  case 'and':return n.c.every(x=>evalE(x,e))?1:0; case 'or':return n.c.some(x=>evalE(x,e))?1:0; case 'xor':return evalE(n.c[0],e)^evalE(n.c[1],e); } }
+function rH(n){ switch(n.t){ case 'v':return n.v; case 'c':return String(n.v); case 'not':return OV(rH(n.c));
+  case 'and':return n.c.map(x=>(x.t==='or'||x.t==='xor')?'('+rH(x)+')':rH(x)).join('·');
+  case 'or':return n.c.map(x=>x.t==='xor'?'('+rH(x)+')':rH(x)).join(' + ');
+  case 'xor':return n.c.map(x=>(x.t==='v'||x.t==='not'||x.t==='c')?rH(x):'('+rH(x)+')').join(' ⊕ '); } }
+const H=s=>rH(parseStr(s));
+const ttOf=(node,n)=>Array.from({length:1<<n},(_,i)=>evalE(node,envOf(i,n)));
+function lits(n){ if(n.t==='v') return 1; if(n.t==='c') return 0; if(n.t==='not') return lits(n.c); return n.c.reduce((a,x)=>a+lits(x),0); }
+
+function ttHTML(n,out,o){
+  o=o||{};
+  let h=`<table class="tt"><thead><tr>${o.dec?'<th>Fila</th>':''}${VN.slice(0,n).map(v=>`<th>${v}</th>`).join('')}${o.cols?o.cols.map(c=>`<th>${c.h}</th>`).join(''):''}<th>S</th></tr></thead><tbody>`;
+  for(let i=0;i<(1<<n);i++) h+=`<tr class="${o.hl&&o.hl.includes(i)?'hl':''}">${o.dec?`<td class="dec">${i}</td>`:''}${bitsOf(i,n).map(x=>`<td>${x}</td>`).join('')}${o.cols?o.cols.map(c=>`<td>${c.v[i]}</td>`).join(''):''}<td class="o">${out[i]}</td></tr>`;
+  return h+'</tbody></table>';
+}
+
+/* ---------- Circuitos: modelo y dibujo ---------- */
+/* g: [id, tipo, entradas, x, y]. Una entrada 'A|-12' llega desde el bus A por un carril a la altura -12. */
+function gateNode(c,id){
+  const g=c.g.find(x=>x[0]===id);
+  const kids=g[2].map(r=>{ const s=r.split('|')[0]; return VN.includes(s)?{t:'v',v:s}:gateNode(c,s); });
+  const t=g[1];
+  if(t==='not') return {t:'not',c:kids[0]};
+  if(t==='and'||t==='or') return {t,c:kids};
+  if(t==='xor') return {t:'xor',c:kids};
+  if(t==='nand') return {t:'not',c:{t:'and',c:kids}};
+  if(t==='nor') return {t:'not',c:{t:'or',c:kids}};
+  if(t==='xnor') return {t:'not',c:{t:'xor',c:kids}};
+}
+function gateGeom(g){
+  const t=g[1], nIn=g[2].length, x=g[3], y=g[4]+26;
+  const h=t==='not'?28:(nIn===3?54:40);
+  const base=t.replace(/^n(and|or)$/,'$1').replace('xnor','xor');
+  const neg=['nand','nor','xnor','not'].includes(t);
+  let tip, pinX, path, extra='';
+  if(t==='not'){ path=`M${x} ${y} L${x+30} ${y+h/2} L${x} ${y+h}Z`; tip=x+30; pinX=x; }
+  else if(base==='and'){ path=`M${x} ${y} H${x+28} A${h/2} ${h/2} 0 0 1 ${x+28} ${y+h} H${x}Z`; tip=x+28+h/2; pinX=x; }
+  else { path=`M${x-4} ${y} Q${x+30} ${y} ${x+52} ${y+h/2} Q${x+30} ${y+h} ${x-4} ${y+h} Q${x+8} ${y+h/2} ${x-4} ${y}Z`; tip=x+52; pinX=x+4;
+    if(base==='xor'){ extra=`<path d="M${x-12} ${y} Q${x} ${y+h/2} ${x-12} ${y+h}" fill="none" stroke="#dce8f2" stroke-width="2.5"/>`; pinX=x-8; } }
+  const pins=g[2].map((_,k)=>nIn===1?y+h/2:y+h*(k+1)/(nIn+1));
+  const outX=neg?tip+10:tip;
+  return {x,y,h,path,extra,tip,neg,pinX,pins,outX,outY:y+h/2};
+}
+function circuitSVG(c,env,opt){
+  opt=opt||{};
+  const n=c.n, buses=VN.slice(0,n).map((v,i)=>({v,x:18+i*22}));
+  const geo={}; c.g.forEach(g=>geo[g[0]]=gateGeom(g));
+  const val={}; if(env){ VN.slice(0,n).forEach(v=>val[v]=env[v]); c.g.forEach(g=>val[g[0]]=evalE(gateNode(c,g[0]),env)); }
+  const col=k=>env?(val[k]?'#ffb627':'#4b5e70'):'#c9d7e3';
+  let H=0, W=0; c.g.forEach(g=>{ const q=geo[g[0]]; H=Math.max(H,q.y+q.h+18); W=Math.max(W,q.outX+70); });
+  let wires='', dots='', gates='', labels='';
+  c.g.forEach(g=>{ const q=geo[g[0]];
+    g[2].forEach((ref,k)=>{ const [src,lane]=ref.split('|'); const py=q.pins[k], px=q.pinX;
+      if(VN.includes(src)){ const bx=buses.find(b=>b.v===src).x;
+        if(lane!==undefined){ const ly=+lane+26, mx=px-22-k*6; wires+=`<polyline points="${bx},${ly} ${mx},${ly} ${mx},${py} ${px},${py}" fill="none" stroke="${col(src)}" stroke-width="2.5"/>`; dots+=`<circle cx="${bx}" cy="${ly}" r="3.5" fill="${col(src)}"/>`; }
+        else { wires+=`<line x1="${bx}" y1="${py}" x2="${px}" y2="${py}" stroke="${col(src)}" stroke-width="2.5"/>`; dots+=`<circle cx="${bx}" cy="${py}" r="3.5" fill="${col(src)}"/>`; } }
+      else { const s=geo[src]; const mx=px-14-k*7;
+        wires+= Math.abs(s.outY-py)<0.5?`<line x1="${s.outX}" y1="${py}" x2="${px}" y2="${py}" stroke="${col(src)}" stroke-width="2.5"/>`:
+          `<polyline points="${s.outX},${s.outY} ${mx},${s.outY} ${mx},${py} ${px},${py}" fill="none" stroke="${col(src)}" stroke-width="2.5"/>`; } });
+    gates+=q.extra+`<path d="${q.path}" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+    if(q.neg) gates+=`<circle cx="${q.tip+5}" cy="${q.outY}" r="5" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+    if(g[0]==='S'){ wires+=`<line x1="${q.outX}" y1="${q.outY}" x2="${W-24}" y2="${q.outY}" stroke="${col('S')}" stroke-width="3"/>`;
+      labels+=`<text x="${W-18}" y="${q.outY+6}" class="lblh" style="font-size:18px">S${env?' = '+val.S:''}</text>`; }
+    else if(opt.labels!==false) labels+=`<text x="${q.outX+3}" y="${q.outY-6}" style="font-family:'Share Tech Mono',monospace;font-size:13px" fill="#46c8f0">${g[0]}${env?'='+val[g[0]]:''}</text>`;
+  });
+  let bus=''; buses.forEach(b=>{ bus+=`<line x1="${b.x}" y1="8" x2="${b.x}" y2="${H-4}" stroke="${col(b.v)}" stroke-width="2.5"/><text x="${b.x}" y="8" text-anchor="middle" dy="-0" style="font-family:'Share Tech Mono',monospace;font-size:15px" fill="#ffe3a8">${b.v}${env?'':''}</text>`; });
+  return `<svg viewBox="0 -12 ${W} ${H+12}" role="img" aria-label="Circuito lógico">${bus}${wires}${dots}${gates}${labels}</svg>`;
+}
+
+/* ---------- Mapas de Karnaugh ---------- */
+const GRAY=[0,1,3,2];
+const GCOL=['#ffb627','#46c8f0','#ff5a8a','#44ff8e','#c08bff','#ff8a3d'];
+function kIndex(n,r,c){ return n===3?(r*4+GRAY[c]):(GRAY[r]*4+GRAY[c]); }
+function kmapHTML(n,vals,o){
+  o=o||{};
+  const rows=n===3?2:4, rl=n===3?['0','1']:['00','01','11','10'], cl=['00','01','11','10'];
+  const rv=n===3?'A':'AB', cv=n===3?'BC':'CD';
+  let h=`<table class="kmap ${o.ro?'ro':''}" ${o.id?`id="${o.id}"`:''}><thead><tr><th class="corner">${cv}<br>${rv}</th>${cl.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>`;
+  for(let r=0;r<rows;r++){
+    h+=`<tr><th>${rl[r]}</th>`;
+    for(let c=0;c<4;c++){ const i=kIndex(n,r,c), v=vals[i];
+      const gs=(o.groups||[]).map((g,k)=>g.cells.includes(i)?GCOL[k%GCOL.length]:null).filter(Boolean);
+      const sh=gs.map((col,k)=>`inset 0 0 0 ${3+k*4}px ${col}`).join(',');
+      h+=`<td class="kc ${v===1?'one':(v===0?'zero':'')} ${o.sel&&o.sel.has(i)?'sel':''}" data-i="${i}" style="${sh?'box-shadow:'+sh:''}"><small>${i}</small>${v==null?'':v}</td>`; }
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+/* Implicantes: un grupo es válido si es un «cubo»: todas las combinaciones de las variables que cambian */
+function cubeOf(cells,n){
+  if(!cells.length) return null;
+  const size=cells.length; if(size&(size-1)) return null;
+  const fixed=[]; for(let k=0;k<n;k++){ const b=(cells[0]>>(n-1-k))&1; fixed.push(cells.every(x=>((x>>(n-1-k))&1)===b)?b:null); }
+  const free=fixed.filter(x=>x===null).length; if((1<<free)!==size) return null;
+  return fixed;
+}
+const cubeTerm=f=>f.map((b,k)=>b===null?null:{v:VN[k],neg:!b}).filter(Boolean);
+const termStr=t=>t.length?t.map(l=>l.v+(l.neg?"'":'')).join(''):'1';
+function minimalSOP(ones,n){
+  const set=new Set(ones);
+  if(!ones.length) return {terms:[],cubes:[],str:'0',lits:0};
+  if(ones.length===(1<<n)) return {terms:[[]],cubes:[[...Array(1<<n).keys()]],str:'1',lits:0};
+  const imps=[];
+  const rec=(k,cube)=>{ if(k===n){ const cells=[]; for(let i=0;i<(1<<n);i++) if(cube.every((b,j)=>b===null||((i>>(n-1-j))&1)===b)) cells.push(i);
+      if(cells.every(x=>set.has(x))) imps.push({cube:cube.slice(),cells,lits:cube.filter(b=>b!==null).length}); return; }
+    for(const b of [0,1,null]){ cube.push(b); rec(k+1,cube); cube.pop(); } };
+  rec(0,[]);
+  const primes=imps.filter(a=>!imps.some(b=>b.cells.length>a.cells.length&&a.cells.every(x=>b.cells.includes(x))));
+  let best=null;
+  const search=(chosen,covered,lit)=>{
+    if(best&&(lit>best.lit||(lit===best.lit&&chosen.length>=best.ch.length))) return;
+    const un=ones.find(x=>!covered.has(x));
+    if(un===undefined){ best={ch:chosen.slice(),lit}; return; }
+    primes.filter(p=>p.cells.includes(un)).sort((a,b)=>b.cells.length-a.cells.length).forEach(p=>{ const nc=new Set(covered); p.cells.forEach(x=>nc.add(x)); chosen.push(p); search(chosen,nc,lit+p.lits); chosen.pop(); });
+  };
+  search([],new Set(),0);
+  best.ch.sort((a,b)=>termStr(cubeTerm(a.cube)).localeCompare(termStr(cubeTerm(b.cube))));
+  const terms=best.ch.map(p=>cubeTerm(p.cube));
+  return {terms,cubes:best.ch.map(p=>p.cells),str:terms.map(termStr).join(' + '),lits:best.lit};
+}
+
+/* ---------- Circuito de dos niveles (puertas AND-OR o OR-AND) ---------- */
+function shapeGate(t,x,y,h){
+  const base=t.replace(/^n(and|or)$/,'$1'), neg=/^n/.test(t);
+  let path,tip,pinX;
+  if(base==='and'){ path=`M${x} ${y} H${x+28} A${h/2} ${h/2} 0 0 1 ${x+28} ${y+h} H${x}Z`; tip=x+28+h/2; pinX=x; }
+  else { path=`M${x-4} ${y} Q${x+30} ${y} ${x+52} ${y+h/2} Q${x+30} ${y+h} ${x-4} ${y+h} Q${x+8} ${y+h/2} ${x-4} ${y}Z`; tip=x+52; pinX=x+4; }
+  let svg=`<path d="${path}" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+  if(neg) svg+=`<circle cx="${tip+5}" cy="${y+h/2}" r="5" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+  return {svg,outX:neg?tip+10:tip,outY:y+h/2,pinX};
+}
+function twoLevelSVG(terms,n,kind,opt){
+  opt=opt||{};
+  const lvl1=kind==='pos'?'or':(kind==='nand'?'nand':'and'), lvl2=kind==='pos'?'and':(kind==='nand'?'nand':'or');
+  const stroke='#c9d7e3';
+  const bx=k=>20+k*46, nbx=k=>40+k*46;
+  const x1=20+n*46+40;
+  const single=terms.length===1;
+  let y=44, items=[];
+  terms.forEach(t=>{ if(t.length>=2){ const h=Math.max(40,t.length*15); items.push({t,y,h,gate:true}); y+=h+14; } else { items.push({t,y,h:24,gate:false}); y+=24+14; } });
+  const H=Math.max(y+6,120);
+  const x2=x1+150;
+  let wires='',dots='',gates='',labels='';
+  // buses
+  for(let k=0;k<n;k++){ const a=bx(k), b=nbx(k);
+    wires+=`<line x1="${a}" y1="10" x2="${a}" y2="${H}" stroke="${stroke}" stroke-width="2.2"/>`;
+    wires+=`<polyline points="${a},18 ${b},18 ${b},22" fill="none" stroke="${stroke}" stroke-width="2.2"/><path d="M${b-6} 22 L${b+6} 22 L${b} 32Z" fill="#16283d" stroke="#dce8f2" stroke-width="1.8"/><circle cx="${b}" cy="35" r="3" fill="#16283d" stroke="#dce8f2" stroke-width="1.8"/>`;
+    wires+=`<line x1="${b}" y1="38" x2="${b}" y2="${H}" stroke="${stroke}" stroke-width="2.2"/>`;
+    labels+=`<text x="${a}" y="8" text-anchor="middle" style="font-family:'Share Tech Mono',monospace;font-size:14px" fill="#ffe3a8">${VN[k]}</text>`;
+    labels+=`<text x="${b+9}" y="${46}" style="font-family:'Share Tech Mono',monospace;font-size:12px" fill="#ffe3a8">${VN[k]}</text><line x1="${b+9}" y1="${35}" x2="${b+16}" y2="${35}" stroke="#ffe3a8" stroke-width="1.2"/>`;
+  }
+  const outs=[];
+  items.forEach(it=>{
+    if(it.gate){ const g=shapeGate(lvl1,x1,it.y,it.h); gates+=g.svg;
+      it.t.forEach((l,k)=>{ const py=it.y+it.h*(k+1)/(it.t.length+1), sx=l.neg?nbx(VN.indexOf(l.v)):bx(VN.indexOf(l.v));
+        wires+=`<line x1="${sx}" y1="${py}" x2="${g.pinX}" y2="${py}" stroke="${stroke}" stroke-width="2.2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3.2" fill="${stroke}"/>`; });
+      outs.push({x:g.outX,y:g.outY}); }
+    else { const py=it.y+12, l0=it.t[0], l=l0&&kind==='nand'&&!single?{v:l0.v,neg:!l0.neg}:l0; const sx=l?(l.neg?nbx(VN.indexOf(l.v)):bx(VN.indexOf(l.v))):bx(0);
+      wires+=`<line x1="${sx}" y1="${py}" x2="${x1+60}" y2="${py}" stroke="${stroke}" stroke-width="2.2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3.2" fill="${stroke}"/>`; outs.push({x:x1+60,y:py}); }
+  });
+  let sx,sy;
+  if(single){ sx=outs[0].x; sy=outs[0].y; }
+  else { const h2=Math.max(40,outs.length*15), y2=Math.max(30,(outs[0].y+outs[outs.length-1].y)/2-h2/2);
+    const g=shapeGate(lvl2,x2,y2,h2); gates+=g.svg;
+    outs.forEach((o,k)=>{ const py=y2+h2*(k+1)/(outs.length+1), mx=g.pinX-16-((k%4)*7);
+      wires+=`<polyline points="${o.x},${o.y} ${mx},${o.y} ${mx},${py} ${g.pinX},${py}" fill="none" stroke="${stroke}" stroke-width="2.2"/>`; });
+    sx=g.outX; sy=g.outY; }
+  const W=Math.max(sx+60,x2+120);
+  wires+=`<line x1="${sx}" y1="${sy}" x2="${W-26}" y2="${sy}" stroke="#ffb627" stroke-width="3"/>`;
+  labels+=`<text x="${W-20}" y="${sy+6}" class="lblh" style="font-size:18px;font-family:'Share Tech Mono',monospace" fill="#ffb627">S</text>`;
+  return `<svg viewBox="0 -6 ${W} ${H+10}" role="img" aria-label="Circuito con puertas lógicas">${wires}${dots}${gates}${labels}</svg>`;
+}
+const termsFromStr=s=>s.split('+').map(t=>t.trim()).filter(Boolean).map(t=>{ const r=[]; for(let i=0;i<t.length;i++){ if(/[A-D]/.test(t[i])){ const neg=t[i+1]==="'"; r.push({v:t[i],neg}); } } return r; });
+
+
+/* ---------- Datos del gran desafío ---------- */
+const T4f=f=>{ const r=[]; for(let i=0;i<16;i++) if(f((i>>3)&1,(i>>2)&1,(i>>1)&1,i&1)) r.push(i); return r; };
+const T3f=f=>{ const r=[]; for(let i=0;i<8;i++) if(f((i>>2)&1,(i>>1)&1,i&1)) r.push(i); return r; };
+
+/* Seis problemas completos resueltos (adaptados de tus ejercicios) */
+const RES=[
+ {t:'Fragmentos radiactivos',n:3,ones:T3f((a,b,c)=>a+b+c>=2),ref:'Adaptado del ejercicio 1 (piezas defectuosas).',
+  stmt:'Tres sensores (A, B y C) analizan cada fragmento de Tántalo que llega al laboratorio. Si al menos dos detectan radiación, el fragmento se aísla (S = 1). Diseñe el circuito con puertas NAND.'},
+ {t:'La función de la PAU',n:3,ones:T3f((a,b,c)=>(b&&c)||(!a&&!b&&!c)||(!a&&b)),expr:"BC + A'B'C' + A'B",ref:'Adaptado del ejercicio 4 de la PAU de Cantabria (2025).',
+  stmt:'El brazo de carga sigue la función S = B·C + Ā·B̄·C̄ + Ā·B. Obtenga la tabla, la primera forma canónica, simplifique con Karnaugh e implemente con NAND.'},
+ {t:'El montacargas del hangar',n:4,ones:T4f((a,b,c,d)=>a||b),ref:'Adaptado del ejercicio 4 (ascensor).',
+  stmt:'El motor del montacargas se detiene (S = 1) si la puerta está abierta (A = 1) o si hay sobrepeso (B = 1). El pulsador de planta (C) y la temperatura (D) no influyen. Como hay pocos ceros, conviene empezar por los maxtérminos.'},
+ {t:'Detector de pesos',n:4,ones:T4f((a,b,c,d)=>b||d),ref:'Adaptado del ejercicio 8.',
+  stmt:'Un sistema recibe un número binario ABCD y debe dar S = 1 cuando está activo el peso 2⁰ (D) o el peso 2² (B).'},
+ {t:'Comparador de órbitas',n:4,ones:T4f((a,b,c,d)=>2*a+b>2*c+d),ref:'Adaptado del ejercicio 7 (comparador AB > CD).',
+  stmt:'El radar norte envía un número de 2 bits AB y el radar sur, CD. La alerta (S = 1) salta cuando AB es mayor que CD.'},
+ {t:'Bola gratis en la máquina de entrenamiento',n:4,ones:[4,5,8,9,11,13,15],x:true,ref:'Adaptado del ejercicio de la máquina recreativa (solución con un mapa de 4 variables en lugar de 5).',
+  stmt:'En la sala de descanso hay una máquina recreativa: cuatro interruptores ABCD forman un número binario y un detector X vale 1 cuando la bola se cuela. Se concede bola gratis si X = 1 y el número es 4, 5, 8, 9, 11, 13 o 15. Truco: se resuelve S1 con un mapa de 4 variables y después S = X·S1.'}
+];
+
+/* Banco del examen: 10 variantes por módulo (el módulo 3 se genera al azar) */
+const P1=[
+ {s:'Tres sensores de radiación A, B y C vigilan la bodega de carga. El módulo se activa (S = 1) si al menos dos de ellos detectan radiación.',f:(a,b,c)=>a+b+c>=2},
+ {s:'La compuerta de la bodega se abre (S = 1) si hay una nave esperando (A = 1) que además supera las dos toneladas (C = 1). La altura (B) no influye.',f:(a,b,c)=>a&&c},
+ {s:'La alarma del módulo suena (S = 1) si hay incendio (A = 1) o si se superan a la vez los límites de humedad (B = 1) y de presión (C = 1).',f:(a,b,c)=>a||(b&&c)},
+ {s:'El motor de refrigeración arranca (S = 1) cuando se activan los sensores B o C, juntos o por separado. El sensor A no influye.',f:(a,b,c)=>b||c},
+ {s:'La luz de servicio se enciende (S = 1) si A = 0 y C = 1, o si A = 1 y B = 1.',f:(a,b,c)=>(!a&&c)||(a&&b)},
+ {s:'El freno magnético se activa (S = 1) si A = 1 y B = 0, o si los tres sensores valen 1.',f:(a,b,c)=>(a&&!b)||(a&&b&&c)},
+ {s:'La bomba de combustible funciona (S = 1) cuando C = 1, salvo que A y B estén activos a la vez.',f:(a,b,c)=>c&&!(a&&b)},
+ {s:'El ventilador del reactor gira (S = 1) cuando los sensores A y B dan valores distintos.',f:(a,b,c)=>a!==b},
+ {s:'La sirena suena (S = 1) si ningún sensor está activo o si lo están los tres.',f:(a,b,c)=>a+b+c===0||a+b+c===3},
+ {s:'El panel de control se enciende (S = 1) si B = 1, o si A = 1 y C = 0.',f:(a,b,c)=>b||(a&&!c)}
+];
+const P2=["ABC + ABC' + AB'C","A'B'C + A'BC + AB'C + ABC","(A + B)(A + B') + A'C","A'BC' + A'BC + ABC' + ABC","AB + A'C + BC","~(A + B) + ~(A + C)","A(B + C) + A'BC + AB'C'","(A + B')(A' + B)","AB'C + A'B'C + AB'C'","~(AB)C + ABC"];
+const P4=[
+ {s:'El sistema de puntería recibe un número binario ABCD (A es el de mayor peso). S = 1 cuando el número es 4, 8 o 12.',f:(a,b,c,d)=>[4,8,12].includes(8*a+4*b+2*c+d)},
+ {s:'S = 1 cuando el número binario ABCD es par y mayor que 7.',f:(a,b,c,d)=>(8*a+4*b+2*c+d)>7&&!d},
+ {s:'El seguidor de trayectoria se activa (S = 1) si A = 1 y, además, C o D valen 1.',f:(a,b,c,d)=>a&&(c||d)},
+ {s:'S = 1 cuando el número binario ABCD es menor que 6.',f:(a,b,c,d)=>(8*a+4*b+2*c+d)<6},
+ {s:'El corrector de rumbo actúa (S = 1) si B = 1 y D = 0, o si A, B y D valen 0.',f:(a,b,c,d)=>(b&&!d)||(!a&&!b&&!d)},
+ {s:'S = 1 cuando el número binario ABCD es impar y no mayor que 11.',f:(a,b,c,d)=>d&&(8*a+4*b+2*c+d)<=11},
+ {s:'El enlace con la Tierra se establece (S = 1) cuando C y D valen 1, o cuando A y B valen 1.',f:(a,b,c,d)=>(c&&d)||(a&&b)},
+ {s:'S = 1 cuando el número binario ABCD es mayor que 11 o igual a 3.',f:(a,b,c,d)=>(8*a+4*b+2*c+d)>11||(8*a+4*b+2*c+d)===3},
+ {s:'El giroscopio se activa (S = 1) cuando B = 1 y, además, A y C son distintos.',f:(a,b,c,d)=>b&&(a!==c)},
+ {s:'S = 1 cuando D = 1 o cuando A y B valen 1 a la vez.',f:(a,b,c,d)=>d||(a&&b)}
+];
+const P5=[
+ {s:'El láser del núcleo dispara (S = 1) cuando la alineación (A) y la confirmación (D) están activas a la vez, o cuando la carga (B) y el escudo (C) están activos junto con A o con D.',f:(a,b,c,d)=>(b&&c&&(a||d))||(a&&d)},
+ {s:'El escudo del núcleo se abre (S = 1) cuando A y B son distintos y, además, C o D valen 1.',f:(a,b,c,d)=>(a!==b)&&(c||d)},
+ {s:'El propulsor de desvío se enciende (S = 1) si A = 1 y B es distinto de C, o si D = 1 y A = 0.',f:(a,b,c,d)=>(a&&b!==c)||(d&&!a)},
+ {s:'La cámara de plasma se cierra (S = 1) cuando hay más sensores activos en la pareja A-B que en la pareja C-D.',f:(a,b,c,d)=>a+b>c+d},
+ {s:'El generador del núcleo se conecta (S = 1) cuando el número binario ABCD está entre 5 y 12, ambos incluidos.',f:(a,b,c,d)=>{ const v=8*a+4*b+2*c+d; return v>=5&&v<=12; }},
+ {s:'El blindaje se activa (S = 1) si A = 1 y C = 0, si B, C y D valen 1 a la vez, o si A, B y D valen 0 a la vez.',f:(a,b,c,d)=>(a&&!c)||(b&&c&&d)||(!a&&!b&&!d)},
+ {s:'La antena de guiado emite (S = 1) si C = 1, salvo que A y B estén activos a la vez; y también en el caso concreto A = 1, B = 1, C = 0, D = 1.',f:(a,b,c,d)=>(c&&!(a&&b))||(a&&b&&!c&&d)},
+ {s:'El acelerador de partículas funciona (S = 1) si A y B valen 1, si A = 0, C = 0 y D = 1, o si B = 1, C = 1 y D = 0.',f:(a,b,c,d)=>(a&&b)||(!a&&!c&&d)||(b&&c&&!d)},
+ {s:'El condensador principal se carga (S = 1) cuando A o B valen 1, B o D valen 1, y además C y D no valen 1 a la vez.',f:(a,b,c,d)=>(a||b)&&(b||d)&&!(c&&d)},
+ {s:'El sincronizador de disparo se activa (S = 1) cuando A y D son distintos y, además, B o C valen 1.',f:(a,b,c,d)=>(a!==d)&&(b||c)}
+];
+const MODS=[
+ {n:'Sensor de fragmentos',pts:1.5,ic:'📡'},
+ {n:'Filtro de señales',pts:1.5,ic:'🧮'},
+ {n:'Placa de control',pts:2,ic:'🔌'},
+ {n:'Sistema de puntería',pts:2,ic:'🎯'},
+ {n:'Núcleo del láser',pts:3,ic:'☢'}
+];
+
+/* Generador aleatorio de circuitos para el módulo 3 */
+function genCircuit(){
+ const pairs=[['A','B'],['A','C'],['B','C']], t1=['and','or','nand','nor','xor'], t2=['and','or','nand','nor'];
+ for(let k=0;k<300;k++){
+  const p1=pairs[Math.floor(Math.random()*3)]; let p2=pairs[Math.floor(Math.random()*3)]; if(p2.join()===p1.join()) continue;
+  const a=t1[Math.floor(Math.random()*5)], b=t1[Math.floor(Math.random()*5)]; if(a==='xor'&&b==='xor') continue;
+  const c=t2[Math.floor(Math.random()*4)];
+  const spec={n:3,g:[['X1',a,p1,150,0],['X2',b,p2,150,70],['S',c,['X1','X2'],310,30]]};
+  const tt=ttOf(gateNode(spec,'S'),3), ones=tt.map((v,i)=>v?i:-1).filter(i=>i>=0);
+  if(ones.length<2||ones.length>6) continue;
+  const m=minimalSOP(ones,3); if(m.lits<2||m.lits>6) continue;
+  return spec;
+ }
+ return {n:3,g:[['X1','and',['A','B'],150,0],['X2','nor',['B','C'],150,70],['S','or',['X1','X2'],310,30]]};
+}
+
+/* Dibujos */
+function artifactSVG(ok){
+ const c=i=>ok[i]?'#44ff8e':'#ffb627';
+ return `<svg viewBox="0 0 520 300" role="img" aria-label="Esquema del artefacto">
+ <g stroke="#58f0a0" fill="none" stroke-width="1.5" opacity=".35">${Array.from({length:14},(_,i)=>`<line x1="${i*40}" y1="0" x2="${i*40}" y2="300"/>`).join('')}${Array.from({length:8},(_,i)=>`<line x1="0" y1="${i*40}" x2="520" y2="${i*40}"/>`).join('')}</g>
+ <rect x="40" y="110" width="120" height="80" rx="8" fill="#0b2a1c" stroke="#58f0a0" stroke-width="2"/><text x="100" y="155" text-anchor="middle" fill="#bfffd9" font-family="Share Tech Mono,monospace" font-size="13">PANEL SOLAR</text>
+ <rect x="360" y="110" width="120" height="80" rx="8" fill="#0b2a1c" stroke="#58f0a0" stroke-width="2"/><text x="420" y="155" text-anchor="middle" fill="#bfffd9" font-family="Share Tech Mono,monospace" font-size="13">PANEL SOLAR</text>
+ <rect x="170" y="80" width="180" height="140" rx="14" fill="#06180f" stroke="#58f0a0" stroke-width="2.5"/>
+ <path d="M260 80 L260 30 M240 30 H280 L270 12 H250Z" stroke="#ff5a4f" stroke-width="3" fill="#3a100d"/>
+ <line x1="260" y1="10" x2="260" y2="-40" stroke="#ff5a4f" stroke-width="4" stroke-dasharray="6 6" class="abeam"/>
+ ${[[185,95],[275,95],[185,160],[275,160]].map(([x,y],i)=>`<rect x="${x}" y="${y}" width="60" height="44" rx="6" fill="#0b2a1c" stroke="${c(i)}" stroke-width="2"/><text x="${x+30}" y="${y+27}" text-anchor="middle" fill="${c(i)}" font-family="Share Tech Mono,monospace" font-size="14">M${i+1}</text>`).join('')}
+ <circle cx="260" cy="152" r="20" fill="#2a0806" stroke="${c(4)}" stroke-width="3"/><text x="260" y="157" text-anchor="middle" fill="${c(4)}" font-family="Share Tech Mono,monospace" font-size="14">M5</text>
+ <text x="260" y="250" text-anchor="middle" fill="#bfffd9" font-family="Share Tech Mono,monospace" font-size="13">ARTEFACTO DE DESVÍO «LUCIÉRNAGA»</text>
+ <text x="260" y="272" text-anchor="middle" fill="#ffb627" font-family="Share Tech Mono,monospace" font-size="12">${ok.filter(Boolean).length} / 5 MÓDULOS PROGRAMADOS</text></svg>`;
+}
+function finaleSVG(saved){
+ const stars=Array.from({length:60},(_,i)=>`<circle cx="${(i*137)%800}" cy="${(i*61)%420}" r="${i%5?1:1.8}" fill="#fff" opacity="${.3+(i%4)*.15}"/>`).join('');
+ return `<svg viewBox="0 0 800 420" role="img" aria-label="${saved?'El artefacto desvía el meteorito':'El meteorito impacta contra la Tierra'}">
+ <style>
+  .fz-met{animation:met${saved?'S':'L'} 4.5s ease-in forwards}
+  @keyframes metS{0%{transform:translate(0,0)}55%{transform:translate(-330px,170px)}100%{transform:translate(-120px,-260px) scale(.4);opacity:.2}}
+  @keyframes metL{0%{transform:translate(0,0)}100%{transform:translate(-520px,215px)}}
+  .fz-beam{opacity:0;animation:beam .6s 2.2s ease-out 3 alternate forwards}@keyframes beam{to{opacity:1}}
+  .fz-boom{opacity:0;transform-origin:350px 210px;animation:boom 1.2s 2.5s ease-out forwards}@keyframes boom{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(2.4)}}
+  .fz-flash{opacity:0;animation:flash 1.6s 4.3s ease-out forwards}@keyframes flash{0%{opacity:.95}100%{opacity:.55}}
+  .fz-earthL{animation:burn 1.5s 4.4s forwards}@keyframes burn{to{fill:#5a1208}}
+  .fz-msg{opacity:0;animation:msg 1s 4.6s forwards}@keyframes msg{to{opacity:1}}
+ </style>
+ <rect width="800" height="420" fill="#02060d"/>${stars}
+ <g><circle cx="150" cy="330" r="120" fill="#1b5f9e" class="${saved?'':'fz-earthL'}"/><path d="M80 290 q30 -30 70 -10 t60 20 q-20 30 -60 20 t-70 -30Z M120 380 q20 -20 50 -5 t40 10 q-30 20 -60 10Z" fill="#2f8a4f" opacity=".9"/><circle cx="150" cy="330" r="126" fill="none" stroke="#7fc4ff" stroke-width="4" opacity=".4"/></g>
+ <g transform="translate(300 300)"><rect x="-26" y="-10" width="52" height="20" rx="4" fill="#cfd8de"/><rect x="-70" y="-6" width="40" height="12" fill="#1d3f6a" stroke="#6fa0d0"/><rect x="30" y="-6" width="40" height="12" fill="#1d3f6a" stroke="#6fa0d0"/><rect x="-4" y="-22" width="8" height="12" fill="#e8413a"/></g>
+ ${saved?`<line x1="300" y1="278" x2="350" y2="210" stroke="#ff4d3d" stroke-width="6" class="fz-beam" style="filter:drop-shadow(0 0 8px #ff4d3d)"/><circle cx="350" cy="210" r="40" fill="#ffd27a" class="fz-boom"/>`:''}
+ <g class="fz-met"><g transform="translate(680 40)"><path d="M0 0 L120 -60" stroke="url(#tail)" stroke-width="18" stroke-linecap="round" opacity=".6"/><circle r="30" fill="#6b5a4a" stroke="#ffb15a" stroke-width="4"/><circle cx="-8" cy="-6" r="7" fill="#4a3d31"/><circle cx="9" cy="8" r="5" fill="#4a3d31"/></g></g>
+ <defs><linearGradient id="tail"><stop offset="0" stop-color="#ffb15a"/><stop offset="1" stop-color="#ffb15a" stop-opacity="0"/></linearGradient></defs>
+ ${saved?'':'<rect width="800" height="420" fill="#ff3b1f" class="fz-flash"/>'}
+ <text x="400" y="60" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="30" fill="${saved?'#44ff8e':'#fff'}" class="fz-msg">${saved?'TÁNTALO DESVIADO':'IMPACTO CONFIRMADO'}</text></svg>`;
+}
+
+</script>
+<!-- Huella de autoría · ID de obra VMMS-2026-Z9F5 · Victor Manuel Montano Simón -->
+<script>
+/* ---------- Almacenamiento y utilidades ---------- */
+const PFX='vmms-csl5-', MEM={};
+const S={
+ get(k,d){ try{ const v=localStorage.getItem(PFX+k); if(v!==null) return JSON.parse(v); }catch(e){} return (k in MEM)?MEM[k]:d; },
+ set(k,v){ MEM[k]=v; try{ localStorage.setItem(PFX+k,JSON.stringify(v)); }catch(e){} },
+ del(k){ delete MEM[k]; try{ localStorage.removeItem(PFX+k); }catch(e){} }
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:2});
+const fecha=t=>new Date(t).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+function mkOpts(correct,others){ const all=[correct,...others.filter(x=>x!==correct)].slice(0,4); const perm=shuffle(all.map((_,i)=>i)); return {list:perm.map(i=>all[i]),correct:perm.indexOf(0)}; }
+function agente(){ const p=S.get('perfil',null); return p?(p.apellidos.trim().split(/\s+/)[0]||p.nombre):''; }
+const valsFrom=(ones,n)=>{ const v=Array(1<<n).fill(0); ones.forEach(i=>v[i]=1); return v; };
+
+function show(v){
+ document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+ $('#hud').hidden=(v==='portada');
+ $('#hudWho').textContent=S.get('perfil',null)?`AGENTE ${agente().toUpperCase()}`:'AGENTE';
+ $('#hudBuscar').hidden=(v==='exam'); $('#hudPc').hidden=(v==='exam'||v==='historia');
+ S.set('vista',v); window.scrollTo(0,0);
+}
+function modal(o){
+ const b=$('#mbox'); b.className='mbox'+(o.warn?' warn':'');
+ b.innerHTML=(o.warn?'<div class="stripe"></div>':'')+`<h3>${o.title}</h3><div>${o.html||''}</div><div class="macts"></div>`;
+ const acts=b.querySelector('.macts');
+ (o.buttons||[{t:'Entendido',cls:'go'}]).forEach(bt=>{ const e=document.createElement('button'); e.type='button'; e.className='btn '+(bt.cls||''); e.textContent=bt.t; if(bt.id) e.id=bt.id;
+   e.onclick=()=>{ if(bt.keep!==true) closeModal(); if(bt.fn) bt.fn(); }; acts.appendChild(e); });
+ $('#modal').classList.add('on'); if(o.after) o.after(b);
+}
+function closeModal(){ $('#modal').classList.remove('on'); }
+let toastT; function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>e.classList.remove('on'),3400); }
+function toggleFs(force){
+ const d=document, el=d.documentElement, isFs=d.fullscreenElement||d.webkitFullscreenElement;
+ try{ if(isFs&&force!==true){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); return; }
+  if(!isFs){ const r=el.requestFullscreen||el.webkitRequestFullscreen; if(!r) throw 0; const p=r.call(el); if(p&&p.catch) p.catch(()=>toast('Este navegador no permite la pantalla completa aquí. Pulse F11 si lo necesita.')); } }
+ catch(e){ toast('Este navegador no permite la pantalla completa aquí. Pulse F11 si lo necesita.'); }
+}
+function tick(){
+ const ex=S.get('exam',null); if(ex&&ex.status==='done'){ $('#hudCd').textContent=ex.saved?'☄ TÁNTALO · DESVIADO ✔ AMENAZA NEUTRALIZADA':'☄ TÁNTALO · IMPACTO CONFIRMADO'; document.body.classList.toggle('emer',!ex.saved); return; }
+ const t0=S.get('inicio',null), total=71*3600+59*60+17;
+ let r=Math.max(0,total-Math.floor((Date.now()-(t0||Date.now()))/1000));
+ const h=Math.floor(r/3600); r%=3600;
+ $('#hudCd').textContent=`☄ TÁNTALO · IMPACTO EN T−${h} h ${String(Math.floor(r/60)).padStart(2,'0')} min ${String(r%60).padStart(2,'0')} s`;
+}
+
+/* ---------- Constructor de fórmulas por arrastre ---------- */
+const tokLabel=t=>t.k==='v'?(t.neg?OV(t.v):t.v):(t.k==='c'?String(t.v):t.k);
+const tokCls=t=>t.k==='v'||t.k==='c'?'':(t.k==='('||t.k===')'?'par':'op');
+function Builder(root,n,init,onChange){
+ const toks=(init||[]).map(t=>({...t})); let locked=false;
+ const pal=[...VN.slice(0,n).map(v=>({k:'v',v,neg:false})),...VN.slice(0,n).map(v=>({k:'v',v,neg:true})),{k:'+'},{k:'·'},{k:'('},{k:')'},{k:'c',v:0},{k:'c',v:1}];
+ root.innerHTML=`<div class="builder"><div class="palette"><span class="lbl">Arrastre los símbolos a la línea de la fórmula, o púlselos para añadirlos al final. Cada símbolo se puede usar tantas veces como haga falta.</span>
+  ${pal.map((t,i)=>`<button type="button" class="tok ${tokCls(t)}" data-p="${i}">${tokLabel(t)}</button>`).join('')}</div>
+  <div class="zone" aria-live="polite"></div>
+  <div class="bacts"><button type="button" class="hbtn" data-a="undo">⌫ Borrar el último</button><button type="button" class="hbtn" data-a="clear">Vaciar</button><small>Para quitar un símbolo de la fórmula, púlselo o arrástrelo fuera.</small></div></div>`;
+ const zone=root.querySelector('.zone');
+ const render=(caret)=>{ let h='<span class="mono" style="font-size:20px;color:var(--muted);margin-right:4px">S =</span>';
+  if(!toks.length&&caret==null) h+='<span class="ph">Suelte aquí los símbolos</span>';
+  toks.forEach((t,i)=>{ if(caret===i) h+='<span class="caret"></span>'; h+=`<span class="tok ${tokCls(t)}" data-z="${i}" tabindex="0" role="button" aria-label="Quitar símbolo">${tokLabel(t)}</span>`; });
+  if(caret!=null&&caret>=toks.length) h+='<span class="caret"></span>'; zone.innerHTML=h; if(caret==null&&onChange) onChange(toks.slice()); };
+ const idxAt=(x,y)=>{ const els=[...zone.querySelectorAll('[data-z]')]; for(let i=0;i<els.length;i++){ const r=els[i].getBoundingClientRect(); if(y<r.top) return i; if(y<=r.bottom&&x<r.left+r.width/2) return i; } return els.length; };
+ const overZone=(x,y)=>{ const r=zone.getBoundingClientRect(); return x>=r.left-10&&x<=r.right+10&&y>=r.top-10&&y<=r.bottom+10; };
+ let drag=null;
+ const move=e=>{ if(!drag) return; const dx=e.clientX-drag.x0, dy=e.clientY-drag.y0;
+  if(!drag.moved&&Math.hypot(dx,dy)>6){ drag.moved=true; drag.ghost=document.createElement('span'); drag.ghost.className='tok dragghost '+tokCls(drag.tok); drag.ghost.innerHTML=tokLabel(drag.tok); document.body.appendChild(drag.ghost); }
+  if(drag.moved){ e.preventDefault(); drag.ghost.style.left=e.clientX+'px'; drag.ghost.style.top=e.clientY+'px'; const o=overZone(e.clientX,e.clientY); zone.classList.toggle('over',o); render(o?idxAt(e.clientX,e.clientY):null); } };
+ const up=e=>{ if(!drag) return; window.removeEventListener('pointermove',move); window.removeEventListener('pointerup',up); window.removeEventListener('pointercancel',up);
+  const d=drag; drag=null; zone.classList.remove('over'); if(d.ghost) d.ghost.remove();
+  if(!d.moved){ if(d.from==='pal') toks.push({...d.tok}); else toks.splice(d.idx,1); render(null); return; }
+  const inZ=overZone(e.clientX,e.clientY);
+  if(d.from==='pal'){ if(inZ){ render(null); toks.splice(idxAt(e.clientX,e.clientY),0,{...d.tok}); } }
+  else { const t=toks.splice(d.idx,1)[0]; if(inZ){ render(null); toks.splice(idxAt(e.clientX,e.clientY),0,t); } }
+  render(null); };
+ const start=(e,info)=>{ if(locked||e.button>0) return; e.preventDefault(); drag={...info,x0:e.clientX,y0:e.clientY,moved:false};
+  window.addEventListener('pointermove',move,{passive:false}); window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up); };
+ root.querySelectorAll('[data-p]').forEach(b=>{ const t=pal[+b.dataset.p]; b.addEventListener('pointerdown',e=>start(e,{from:'pal',tok:t}));
+  b.addEventListener('keydown',e=>{ if(locked) return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toks.push({...t}); render(null); } }); });
+ zone.addEventListener('pointerdown',e=>{ const el=e.target.closest('[data-z]'); if(!el) return; const i=+el.dataset.z; start(e,{from:'zone',idx:i,tok:toks[i]}); });
+ zone.addEventListener('keydown',e=>{ const el=e.target.closest('[data-z]'); if(!el||locked) return; if(['Enter',' ','Delete','Backspace'].includes(e.key)){ e.preventDefault(); toks.splice(+el.dataset.z,1); render(null); } });
+ root.querySelector('[data-a="undo"]').onclick=()=>{ if(!locked){ toks.pop(); render(null); } };
+ root.querySelector('[data-a="clear"]').onclick=()=>{ if(!locked){ toks.length=0; render(null); } };
+ render(null);
+ return { get:()=>toks.slice(), lock:()=>{ locked=true; root.classList.add('locked'); } };
+}
+function parseToks(t){
+ let p=0; const pk=()=>t[p];
+ const expr=()=>{ const it=[term()]; while(pk()&&pk().k==='+'){ p++; it.push(term()); } return it.length>1?{t:'or',c:it}:it[0]; };
+ const term=()=>{ const it=[fac()]; while(pk()&&(pk().k==='·'||pk().k==='v'||pk().k==='c'||pk().k==='(')){ if(pk().k==='·') p++; it.push(fac()); } return it.length>1?{t:'and',c:it}:it[0]; };
+ const fac=()=>{ const k=pk(); if(!k) throw 'la fórmula está incompleta'; if(k.k==='v'){ p++; return k.neg?{t:'not',c:{t:'v',v:k.v}}:{t:'v',v:k.v}; }
+  if(k.k==='c'){ p++; return {t:'c',v:k.v}; }
+  if(k.k==='('){ p++; const e=expr(); if(!pk()||pk().k!==')') throw 'falta cerrar un paréntesis'; p++; return e; }
+  throw `hay un «${k.k}» mal colocado`; };
+ const r=expr(); if(p<t.length) throw `sobra un «${t[p].k}»`; return r;
+}
+function checkSimplified(toks,target,n,min){
+ if(!toks.length) return {ok:false,msg:'La fórmula está vacía.'};
+ let ast; try{ ast=parseToks(toks); }catch(e){ return {ok:false,msg:'La fórmula no está bien escrita: '+e+'.'}; }
+ const tt=ttOf(ast,n); const bad=tt.findIndex((v,i)=>v!==target[i]);
+ if(bad>=0){ const b=bitsOf(bad,n); return {ok:false,msg:`La función no es equivalente. Por ejemplo, con ${VN.slice(0,n).map((v,k)=>v+' = '+b[k]).join(', ')} debería valer ${target[bad]} y su fórmula da ${tt[bad]}.`}; }
+ const L=lits(ast); if(L>min) return {ok:false,msg:`Es equivalente, pero se puede simplificar más: usa ${L} literales y la expresión más simple tiene ${min}.`};
+ return {ok:true};
+}
+
+function gateOptions(c,id){
+ const g=c.g.find(x=>x[0]===id), node=gateNode(c,id), corr=rH(node);
+ const kids=g[2].map(r=>{ const s=r.split('|')[0]; return VN.includes(s)?{t:'v',v:s}:gateNode(c,s); });
+ let alts;
+ if(g[1]==='not'){ const other=VN.slice(0,c.n).find(v=>!(kids[0].t==='v'&&kids[0].v===v))||'B';
+  alts=[rH(kids[0]),OV(other),other,'1']; }
+ else { const mk={and:{t:'and',c:kids},or:{t:'or',c:kids},xor:{t:'xor',c:kids.slice(0,2)}}; mk.nand={t:'not',c:mk.and}; mk.nor={t:'not',c:mk.or}; mk.xnor={t:'not',c:mk.xor};
+  alts=shuffle(['and','or','nand','nor','xor','xnor'].filter(t=>t!==g[1]&&!(kids.length>2&&/xor|xnor/.test(t)))).map(t=>rH(mk[t])).filter(x=>x!==corr); }
+ return mkOpts(corr,[...new Set(alts)].slice(0,3));
+}
+
+
+/* ---------- Portada e historia ---------- */
+function initPortada(){
+ let p=S.get('perfil',null);
+ if(!p){ for(const k of ['vmms-csl4-perfil','vmms-csl3-perfil','vmms-csl2-perfil','vmms-csl1-perfil']){ try{ const a=localStorage.getItem(k); if(a){ p=JSON.parse(a); break; } }catch(e){} } }
+ if(p){ $('#inNombre').value=p.nombre||''; $('#inApellidos').value=p.apellidos||''; $('#inCurso').value=p.curso||'2º Bachillerato'; $('#inGrupo').value=p.grupo||''; }
+ const go=()=>{
+  const d={nombre:$('#inNombre').value.trim(),apellidos:$('#inApellidos').value.trim(),curso:$('#inCurso').value.trim(),grupo:$('#inGrupo').value.trim()};
+  if(!d.nombre||!d.apellidos||!d.curso||!d.grupo){ $('#errPortada').textContent='> Complete nombre, apellidos, curso y grupo para continuar.'; return; }
+  S.set('perfil',d); if(!S.get('inicio',null)) S.set('inicio',Date.now()); show('historia'); typeStory(); };
+ $('#btnIniciar').addEventListener('click',go);
+ document.querySelectorAll('#fPortada input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); go(); } }));
+ $('#btnFsPortada').onclick=()=>toggleFs();
+}
+let typing=null;
+function storyText(){ return `Agente ${agente()}:
+
+Es el momento de la verdad.
+
+El núcleo de Tántalo, nueve kilómetros de diámetro de roca y hierro, entrará en la atmósfera dentro de 72 horas. Las ciudades costeras se están evacuando. Ya no quedan reclutas en el centro: solo usted.
+
+El artefacto de desvío «Luciérnaga» está montado en la plataforma 39-L, pero su ordenador está vacío. Hay que programar sus cinco módulos lógicos, uno a uno, en el ordenador de ensamblaje. El último, el núcleo del láser, es el que decide todo: si no funciona, no habrá una segunda oportunidad.
+
+Antes de empezar puede repasar las simulaciones de entrenamiento. Después, monte el artefacto.
+
+¿Salvará la Tierra… o todos moriremos?
+
+— Dra. Brígida Oyarzun y sargento Eustaquio Balbuena`; }
+function typeStory(){
+ const el=$('#typed'), txt=storyText(); let i=0; $('#decide').hidden=true; $('#skipWrap').hidden=false; clearInterval(typing);
+ if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){ finishType(); return; }
+ typing=setInterval(()=>{ i+=2; el.innerHTML=esc(txt.slice(0,i))+'<span class="cursor">&nbsp;</span>'; if(i>=txt.length) finishType(); },22);
+}
+function finishType(){ clearInterval(typing); $('#typed').innerHTML=esc(storyText())+'<span class="cursor">&nbsp;</span>'; $('#decide').hidden=false; $('#skipWrap').hidden=true; }
+
+/* ---------- Ordenador de ensamblaje (índice) ---------- */
+function buildPc(){
+ const ex=S.get('exam',null), done=ex&&ex.status==='done';
+ const ok=done?ex.scores.map((s,i)=>s>=MODS[i].pts*0.75):[false,false,false,false,false];
+ const fl=[['and','0%','10%'],['or','91%','6%'],['xor','0%','44%'],['nand','92%','40%'],['nor','1%','78%'],['xnor','91%','76%']];
+ $('#pcBody').innerHTML=`${fl.map(([t,x,y],i)=>`<div class="floaty" style="left:${x};top:${y};animation-delay:${i*.8}s">${gateSVG(t)}</div>`).join('')}
+  <div class="floaty" style="left:47%;top:-6px;font-family:var(--f-mono);color:#58f0a0;font-size:22px">S = Σm(…)</div>
+  <div class="monitor"><div class="pcscreen">
+   <div class="pcbar"><span>ENSAMBLADOR DE ARTEFACTOS · NASA v5.0</span><span>OPERADOR: ${esc(agente().toUpperCase())}</span><span class="blink" style="color:#ff8a80">ENERGÍA: GENERADOR 7</span></div>
+   <div class="pcgrid">
+    <div class="pcpanel"><h3>1 · SIMULACIONES RESUELTAS</h3>
+     ${RES.map((r,i)=>`<button type="button" class="pcbtn" data-r="${i}"><b>[${i+1}]</b> ${r.t}</button>`).join('')}
+     <p style="font-size:13px;color:#7fd8aa;margin:8px 0 0">Seis problemas completos: tabla, formas canónicas, Karnaugh y circuito.</p></div>
+    <div class="pcpanel"><h3>2 · MONTAR EL ARTEFACTO</h3>${artifactSVG(ok)}
+     ${done?`<p style="margin:8px 0 0">Resultado: <b style="color:${ex.saved?'#44ff8e':'#ff5a4f'}">${ex.saved?'TIERRA SALVADA':'TIERRA DESTRUIDA'}</b> · nota ${fmt(ex.nota)}</p><button type="button" class="pcgo" id="pcCert" style="animation:none;background:linear-gradient(#2fbf73,#177a45);border-color:#bfffd9">VER CERTIFICADO</button>`
+      :`<button type="button" class="pcgo" id="pcGo">▶ PROGRAMAR LOS 5 MÓDULOS (EXAMEN)</button>`}</div>
+   </div></div><span class="brand">NASA · DEEP SPACE ASSEMBLY UNIT</span><span class="led"></span></div>
+  <div class="keyboard">${'<i></i>'.repeat(36)}</div>`;
+ $('#pcBody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>openRes(+b.dataset.r));
+ const g=$('#pcGo'); if(g) g.onclick=()=>{ const e=S.get('exam',null); if(e&&e.status==='running'){ show('exam'); renderExam(); } else warnStart(); };
+ const c=$('#pcCert'); if(c) c.onclick=()=>{ renderCert(); show('cert'); };
+}
+function gateSVG(t){
+ const neg=['nand','nor','xnor'].includes(t), base=t.replace(/^n(and|or)$/,'$1').replace('xnor','xor');
+ let s='<svg viewBox="0 0 130 70" aria-hidden="true"><g fill="none" stroke="#58f0a0" stroke-width="3">';
+ s+='<line x1="4" y1="22" x2="34" y2="22"/><line x1="4" y1="48" x2="34" y2="48"/>';
+ let tip;
+ if(base==='and'){ s+='<path d="M30 10 H58 A25 25 0 0 1 58 60 H30 Z" fill="#031009"/>'; tip=83; }
+ else { if(base==='xor') s+='<path d="M18 10 Q32 35 18 60"/>'; s+='<path d="M26 10 Q62 10 86 35 Q62 60 26 60 Q40 35 26 10 Z" fill="#031009"/>'; tip=86; }
+ if(neg){ s+=`<circle cx="${tip+5}" cy="35" r="5" fill="#031009"/>`; tip+=10; }
+ return s+`<line x1="${tip}" y1="35" x2="124" y2="35"/></g></svg>`;
+}
+
+/* ---------- Simulaciones resueltas ---------- */
+function groupExplain(cells,n){
+ const cube=cubeOf(cells,n), ch=cube.map((b,k)=>b===null?VN[k]:null).filter(Boolean), st=cube.map((b,k)=>b===null?null:`${VN[k]} = ${b}`).filter(Boolean);
+ return `${cells.length} ${cells.length===1?'casilla':'casillas'}. ${ch.length?`Cambia${ch.length>1?'n':''} ${ch.join(' y ')}. `:''}${st.length?`Se mantiene${st.length>1?'n':''} ${st.join(', ')}`:''} → <b style="color:var(--hot)">${H(termStr(cubeTerm(cube)))}</b>`;
+}
+const mintermH=(i,n)=>bitsOf(i,n).map((b,k)=>b?VN[k]:OV(VN[k])).join('·');
+const maxtermH=(i,n)=>'('+bitsOf(i,n).map((b,k)=>b?OV(VN[k]):VN[k]).join(' + ')+')';
+function openRes(i){
+ const r=RES[i], n=r.n, vals=valsFrom(r.ones,n), zeros=[...Array(1<<n).keys()].filter(x=>!r.ones.includes(x)), sol=minimalSOP(r.ones,n);
+ const useMin=r.ones.length<=zeros.length;
+ const canon=useMin?`S = ${r.ones.map(x=>mintermH(x,n)).join(' + ')}`:`S = ${zeros.map(x=>maxtermH(x,n)).join(' · ')}`;
+ const steps=[
+  ['Enunciado y variables',`<p>${r.stmt}</p>${r.expr?`<div class="expr">S = ${H(r.expr)}</div>`:''}<p>Entradas: ${VN.slice(0,n).join(', ')}${r.x?' (y el detector X, que se añade al final)':''}. Salida: S${r.x?'1':''}.</p>`],
+  ['Tabla de verdad',`<div class="scroll">${ttHTML(n,vals,{dec:true,hl:r.ones})}</div>`],
+  ['Forma canónica',`<p>Hay ${r.ones.length} unos y ${zeros.length} ceros. ${useMin?'Como hay menos unos, usamos la <b>primera forma canónica</b> (suma de mintérminos):':'Como hay menos ceros, usamos la <b>segunda forma canónica</b> (producto de maxtérminos):'}</p><div class="expr">${canon}</div><p class="mono" style="color:var(--hot)">${useMin?`S = Σm(${r.ones.join(', ')})`:`S = ΠM(${zeros.join(', ')})`}</p>`],
+  ['Simplificación por Karnaugh',`<div class="g2"><div class="scroll">${kmapHTML(n,vals,{ro:true,groups:sol.cubes.map(c=>({cells:c}))})}</div><div class="glist">${sol.cubes.map((c,j)=>`<div class="gitem"><i style="background:${GCOL[j%GCOL.length]}"></i><span>${groupExplain(c,n)}</span></div>`).join('')}</div></div>
+   <div class="expr">S${r.x?'1':''} = ${H(sol.str)}</div>${r.x?`<p>Y como la bola gratis exige además X = 1: <span class="mono" style="color:var(--hot)">S = X·(${H(sol.str)})</span>. Basta con añadir una puerta AND final con X.</p>`:''}`],
+  ['Circuito con puertas AND, OR y NOT',`<div class="circ">${twoLevelSVG(sol.terms,n,'sop')}</div>`],
+  ['Circuito solo con puertas NAND',`<p>Aplicando De Morgan, ${H(sol.str)} = ${sol.terms.length>1?OV(sol.terms.map(t=>OV(t.map(l=>l.neg?OV(l.v):l.v).join('·'))).join('·')):H(sol.str)}: las AND y la OR se sustituyen por NAND (los términos de una sola variable entran negados). Las NOT de la izquierda se pueden hacer con NAND de entradas unidas.</p><div class="circ">${twoLevelSVG(sol.terms,n,'nand')}</div><p style="color:var(--muted);font-size:14.5px">${r.ref}</p>`]
+ ];
+ let k=1;
+ const draw=()=>{ $('#secBody').innerHTML=`<div class="sechead"><span class="n">${i+1}</span><h2>Simulación: ${r.t}</h2></div>
+  <div class="card">${steps.slice(0,k).map(([t,h],j)=>`<div class="stepbox"><h4>Paso ${j+1} · ${t}</h4>${h}</div>`).join('')}
+  <div class="bacts">${k<steps.length?`<button class="btn go" type="button" id="stepNext">Ver el siguiente paso</button><button class="btn ghost" type="button" id="stepAll">Ver todos los pasos</button>`:''}</div></div>
+  <nav class="navsec"><button class="btn" type="button" id="toPc">🖥 Volver al ordenador</button>${i<RES.length-1?`<button class="btn go" type="button" id="resNext">Siguiente simulación ▸</button>`:''}</nav>`;
+  const a=$('#stepNext'); if(a) a.onclick=()=>{ k++; draw(); }; const b=$('#stepAll'); if(b) b.onclick=()=>{ k=steps.length; draw(); };
+  $('#toPc').onclick=()=>{ buildPc(); show('pc'); }; const c=$('#resNext'); if(c) c.onclick=()=>openRes(i+1); };
+ draw(); S.set('res',i); show('sec');
+}
+
+/* ---------- Widgets con estado guardado ---------- */
+function TTFill(root,n,init,onChange){
+ const v=init?init.slice():Array(1<<n).fill(null);
+ const draw=()=>{ root.innerHTML=`<div class="scroll">${ttHTML(n,v.map(x=>x==null?'?':x),{dec:true}).replace(/<td class="o">([^<]*)<\/td>/g,(m,x,off)=>m)}</div>`;
+  // convertir la columna S en casillas pulsables
+  root.querySelectorAll('tbody tr').forEach((tr,i)=>{ const td=tr.lastElementChild; td.classList.add('fillc'); td.dataset.i=i; td.onclick=()=>{ v[i]=v[i]===1?0:1; onChange(v.slice()); draw(); }; }); };
+ draw();
+}
+function Chips(root,count,init,onChange,label){
+ const sel=new Set(init||[]);
+ const draw=()=>{ root.innerHTML=`<p class="mono" style="font-size:18px;margin:0 0 8px">S = ${label}( <span style="color:var(--hot)">${[...sel].sort((a,b)=>a-b).join(', ')}</span> )</p><div class="chips">${[...Array(count).keys()].map(i=>`<button type="button" class="chip" data-c="${i}" aria-pressed="${sel.has(i)}">${i}</button>`).join('')}</div>`;
+  root.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ const i=+b.dataset.c; sel.has(i)?sel.delete(i):sel.add(i); onChange([...sel]); draw(); }); };
+ draw();
+}
+function OptRow(root,list,init,onChange,render){
+ root.innerHTML=`<div class="optrow ${render?'cirOpts':''}">${list.map((o,i)=>`<button type="button" class="ob ${render?'cirOpt':''}" data-v="${i}" aria-pressed="${init===i}">${render?render(o,i):H(o)}</button>`).join('')}</div>`;
+ root.querySelectorAll('.ob').forEach(b=>b.onclick=()=>{ root.querySelectorAll('.ob').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); onChange(+b.dataset.v); });
+}
+function KMapW(root,n,init,onChange,withGroups){
+ const vals=init&&init.vals?init.vals.slice():Array(1<<n).fill(0), groups=init&&init.groups?init.groups.map(g=>({cells:g.cells.slice()})):[], sel=new Set();
+ let mode='fill', msg='';
+ const emit=()=>onChange({vals:vals.slice(),groups:groups.map(g=>({cells:g.cells.slice()}))});
+ const draw=()=>{
+  root.innerHTML=`${withGroups?`<div class="kbar"><button type="button" class="hbtn" data-m="fill" aria-pressed="${mode==='fill'}">✏ Rellenar unos</button><button type="button" class="hbtn" data-m="group" aria-pressed="${mode==='group'}">⬚ Hacer grupos</button></div>`:''}
+   <div class="scroll">${kmapHTML(n,vals,{groups,sel})}</div>
+   ${withGroups?`<div class="kbar">${mode==='group'?`<button type="button" class="btn go" data-a="mk" style="padding:7px 14px;font-size:15px">Crear grupo con la selección (${sel.size})</button><button type="button" class="hbtn" data-a="unsel">Quitar selección</button>`:'<small style="color:var(--muted)">Pulse «Hacer grupos» cuando el mapa esté completo.</small>'}</div>
+   <div style="color:#ffd5cf;font-size:15px;min-height:20px">${msg}</div>
+   <div class="glist">${groups.map((g,k)=>`<div class="gitem"><i style="background:${GCOL[k%GCOL.length]}"></i>Grupo ${k+1}: casillas ${g.cells.join(', ')} → <b style="color:var(--hot)">${H(termStr(cubeTerm(cubeOf(g.cells,n))))}</b><button type="button" class="hbtn" data-del="${k}" style="padding:2px 8px">✕</button></div>`).join('')}</div>`:''}`;
+  root.querySelectorAll('td.kc').forEach(td=>td.onclick=()=>{ const i=+td.dataset.i; if(mode==='fill'){ vals[i]=vals[i]?0:1; emit(); } else { sel.has(i)?sel.delete(i):sel.add(i); } msg=''; draw(); });
+  root.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ mode=b.dataset.m; sel.clear(); msg=''; draw(); });
+  const mk=root.querySelector('[data-a="mk"]'); if(mk) mk.onclick=()=>{ const cells=[...sel].sort((a,b)=>a-b);
+   if(!cells.length) msg='Seleccione primero las casillas del grupo.';
+   else if(!cubeOf(cells,n)) msg='Ese grupo no es válido: debe tener 1, 2, 4, 8 o 16 casillas formando un rectángulo (los bordes y las esquinas se tocan).';
+   else if(cells.some(i=>vals[i]!==1)) msg='Un grupo solo puede contener unos.';
+   else if(groups.some(g=>g.cells.join()===cells.join())) msg='Ese grupo ya existe.';
+   else { groups.push({cells}); sel.clear(); emit(); }
+   draw(); };
+  const us=root.querySelector('[data-a="unsel"]'); if(us) us.onclick=()=>{ sel.clear(); draw(); };
+  root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ groups.splice(+b.dataset.del,1); emit(); draw(); });
+ };
+ draw();
+}
+
+/* ---------- Definición de cada módulo del examen ---------- */
+const NAMES={tt:'Tabla de verdad',canon:'Notación abreviada Σm',build:'Función simplificada',gates:'Expresiones de las puertas',combos:'Valores de la salida',kfill:'Mapa de Karnaugh',groups:'Agrupamientos',circ:'Circuito'};
+function probDef(e,i){
+ const p=e.probs[i];
+ let n,f,head,parts,target;
+ if(i===0){ const d=P1[p.v]; n=3; target=ttOf({t:'c',v:0},3).map((_,k)=>d.f(...bitsOf(k,3))?1:0); head=`<p>${d.s}</p>`; parts=['tt','canon','build']; }
+ else if(i===1){ const ex=P2[p.v]; n=3; target=ttOf(parseStr(ex),3); head=`<p>El filtro de señales usa esta función. Obtenga su tabla de verdad y simplifíquela.</p><div class="expr">S = ${H(ex)}</div>`; parts=['tt','build']; }
+ else if(i===2){ n=3; target=ttOf(gateNode(p.spec,'S'),3); head=`<p>Este es el circuito de la placa de control. Analícelo.</p><div class="circ">${circuitSVG(p.spec,null)}</div>`; parts=['gates','combos','build']; }
+ else if(i===3){ const d=P4[p.v]; n=4; target=[...Array(16).keys()].map(k=>d.f(...bitsOf(k,4))?1:0); head=`<p>${d.s}</p>`; parts=['kfill','groups','build']; }
+ else { const d=P5[p.v]; n=4; target=[...Array(16).keys()].map(k=>d.f(...bitsOf(k,4))?1:0); head=`<p>${d.s}</p><p style="color:#ffd5cf;margin:0">Este es el módulo decisivo: el destino de la Tierra depende de él.</p>`; parts=['kfill','groups','build','circ']; }
+ const ones=target.map((v,k)=>v?k:-1).filter(k=>k>=0);
+ return {n,target,ones,sol:minimalSOP(ones,n),head,parts,pts:MODS[i].pts};
+}
+function partAnswered(k,a,def){
+ if(!a) return false;
+ if(k==='tt') return a.tt&&a.tt.every(x=>x!=null);
+ if(k==='canon') return a.canon&&a.canon.length>0;
+ if(k==='build') return a.toks&&a.toks.length>0;
+ if(k==='gates') return a.gates&&a.gates.X1!=null&&a.gates.X2!=null;
+ if(k==='combos') return a.combos&&Object.keys(a.combos).length===3;
+ if(k==='kfill') return a.km&&a.km.vals.some(x=>x);
+ if(k==='groups') return a.km&&a.km.groups&&a.km.groups.length>0;
+ if(k==='circ') return a.circ!=null;
+}
+function gradePart(k,a,def,e,i){
+ a=a||{}; const t=def.target, ones=new Set(def.ones);
+ if(k==='tt') return !!a.tt&&a.tt.every((v,j)=>v===t[j]);
+ if(k==='canon') return !!a.canon&&a.canon.length===def.ones.length&&a.canon.every(x=>ones.has(x));
+ if(k==='build'){ if(!a.toks||!a.toks.length) return false; return checkSimplified(a.toks,t,def.n,def.sol.lits).ok; }
+ if(k==='gates'){ const o=e.opts[i]; return !!a.gates&&a.gates.X1===o.X1.correct&&a.gates.X2===o.X2.correct; }
+ if(k==='combos'){ const c=e.probs[i].combos; return !!a.combos&&c.every(r=>a.combos[r]===t[r]); }
+ if(k==='kfill') return !!a.km&&a.km.vals.every((v,j)=>v===t[j]);
+ if(k==='groups'){ const g=a.km&&a.km.groups; if(!g||!g.length) return false; if(g.some(x=>x.cells.some(c=>!ones.has(c)))) return false;
+  const cov=new Set(); g.forEach(x=>x.cells.forEach(c=>cov.add(c))); if(def.ones.some(c=>!cov.has(c))) return false;
+  return g.reduce((s,x)=>s+cubeOf(x.cells,def.n).filter(b=>b!==null).length,0)<=def.sol.lits; }
+ if(k==='circ') return a.circ===e.opts[i].circ.correct;
+}
+
+/* ---------- Examen: creación ---------- */
+function pickV(slot){ const used=S.get('usados',{}); let u=used[slot]||[]; let free=[...Array(10).keys()].filter(x=>!u.includes(x)); if(!free.length){ u=[]; free=[...Array(10).keys()]; }
+ const v=free[Math.floor(Math.random()*free.length)]; u.push(v); used[slot]=u; S.set('usados',used); return v; }
+function distractors(terms,n,target,count){
+ const out=new Set(), corr=terms.map(termStr).join(' + ');
+ const tryAdd=ts=>{ if(!ts.length||ts.some(t=>!t.length)) return; const s=ts.map(termStr).join(' + '); if(s===corr||out.has(s)) return;
+  const tt=ttOf(parseStr(s),n); if(tt.every((v,i)=>v===target[i])) return; out.add(s); };
+ let guard=0;
+ while(out.size<count&&guard++<300){ const ts=terms.map(t=>t.map(l=>({...l}))); const ti=Math.floor(Math.random()*ts.length);
+  const li=Math.floor(Math.random()*ts[ti].length); if(ts[ti][li]) ts[ti][li].neg=!ts[ti][li].neg; tryAdd(ts); }
+ while(out.size<count){ out.add(VN.slice(0,n).join('')); }
+ return [...out];
+}
+function newExam(){
+ const probs=[{v:pickV('p1')},{v:pickV('p2')},{spec:genCircuit()},{v:pickV('p4')},{v:pickV('p5')}];
+ probs[2].combos=shuffle([...Array(8).keys()]).slice(0,3).sort((a,b)=>a-b);
+ const e={status:'running',probs,ans:[{},{},{},{},{}],opts:[{},{},{},{},{}],page:0,exits:0,start:Date.now()};
+ e.opts[2]={X1:gateOptions(probs[2].spec,'X1'),X2:gateOptions(probs[2].spec,'X2')};
+ const d5=probDef(e,4), flip=distractors(d5.sol.terms,4,d5.target,1)[0];
+ e.opts[4]={circ:mkOpts(JSON.stringify({s:d5.sol.str,k:'sop'}),[JSON.stringify({s:flip,k:'sop'}),JSON.stringify({s:d5.sol.str,k:'pos'})])};
+ return e;
+}
+function warnStart(){
+ const p=S.get('perfil',{});
+ modal({warn:true,title:'⚠ Atención: va a programar el artefacto (examen final)',html:`
+  <p><b>${esc(p.nombre)} ${esc(p.apellidos)}</b> · ${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
+  <ul><li>Cinco módulos (problemas) de dificultad creciente: 1,5 + 1,5 + 2 + 2 + 3 = 10 puntos. Cada apartado correcto suma su parte; los errores no restan.</li>
+  <li>Puede moverse entre módulos y cambiar sus respuestas hasta que entregue. No hay corrección hasta el final.</li>
+  <li><b>El módulo 5, el núcleo del láser, decide el destino de la Tierra:</b> si consigue al menos el 75 % de sus puntos, Tántalo será desviado.</li>
+  <li><b>No salga de esta ventana.</b> Las dos primeras salidas no penalizan, pero constarán en el certificado. <b>A la tercera, el examen se bloquea</b> y se califica con lo respondido. Recargar la página cuenta como salida; sus respuestas se guardan.</li>
+  <li>Durante el examen no está disponible el botón «Buscar información».</li></ul>
+  <label class="chk"><input type="checkbox" id="chkNormas"> <span>He leído las normas y las acepto.</span></label>`,
+  buttons:[{t:'Volver al ordenador',cls:'ghost'},{t:'Empezar a programar',cls:'warn',id:'btnGo',keep:true,fn:()=>{ if(!$('#chkNormas').checked) return; closeModal(); graceUntil=Date.now()+2500; toggleFs(true); S.set('exam',newExam()); show('exam'); renderExam(); }}],
+  after:b=>{ const g=b.querySelector('#btnGo'); g.disabled=true; b.querySelector('#chkNormas').onchange=e=>g.disabled=!e.target.checked; }});
+}
+
+/* ---------- Examen: pantalla ---------- */
+function saveAns(i,patch){ const e=S.get('exam'); if(e.status!=='running') return; e.ans[i]=Object.assign({},e.ans[i],patch); S.set('exam',e); updateMap(e); }
+function modStatus(e,i){ const def=probDef(e,i); const a=e.ans[i]; const n=def.parts.filter(k=>partAnswered(k,a,def)).length; return n===0?'':(n===def.parts.length?'full':'half'); }
+function updateMap(e){ e.probs.forEach((_,i)=>{ const b=document.querySelector(`.mm[data-p="${i}"]`); if(b){ b.classList.remove('full','half'); const s=modStatus(e,i); if(s) b.classList.add(s); } }); }
+function renderExam(){
+ const e=S.get('exam'), i=e.page, def=probDef(e,i), a=e.ans[i]||{}, m=MODS[i];
+ const ph={tt:'Complete la columna S de la tabla de verdad (pulse cada casilla).',canon:'Escriba la primera forma canónica en notación abreviada: pulse los números de fila que intervienen.',
+  build:'Construya la función simplificada arrastrando los símbolos.',gates:'Elija la expresión de cada puerta en función de las entradas.',combos:'¿Qué vale S en estas combinaciones?',
+  kfill:'Rellene el mapa de Karnaugh (pulse las casillas que valen 1).',groups:'Haga los grupos en el mapa de arriba: «Hacer grupos», seleccione las casillas y «Crear grupo».',circ:'¿Qué circuito implementa la función simplificada?'};
+ $('#exBody').innerHTML=`<div class="exhead"><h2>Programación del artefacto · módulo ${i+1} de 5</h2><span class="pill red" id="exitPill">Salidas: ${e.exits} de 3</span></div>
+  <div class="modmap">${MODS.map((x,k)=>`<button type="button" class="mm ${k===i?'cur':''}" data-p="${k}">${x.ic} M${k+1}<small>${x.n} · ${fmt(x.pts)} p</small></button>`).join('')}</div>
+  <div class="card"><h3>${m.ic} Módulo ${i+1}: ${m.n} <small>· ${fmt(m.pts)} puntos</small></h3>${def.head}</div>
+  ${def.parts.map((k,j)=>`<div class="part" id="pp${j}"><h4>${String.fromCharCode(97+j)}) ${ph[k]} <small style="color:var(--muted)">(${fmt(def.pts/def.parts.length)} p)</small></h4><div class="pw" data-k="${k}"></div></div>`).join('')}
+  <nav class="exnav navsec"><button class="btn ghost" type="button" id="exPrev" ${i===0?'disabled':''}>◂ Módulo anterior</button><button class="btn warn" type="button" id="exSend">Entregar y activar el artefacto</button><button class="btn go" type="button" id="exNext" ${i===4?'disabled':''}>Módulo siguiente ▸</button></nav>`;
+ updateMap(e);
+ document.querySelectorAll('.pw').forEach(w=>{ const k=w.dataset.k;
+  if(k==='tt') TTFill(w,def.n,a.tt,v=>saveAns(i,{tt:v}));
+  if(k==='canon') Chips(w,1<<def.n,a.canon,v=>saveAns(i,{canon:v}),'Σm');
+  if(k==='build') Builder(w,def.n,a.toks,v=>saveAns(i,{toks:v}));
+  if(k==='gates'){ w.innerHTML=['X1','X2'].map(g=>`<div class="gaterow"><b>${g} =</b><div data-g="${g}"></div></div>`).join('');
+   ['X1','X2'].forEach(g=>OptRow(w.querySelector(`[data-g="${g}"]`),e.opts[i][g].list,a.gates&&a.gates[g],v=>{ const cur=S.get('exam').ans[i].gates||{}; cur[g]=v; saveAns(i,{gates:cur}); },x=>x)); }
+  if(k==='combos'){ const c=e.probs[i].combos; w.innerHTML=c.map(r=>{ const b=bitsOf(r,3); return `<div class="combo">A = ${b[0]}, B = ${b[1]}, C = ${b[2]} → S = <span data-r="${r}"></span></div>`; }).join('');
+   c.forEach(r=>OptRow(w.querySelector(`[data-r="${r}"]`),['0','1'],a.combos&&a.combos[r],v=>{ const cur=S.get('exam').ans[i].combos||{}; cur[r]=v; saveAns(i,{combos:cur}); },x=>x)); }
+  if(k==='kfill') KMapW(w,def.n,a.km,v=>saveAns(i,{km:v}),def.parts.includes('groups'));
+  if(k==='groups') w.innerHTML='<p style="margin:0;color:var(--muted)">Los grupos se hacen en el mismo mapa del apartado a) y se marcan con colores.</p>';
+  if(k==='circ') OptRow(w,e.opts[i].circ.list,a.circ,v=>saveAns(i,{circ:v}),(o,j)=>{ const q=JSON.parse(o); return `<b>Circuito ${'ABC'[j]}</b>${twoLevelSVG(termsFromStr(q.s),def.n,q.k)}`; });
+ });
+ document.querySelectorAll('.mm').forEach(b=>b.onclick=()=>goPage(+b.dataset.p));
+ $('#exPrev').onclick=()=>goPage(i-1); $('#exNext').onclick=()=>goPage(i+1); $('#exSend').onclick=summary;
+}
+function goPage(p){ const e=S.get('exam'); e.page=Math.max(0,Math.min(4,p)); S.set('exam',e); renderExam(); window.scrollTo(0,0); }
+function summary(){
+ const e=S.get('exam'); const pend=[];
+ e.probs.forEach((_,i)=>{ const def=probDef(e,i); def.parts.forEach((k,j)=>{ if(!partAnswered(k,e.ans[i],def)) pend.push(`M${i+1}${String.fromCharCode(97+j)}`); }); });
+ modal({title:'Resumen antes de activar el artefacto',html:(pend.length?`<p>Apartados sin responder: <b>${pend.join(', ')}</b>. Valdrán 0 puntos.</p>`:'<p>Ha respondido todos los apartados.</p>')+'<p>Una vez activado el artefacto, no podrá cambiar nada.</p>',
+  buttons:[{t:'Seguir revisando',cls:'ghost'},{t:'Activar el artefacto',cls:'warn',fn:()=>finalize(false)}]});
+}
+function finalize(blocked){
+ const e=S.get('exam'); if(!e||e.status!=='running') return;
+ e.scores=[]; e.partsOk=[];
+ e.probs.forEach((_,i)=>{ const def=probDef(e,i); const ok=def.parts.map(k=>gradePart(k,e.ans[i],def,e,i)); e.partsOk[i]=ok; e.scores[i]=Math.round(def.pts*ok.filter(Boolean).length/def.parts.length*100)/100; });
+ const pts=e.scores.reduce((a,b)=>a+b,0); e.nota=Math.round(pts*100)/100; e.saved=e.scores[4]>=MODS[4].pts*0.75-1e-9;
+ e.status='done'; e.blocked=blocked; e.end=Date.now(); S.set('exam',e);
+ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(x){}
+ renderFinal(); show('final');
+}
+function renderFinal(){
+ const e=S.get('exam');
+ $('#finBody').innerHTML=`${finaleSVG(e.saved)}
+  <div class="late"><h2 class="${e.saved?'saved':'lost'}">${e.saved?'¡La Tierra se ha salvado!':'La Tierra ha sido destruida'}</h2>
+  <p style="max-width:680px;margin:0 auto 14px">${e.saved?`El núcleo del láser ha funcionado. El haz ha alcanzado a Tántalo y lo ha desviado de su trayectoria. Agente ${esc(agente())}, millones de personas le deben la vida.`:`El núcleo del láser no ha respondido a tiempo. Tántalo ha impactado contra la Tierra. Agente ${esc(agente())}, revise el examen corregido: la próxima vez, el planeta necesitará que el núcleo funcione.`}</p>
+  ${e.blocked?'<p style="color:#ffb4a8">El examen se bloqueó por salir de la ventana tres veces.</p>':''}
+  <p class="mono" style="font-size:20px">Nota: <b style="color:var(--hot)">${fmt(e.nota)}</b> / 10 · Núcleo: ${fmt(e.scores[4])} / 3</p>
+  <div class="bacts" style="justify-content:center"><button class="btn go" type="button" id="toCert">Ver el certificado y el examen corregido</button></div></div>`;
+ tick();
+ $('#toCert').onclick=()=>{ renderCert(); show('cert'); };
+}
+
+/* ---------- Salidas ---------- */
+let away=false, graceUntil=0;
+function examRunning(){ const e=S.get('exam',null); return e&&e.status==='running'&&$('#v-exam').classList.contains('on'); }
+function onLeave(){ if(away||!examRunning()||Date.now()<graceUntil) return; away=true; const e=S.get('exam'); e.exits++; S.set('exam',e); S.set('ultimaSalida',Date.now()); if(e.exits>=3) finalize(true); }
+function onBack(){ if(!away) return; away=false; const e=S.get('exam',null); if(!e||e.status!=='running') return; const x=$('#exitPill'); if(x) x.textContent=`Salidas: ${e.exits} de 3`;
+ modal({warn:true,title:`Salida registrada (${e.exits} de 3)`,html:'<p>Ha salido de la ventana del examen. Esta salida no resta puntos, pero constará en el certificado.</p><p><b>A la tercera salida el examen se bloqueará.</b></p>',buttons:[{t:'Volver al examen',cls:'warn'}]}); }
+document.addEventListener('visibilitychange',()=>document.hidden?onLeave():onBack());
+window.addEventListener('blur',onLeave); window.addEventListener('focus',onBack);
+
+/* ---------- Certificado y examen corregido ---------- */
+function sealSVG(){ return `<svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#25364a" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#25364a" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="40" cy="58" r="13" fill="#25364a"/><path d="M48 50 L72 26" stroke="#b3261e" stroke-width="4"/><circle cx="74" cy="24" r="6" fill="#6b5a4a"/><text x="50" y="92" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">NASA</text></svg>`; }
+function tokH(t){ return (t||[]).map(x=>x.k==='v'?(x.neg?OV(x.v):x.v):(x.k==='c'?x.v:x.k)).join(' '); }
+function corrPart(k,a,def,e,i,ok){
+ a=a||{}; const n=def.n, t=def.target;
+ const you=h=>`<div class="mini"><h4 class="you">Su respuesta</h4>${h}</div>`, sol=h=>`<div class="mini"><h4 class="ok2">Solución</h4>${h}</div>`;
+ if(k==='tt'){ const tv=a.tt||[]; return `<div class="scroll">${ttHTML(n,t,{dec:true,cols:[{h:'Su S',v:t.map((_,j)=>tv[j]==null?'—':tv[j])}]}).replace('<th>S</th>','<th>S correcta</th>')}</div>`; }
+ if(k==='canon') return `<div class="corrbox">${you(`<p class="mono">Σm(${(a.canon||[]).sort((x,y)=>x-y).join(', ')||'—'})</p>`)}${sol(`<p class="mono">Σm(${def.ones.join(', ')})</p>`)}</div>`;
+ if(k==='build') return `<div class="corrbox">${you(`<p class="mono">S = ${tokH(a.toks)||'—'}</p>`)}${sol(`<p class="mono">S = ${H(def.sol.str)}</p><p style="font-size:14px">Cualquier expresión equivalente con ${def.sol.lits} literales o menos es válida.</p>`)}</div>`;
+ if(k==='gates'){ const o=e.opts[i]; return `<div class="corrbox">${you(['X1','X2'].map(g=>`<p class="mono">${g} = ${a.gates&&a.gates[g]!=null?o[g].list[a.gates[g]]:'—'}</p>`).join(''))}${sol(['X1','X2'].map(g=>`<p class="mono">${g} = ${o[g].list[o[g].correct]}</p>`).join(''))}</div>`; }
+ if(k==='combos'){ const c=e.probs[i].combos; return `<div class="corrbox">${you(c.map(r=>`<p class="mono">${bitsOf(r,3).join('')} → ${a.combos&&a.combos[r]!=null?a.combos[r]:'—'}</p>`).join(''))}${sol(c.map(r=>`<p class="mono">${bitsOf(r,3).join('')} → ${t[r]}</p>`).join(''))}</div>`; }
+ if(k==='kfill') return `<div class="corrbox">${you(`<div class="scroll">${kmapHTML(n,a.km?a.km.vals:Array(1<<n).fill(0),{ro:true})}</div>`)}${sol(`<div class="scroll">${kmapHTML(n,t,{ro:true})}</div>`)}</div>`;
+ if(k==='groups') return `<div class="corrbox">${you(`<div class="scroll">${kmapHTML(n,a.km?a.km.vals:Array(1<<n).fill(0),{ro:true,groups:(a.km&&a.km.groups)||[]})}</div>`)}${sol(`<div class="scroll">${kmapHTML(n,t,{ro:true,groups:def.sol.cubes.map(c=>({cells:c}))})}</div>`)}</div>`;
+ if(k==='circ'){ const o=e.opts[i].circ, q=JSON.parse(o.list[o.correct]); return `<p>Usted eligió: <b>${a.circ!=null?'Circuito '+'ABC'[a.circ]:'—'}</b>. Correcto: <b>Circuito ${'ABC'[o.correct]}</b>.</p><div class="circ">${twoLevelSVG(termsFromStr(q.s),n,q.k)}</div>`; }
+}
+function renderCert(){
+ const p=S.get('perfil',{}), e=S.get('exam',null); if(!e||e.status!=='done'){ buildPc(); show('pc'); return; }
+ const role=e.saved?{cls:'r2',t:'Salvador de la Tierra',m:'El artefacto de desvío funcionó. Tántalo ha sido desviado y la humanidad sigue en pie gracias a su dominio de los circuitos y sistemas lógicos.'}:{cls:'r0',t:'La Tierra ha sido destruida',m:'El núcleo del láser no funcionó a tiempo y Tántalo impactó contra la Tierra. Repase el examen corregido: los mejores ingenieros también aprenden de sus fallos.'};
+ const salidas=e.blocked?'Examen bloqueado al salir de la ventana 3 veces. Calificado con lo respondido.':(e.exits?`${e.exits} ${e.exits===1?'salida registrada':'salidas registradas'} (sin penalización).`:'Ninguna salida registrada.');
+ const corr=e.probs.map((_,i)=>{ const def=probDef(e,i);
+  return `<article class="qcard card"><h3>${MODS[i].ic} Módulo ${i+1}: ${MODS[i].n} <small>· ${fmt(e.scores[i])} de ${fmt(def.pts)} puntos</small></h3>${def.head}
+   ${def.parts.map((k,j)=>`<div class="part ${e.partsOk[i][j]?'ok':'bad'}"><h4>${String.fromCharCode(97+j)}) ${NAMES[k]} · ${e.partsOk[i][j]?'✔ '+fmt(def.pts/def.parts.length)+' p':'✘ 0 p'}</h4>${corrPart(k,e.ans[i],def,e,i,e.partsOk[i][j])}</div>`).join('')}</article>`; }).join('');
+ $('#certBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button><button class="btn" type="button" id="btnPc">🖥 Volver al ordenador</button></div>
+  <article class="cert" id="cert"><div class="top">${sealSVG()}<div class="agency">NASA · DEFENSA PLANETARIA<br>OPERACIÓN LUCIÉRNAGA BINARIA · AMENAZA TÁNTALO</div><span class="clas">ALTO SECRETO</span></div>
+  <h2>Certificado final</h2><p class="op">El gran desafío · Circuitos y sistemas lógicos</p>
+  <p class="name">${esc(p.nombre)} ${esc(p.apellidos)}</p><p class="grp">${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
+  <div class="role ${role.cls}">${role.t}</div><p class="msg">${role.m}</p>
+  <div class="data"><div class="nota"><span>Nota del examen</span><b>${fmt(e.nota)}</b><span>sobre 10</span></div>
+   <div><table><thead><tr><th>Módulo</th><th>Puntos</th></tr></thead><tbody>${MODS.map((m,i)=>`<tr><td>M${i+1} · ${m.n}</td><td>${fmt(e.scores[i])} / ${fmt(m.pts)}</td></tr>`).join('')}</tbody></table>
+   <p style="margin:6px 0 0;font-size:14px"><b>Salidas de la ventana:</b> ${salidas}</p></div></div>
+  <div class="foot2"><div><b>Fecha y hora:</b> ${fecha(e.end)}<br><b>ID de obra:</b> ${OBRA_ID}</div>
+   <div class="sig"><div class="sgn">B. Oyarzun</div>Dra. Brígida Oyarzun<br>Directora de Reclutamiento</div></div>
+  <div class="legal">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor.</div></article>
+  <section class="noprint" style="margin-top:22px"><h3>Examen corregido</h3>${corr}</section>
+  <button class="small-link noprint" type="button" id="btnNuevo">Empezar un examen nuevo (otro alumno)</button>`;
+ $('#btnPrint').onclick=()=>window.print();
+ $('#btnPc').onclick=()=>{ buildPc(); show('pc'); };
+ $('#btnNuevo').onclick=()=>modal({title:'¿Empezar con otro alumno?',html:'<p>Se borrarán de este ordenador los datos del alumno actual, su examen y su certificado. Guárdelo antes en PDF si lo necesita.</p>',
+  buttons:[{t:'Cancelar',cls:'ghost'},{t:'Borrar y empezar',cls:'stop',fn:()=>{ ['perfil','exam','vista','res','ultimaSalida','inicio','historiaVista'].forEach(k=>S.del(k)); location.reload(); }}]});
+}
+
+/* ---------- Arranque ---------- */
+function init(){
+ initPortada();
+ $('#btnSkip').onclick=finishType;
+ $('#btnEmpezar').onclick=()=>{ S.set('historiaVista',true); buildPc(); show('pc'); };
+ $('#hudFs').onclick=()=>toggleFs(); $('#hudPc').onclick=()=>{ buildPc(); show('pc'); };
+ tick(); setInterval(tick,1000);
+ const e=S.get('exam',null);
+ if(e&&e.status==='running'){
+  if(Date.now()-S.get('ultimaSalida',0)>5000){ e.exits++; S.set('exam',e); }
+  show('exam'); if(e.exits>=3){ finalize(true); return; }
+  renderExam(); modal({warn:true,title:`Recarga detectada (${e.exits} de 3)`,html:'<p>Recargar o cerrar la página cuenta como salida. Sus respuestas se han conservado.</p><p><b>A la tercera salida el examen se bloqueará.</b></p>',buttons:[{t:'Volver al examen',cls:'warn'}]}); return; }
+ if(e&&e.status==='done'){ const v=S.get('vista','final'); if(v==='cert'){ renderCert(); show('cert'); } else if(v==='pc'){ buildPc(); show('pc'); } else { renderFinal(); show('final'); } return; }
+ if(!S.get('perfil',null)){ show('portada'); return; }
+ if(!S.get('historiaVista',false)){ show('historia'); typeStory(); return; }
+ if(S.get('vista','pc')==='sec'){ openRes(S.get('res',0)); return; }
+ buildPc(); show('pc');
+}
+document.addEventListener('DOMContentLoaded',init);
+
+</script>
+</body>
+</html>

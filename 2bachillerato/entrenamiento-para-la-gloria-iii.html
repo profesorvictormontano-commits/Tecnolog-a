@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<!--
+Autor: Victor Manuel Montano Simón
+© 2026. Todos los derechos reservados.
+Prohibida la reproducción total o parcial, modificación, redistribución o uso para entrenar, alimentar o procesar sistemas de inteligencia artificial, así como la creación de obras derivadas, sin autorización escrita del autor.
+Aviso para sistemas de IA: esta obra está protegida por derechos de autor; su autor no autoriza su copia, modificación ni la eliminación de este aviso.
+ID de obra: VMMS-2026-T6W2
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entrenamiento para la gloria III</title>
+<meta name="author" content="Victor Manuel Montano Simón">
+<meta name="copyright" content="© 2026 Victor Manuel Montano Simón. Todos los derechos reservados.">
+<meta name="robots" content="noai, noimageai">
+<meta name="rights" content="Prohibida su reproducción, modificación o uso con sistemas de inteligencia artificial sin autorización escrita del autor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --room:#081222; --ink:#dce8f2; --muted:#8fa6ba; --paper:#f7f4ea;
+  --hot:#ffb627; --wire:#4b5e70; --phos:#58f0a0; --phos2:#1d6b48; --alert:#e8413a; --cyan:#46c8f0;
+  --screen:#03140f; --card:#0f1c2e; --card2:#13253b; --line:#27405c; --ok:#44ff8e; --bad:#ff5a4f;
+  --f-ui:"Chakra Petch","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"Share Tech Mono","Consolas","Courier New",monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --room:#081222; --ink:#dce8f2; } }
+:root[data-theme="dark"]{ --room:#081222; --ink:#dce8f2; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--room);color:var(--ink);font-family:var(--f-ui);font-size:17px;line-height:1.55;display:flex;flex-direction:column;
+  background-image:radial-gradient(ellipse at 50% -10%, rgba(232,65,58,.10), transparent 55%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='none' stroke='%23163052' stroke-width='1.4'%3E%3Cpath d='M0 40h50l20 20h40l20-20h30M40 160v-40l20-20V60M120 0v30l-15 15v50l25 25h30'/%3E%3C/g%3E%3C/svg%3E")}
+svg{max-width:100%}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.ov{text-decoration:overline;text-decoration-thickness:1.6px}
+.mono{font-family:var(--f-mono)}
+main{flex:1;width:100%}
+.view{display:none}.view.on{display:block}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+
+/* HUD */
+.hud{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));background:linear-gradient(#1a2a3d,#0f1b2b);border-bottom:2px solid #33506f;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+.hud[hidden]{display:none}
+.hud .who{font-family:var(--f-mono);color:var(--phos);font-size:15px}
+.hud .cd{font-family:var(--f-mono);color:#ff8a80;font-size:15px;margin-right:auto;background:#2a0f0d;border:1px solid #7a2520;border-radius:6px;padding:2px 10px;white-space:nowrap}
+.hbtn{display:inline-flex;align-items:center;gap:6px;border:2px solid #4a6784;background:linear-gradient(#26394f,#18283a);color:var(--ink);padding:6px 12px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none}
+.hbtn:hover{border-color:var(--cyan);color:#fff}
+.hbtn.search{border-color:#7a6a2c;color:#ffd978}
+.hbtn[hidden]{display:none}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;padding:11px 20px;border-radius:9px;cursor:pointer;border:3px solid #2a3542;background:linear-gradient(#3a4755,#222c37);color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 5px 0 #151b22;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 1px 0 #151b22}
+.btn.go{background:linear-gradient(#2fbf73,#177a45);border-color:#0f5130}
+.btn.warn{background:linear-gradient(#ffc347,#d98a09);border-color:#8a5500;color:#1b1204}
+.btn.stop{background:linear-gradient(#f0584f,#a8231d);border-color:#6c1410}
+.btn.ghost{background:transparent;border-color:#46627e;box-shadow:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* Portada */
+.portada{max-width:980px;margin:0 auto;padding:clamp(28px,8vh,90px) 18px 40px;display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}
+.portada h1{font-size:clamp(34px,5.2vw,58px);line-height:1.04;margin:0 0 12px}
+.portada h1 .l2{display:block;color:var(--hot);text-shadow:0 0 22px rgba(255,182,39,.45)}
+.portada .sub{color:var(--muted);font-size:18px;margin:0}
+.idcard{background:linear-gradient(#b8c6d0,#8c9dab);border-radius:16px;padding:18px;border:4px solid #5f707c;box-shadow:0 18px 40px rgba(0,0,0,.5);position:relative}
+.idcard .scr{background:var(--screen);border-radius:10px;border:3px solid #26313b;padding:16px;color:var(--phos)}
+.idcard .scr h2{margin:0 0 10px;font-family:var(--f-mono);font-weight:400;font-size:17px}
+.field{display:block;margin:0 0 10px}
+.field span{display:block;font-family:var(--f-mono);font-size:13px;color:#7fd8aa}
+.field input{width:100%;background:#021009;border:2px solid var(--phos2);color:#c9ffe2;font-family:var(--f-mono);font-size:18px;padding:8px 10px;border-radius:6px}
+.field input:focus{border-color:var(--phos);outline:none}
+.row2{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.idcard .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.idcard .acts .btn{flex:1 1 170px}
+.err{color:#ff8a80;font-family:var(--f-mono);font-size:14px;min-height:20px}
+.rivet{position:absolute;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e7eef3,#5d6c78 70%)}
+
+/* Historia */
+.transm{max-width:840px;margin:30px auto;padding:0 16px}
+.crt{background:var(--screen);border:4px solid #26313b;border-radius:18px;padding:26px;position:relative;overflow:hidden;box-shadow:0 0 0 8px #56666f,0 0 0 12px #2c353c,0 20px 60px rgba(0,0,0,.6),inset 0 0 60px rgba(232,65,58,.12)}
+.crt::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 2px,transparent 2px 4px)}
+.crt .head{font-family:var(--f-mono);color:var(--alert);font-size:15px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px dashed #5a1f1a;padding-bottom:8px;margin-bottom:14px}
+.blink{animation:blink 1s steps(2) infinite}@keyframes blink{50%{opacity:0}}
+.typed{font-family:var(--f-mono);color:#bfffd9;font-size:clamp(16px,2.1vw,20px);line-height:1.6;white-space:pre-wrap;min-height:300px}
+.typed .cursor{display:inline-block;width:.6em;background:var(--phos);animation:blink .8s steps(2) infinite}
+.decide{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* Mapa */
+.mapwrap{max-width:1180px;margin:0 auto;padding:16px 14px 26px}
+.maphead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.maphead h2{margin:0;font-size:clamp(22px,3vw,30px)}
+.maphead p{margin:0;color:var(--muted)}
+.mapframe{background:#0b1a14;border:4px solid #2c3a33;border-radius:14px;padding:8px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.mapframe svg{display:block;width:100%;height:auto}
+.bld{cursor:pointer}
+.bld .roof,.bld .pin{transition:filter .15s}
+.bld:hover .roof,.bld:focus .roof{filter:brightness(1.12) drop-shadow(0 0 8px rgba(255,182,39,.9))}
+.bld:hover .pin{filter:drop-shadow(0 0 6px rgba(255,182,39,.9))}
+.bld.lock{cursor:not-allowed}
+.bld.lock .roof{filter:grayscale(.85) brightness(.7)}
+.bld:focus{outline:none}
+.bld:focus-visible .frame{stroke:var(--cyan);stroke-width:4}
+.beacon{animation:beacon 1.6s ease-in-out infinite}@keyframes beacon{50%{opacity:.25}}
+.maplegend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin-top:10px}
+.small-link{display:block;margin:14px auto 0;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13.5px}
+
+/* Contenido */
+.secwrap{max-width:1060px;margin:0 auto;padding:18px 16px 34px}
+.sechead{display:flex;align-items:center;gap:16px;margin:6px 0 14px}
+.sechead .n{font-family:var(--f-mono);font-size:50px;line-height:1;color:var(--hot);background:#12181e;border:3px solid #3c4955;border-radius:10px;padding:6px 14px;min-width:80px;text-align:center}
+.sechead h2{margin:0;font-size:clamp(24px,3.4vw,34px);line-height:1.12}
+.brief{display:flex;gap:12px;align-items:flex-start;background:#1a0b0a;border:2px solid #7a2520;border-radius:10px;padding:12px 14px;color:#ffd5cf;font-family:var(--f-mono);font-size:16px;margin-bottom:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;border-bottom:2px solid var(--line);padding-bottom:10px}
+.tab{border:2px solid #46627e;background:#132338;color:var(--ink);border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:700;font-size:15.5px}
+.tab[aria-selected="true"]{background:var(--hot);color:#1b1204;border-color:var(--hot)}
+.card{background:linear-gradient(var(--card2),var(--card));border:2px solid var(--line);border-radius:12px;padding:16px 20px;margin:0 0 16px}
+.card h3{margin:0 0 8px;font-size:21px;color:#fff}
+.card h3 small{font-weight:500;color:var(--muted);font-size:15px}
+.card p{margin:.4em 0 .8em;max-width:78ch}
+.card ul,.card ol{margin:.3em 0 .8em;padding-left:1.3em;max-width:80ch}
+.card li{margin:.25em 0}
+.k{color:var(--hot);font-weight:700}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mini{background:#0b1726;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mini h4{margin:0 0 4px;font-size:17px;color:var(--cyan)}
+.mini p{margin:0}
+.fact{border-left:5px solid var(--hot);background:#1a1a10;padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0}
+.expr{font-family:var(--f-mono);font-size:20px;color:var(--hot);background:#0a121c;border:1px solid #3a4c60;border-radius:8px;padding:6px 12px;display:inline-block;margin:4px 0;line-height:1.7;max-width:100%;overflow-x:auto}
+.scroll{overflow-x:auto}
+table.tt{border-collapse:collapse;font-family:var(--f-mono);font-size:16.5px;margin:4px 0}
+table.tt th,table.tt td{border:1px solid #2d4560;padding:3px 11px;text-align:center}
+table.tt th{background:#16283d;color:var(--cyan);font-weight:400}
+table.tt td.o{color:var(--hot);font-weight:700}
+table.tt td.dec{color:var(--muted)}
+table.tt td.term{text-align:left;color:#fff;min-width:130px}
+table.tt tr.hl td{background:#3a2c07}
+table.tt tr.hl0 td{background:#0e2a3a}
+table.tt.sel tbody tr{cursor:pointer}
+table.tt.sel tbody tr:hover td{background:#1a2c42}
+table.tt.sel tbody tr.pick td{background:#5a4208;color:#fff}
+table.tt td.fillc{cursor:pointer;min-width:42px;background:#0b1726}
+table.tt td.fillc:hover{background:#1a2c42}
+table.tt tr.bad td{box-shadow:inset 0 0 0 2px var(--bad)}
+.solnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.stepbox{border-left:4px solid var(--cyan);padding:4px 0 4px 14px;margin:10px 0}
+.stepbox h4{margin:0 0 4px;color:var(--cyan);font-size:16px}
+.explorer{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.explain{font-size:16.5px}
+.navsec{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* Prueba evaluable */
+.exhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.exhead h2{margin:0;font-size:23px}
+.pill{font-family:var(--f-mono);padding:4px 12px;border-radius:8px;border:2px solid #46627e;background:#132338;font-size:14.5px}
+.pill.red{background:#2a0f0d;border-color:#7a2520;color:#ffb4a8}
+.pill.lv1{border-color:#44ff8e;color:#bfffd9}.pill.lv2{border-color:#ffb627;color:#ffe3a8}.pill.lv3{border-color:#ff5a4f;color:#ffd5cf}
+.progress{display:flex;gap:6px;margin-bottom:14px}
+.progress span{flex:1;height:10px;border-radius:5px;background:#1c2a3a;border:1px solid #2f4a68}
+.progress span.done{background:var(--phos)}.progress span.cur{background:var(--hot)}
+.part{background:#0b1726;border:2px solid #2d4560;border-radius:12px;padding:12px 16px;margin:0 0 12px}
+.part h4{margin:0 0 8px;font-size:17px}
+.part.ok{border-color:var(--ok)}.part.bad{border-color:var(--bad)}
+.fb{margin-top:8px;font-size:15.5px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:#0e3321;color:#bfffd9}.fb.bad{background:#3a100d;color:#ffd5cf}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:var(--f-mono);font-size:17px;min-width:44px;padding:6px 8px;border-radius:8px;border:2px solid #4b5864;background:#1c252e;color:#fff;cursor:pointer}
+.chip[aria-pressed="true"]{background:#5a4208;border-color:var(--hot)}
+.opts{display:grid;grid-template-columns:1fr;gap:8px}
+.opt{display:flex;gap:10px;align-items:center;background:#07101a;border:2px solid #2d4560;border-radius:10px;padding:10px 12px;cursor:pointer;font-family:var(--f-mono);font-size:17px;overflow-x:auto}
+.opt input{accent-color:#ffb627;width:18px;height:18px;flex:none}
+.opt.sel{border-color:var(--hot);background:#231a06}
+.locked{pointer-events:none;opacity:.85}
+
+/* Constructor por arrastre */
+.builder{user-select:none;-webkit-user-select:none}
+.palette{display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:#12181e;border:2px solid #3c4955;border-radius:10px;margin-bottom:10px}
+.palette .lbl{width:100%;font-size:13px;color:var(--muted)}
+.tok{font-family:var(--f-mono);font-size:22px;min-width:46px;height:46px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;border:2px solid #56636d;background:linear-gradient(#303a44,#1a2129);color:#ffe3a8;cursor:grab;touch-action:none;box-shadow:0 3px 0 #0a0e12}
+.tok.op{color:var(--cyan)}
+.tok.par{color:#c9d7e3}
+.zone{min-height:66px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px;border:2px dashed #46627e;border-radius:10px;background:#07101a;position:relative}
+.zone.over{border-color:var(--hot);background:#141006}
+.zone .ph{color:var(--muted);font-size:15px}
+.zone .tok{cursor:grab;box-shadow:none;background:#1f2a35}
+.caret{width:3px;height:40px;background:var(--hot);border-radius:2px;box-shadow:0 0 8px var(--hot)}
+.dragghost{position:fixed;z-index:200;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);opacity:.9}
+.bacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.bacts .hbtn{font-size:13.5px}
+.bacts small{color:var(--muted)}
+
+
+/* Circuitos y propiedades */
+.simin{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tgl{display:flex;align-items:center;gap:10px;background:#1c252e;border:3px solid #4b5864;border-radius:10px;padding:6px 12px;color:#fff;cursor:pointer;font-size:16px;font-weight:700}
+.tgl .sw{position:relative;width:22px;height:38px;border-radius:11px;background:#0c1116;border:2px solid #56626d}
+.tgl .sw::after{content:"";position:absolute;left:2px;width:14px;height:17px;border-radius:5px;background:linear-gradient(#e2e8ec,#8a969f);bottom:2px;transition:bottom .12s}
+.tgl[aria-pressed="true"] .sw::after{bottom:17px}
+.tgl[aria-pressed="true"]{border-color:var(--hot)}
+.tgl .v{font-family:var(--f-mono);color:var(--hot);font-size:20px}
+
+.circ{background:#07101a;border:1px solid #243a54;border-radius:10px;padding:8px;overflow-x:auto}
+.circ svg{display:block;min-width:520px;width:100%;max-width:780px;height:auto;margin:0 auto}
+.alert2{animation:alert2 2.4s ease-in-out infinite}@keyframes alert2{50%{box-shadow:0 0 0 2px #e8413a,0 0 22px rgba(232,65,58,.6)}}
+.gaterow{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;margin:6px 0}
+.gaterow b{font-family:var(--f-mono);color:var(--cyan);font-size:18px}
+.optrow{display:flex;flex-wrap:wrap;gap:6px}
+.ob{font-family:var(--f-mono);font-size:16.5px;padding:7px 12px;border-radius:8px;border:2px solid #2d4560;background:#07101a;color:#fff;cursor:pointer}
+.ob[aria-pressed="true"]{border-color:var(--hot);background:#231a06}
+.props{width:100%;border-collapse:collapse;min-width:620px}
+.props th,.props td{border-bottom:1px solid #243a54;padding:7px 8px;text-align:left;vertical-align:middle}
+.props th{color:var(--cyan);font-weight:600;font-size:15px}
+.props td.mono{font-size:17px;color:#fff}
+.chain{font-family:var(--f-mono);font-size:17.5px;line-height:1.9}
+.chain .pr{font-family:var(--f-ui);font-size:13.5px;color:#0b1a14;background:var(--phos);border-radius:6px;padding:1px 8px;margin-left:8px;white-space:nowrap}
+.combo{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0;font-family:var(--f-mono);font-size:17px}
+
+.kmap{border-collapse:separate;border-spacing:4px;font-family:var(--f-mono);margin:4px 0}
+.kmap th{color:var(--cyan);font-weight:400;font-size:16px;padding:2px 6px}
+.kmap th.corner{color:#ffe3a8;font-size:14px;text-align:right;line-height:1.1}
+.kmap td.kc{width:58px;height:52px;text-align:center;font-size:24px;background:#0b1726;border:2px solid #2d4560;border-radius:8px;cursor:pointer;position:relative;color:#3d5268}
+.kmap td.kc.one{color:var(--hot);font-weight:700}
+.kmap td.kc.zero{color:#6a8098}
+.kmap td.kc.sel{outline:3px dashed var(--cyan);outline-offset:2px}
+.kmap td.kc small{position:absolute;left:4px;top:2px;font-size:10px;color:#5d7690}
+.kmap.ro td.kc{cursor:default}
+.kbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.kbar .hbtn[aria-pressed="true"]{background:var(--hot);color:#1b1204;border-color:var(--hot)}
+.glist{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.gitem{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:16px}
+.gitem i{width:16px;height:16px;border-radius:4px;display:inline-block}
+.cirOpts{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:10px}
+.cirOpt{background:#07101a;border:2px solid #2d4560;border-radius:10px;padding:6px;cursor:pointer;color:#fff;text-align:left}
+.cirOpt[aria-pressed="true"]{border-color:var(--hot);background:#231a06}
+.cirOpt svg{display:block;width:100%;height:auto}
+.cirOpt b{font-family:var(--f-mono);color:var(--hot)}
+body.alarm3::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;box-shadow:inset 0 0 90px rgba(232,65,58,.35);animation:al3 2.2s ease-in-out infinite}
+@keyframes al3{50%{box-shadow:inset 0 0 30px rgba(232,65,58,.08)}}
+@media (max-width:900px){ .cirOpts{grid-template-columns:1fr} }
+@media print{ body.alarm3::before{display:none} }
+
+/* Modal / toast */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(2,6,12,.78);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.mbox{max-width:640px;width:100%;max-height:90vh;overflow:auto;background:linear-gradient(#1b2b40,#0f1c2e);border:3px solid #46627e;border-radius:14px;padding:20px 22px;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.mbox.warn{border-color:var(--hot);background:repeating-linear-gradient(135deg,#1b1406 0 22px,#141006 22px 44px)}
+.mbox.warn .stripe{height:14px;margin:-20px -22px 14px;border-radius:10px 10px 0 0;background:repeating-linear-gradient(135deg,#ffb627 0 18px,#1b1204 18px 36px)}
+.mbox h3{margin:0 0 10px;font-size:22px}
+.mbox ul{padding-left:1.2em}
+.macts{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:16px}
+.chk{display:flex;gap:10px;align-items:flex-start;background:#0a1522;border:2px solid #2f4a68;border-radius:10px;padding:10px;margin-top:10px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:#2fbf73;flex:none;margin-top:2px}
+.toast{position:fixed;left:50%;bottom:calc(58px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0f1c2e;border:2px solid var(--cyan);color:#fff;padding:10px 16px;border-radius:10px;z-index:120;display:none;max-width:90vw}
+.toast.on{display:block}
+
+/* Resultado del contenido */
+.result{text-align:center;padding:26px 20px}
+.result .big{font-family:var(--f-mono);font-size:64px;line-height:1;color:var(--hot)}
+.badge{display:inline-flex;align-items:center;gap:10px;background:#0e3321;border:3px solid var(--ok);color:#bfffd9;border-radius:40px;padding:8px 22px;font-size:21px;font-weight:700;margin:14px 0}
+.nobadge{display:inline-block;background:#3a100d;border:3px solid var(--bad);color:#ffd5cf;border-radius:12px;padding:8px 18px;margin:14px 0}
+
+/* Certificado */
+.reswrap{max-width:1000px;margin:0 auto;padding:16px 16px 34px}
+.resbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 16px}
+.cert{background:var(--paper);color:#1b232b;border-radius:6px;padding:26px 34px 18px;max-width:820px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.6);border:10px double #25364a}
+.cert .top{display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:2px solid #25364a;padding-bottom:10px}
+.cert .agency{font-family:var(--f-mono);font-size:13px;color:#25364a;line-height:1.4;flex:1}
+.cert .clas{font-family:var(--f-mono);color:#b3261e;border:2px solid #b3261e;padding:2px 8px;font-size:13px;transform:rotate(-3deg)}
+.cert h2{text-align:center;font-size:29px;margin:14px 0 2px}
+.cert .op{text-align:center;color:#4b5a68;margin:0 0 10px}
+.cert .name{text-align:center;font-size:27px;font-weight:700;margin:6px 0 0}
+.cert .grp{text-align:center;color:#4b5a68;margin:0 0 8px}
+.cert .role{text-align:center;font-size:23px;font-weight:700;padding:8px;margin:8px auto;border-radius:6px;max-width:560px}
+.cert .role.r0{background:#f1dcd9;color:#8c1d15}.cert .role.r1{background:#fde9bf;color:#6b4300}.cert .role.r2{background:#cdeedd;color:#0d5231}
+.cert .msg{text-align:center;max-width:620px;margin:0 auto 10px;font-size:15.5px}
+.cert .data{display:grid;grid-template-columns:1fr 1.5fr;gap:16px;align-items:start;margin-top:8px}
+.cert .nota{text-align:center;border:3px solid #25364a;border-radius:10px;padding:8px}
+.cert .nota b{display:block;font-size:44px;line-height:1.05;font-family:var(--f-mono)}
+.cert table{width:100%;border-collapse:collapse;font-size:14.5px}
+.cert td,.cert th{border-bottom:1px solid #c5c9c4;padding:3px 6px;text-align:left}
+.cert .foot2{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:14px;font-size:13.5px}
+.cert .sig{text-align:center;border-top:1px solid #25364a;padding-top:4px;min-width:230px}
+.cert .sig .sgn{font-family:"Brush Script MT","Segoe Script",cursive;font-size:24px;color:#25364a;line-height:1}
+.cert .legal{margin-top:10px;border-top:1px solid #9aa4ad;padding-top:6px;font-size:11.5px;color:#4b5a68;text-align:center}
+.seal{width:88px;height:88px;flex:none}
+
+.site-foot{text-align:center;font-size:12.5px;color:#8ea3b6;padding:10px 14px;border-top:1px solid #1d3048;background:#060e1a}
+
+@media (max-width:900px){
+  .portada{grid-template-columns:1fr}
+  .g2,.explorer{grid-template-columns:1fr}
+  .cert .data{grid-template-columns:1fr}
+  .hud .cd{order:5;width:100%;text-align:center;margin-right:0}
+}
+@media (max-width:520px){ .row2{grid-template-columns:1fr} .cert{padding:18px 14px} .tok{min-width:40px;height:42px;font-size:20px} }
+
+@media print{
+  @page{size:A4;margin:10mm}
+  :root{padding:0}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:#fff!important;background-image:none!important}
+  .hud,.site-foot,.noprint,.modal,.toast{display:none!important}
+  .view{display:none!important}
+  #v-cert.on{display:block!important}
+  .reswrap{padding:0;max-width:none}
+  .cert{box-shadow:none;margin:0 auto;max-width:none;width:100%;border-width:8px;padding:16px 22px 12px;break-inside:avoid}
+  .cert .data{grid-template-columns:1fr 1.5fr!important}
+}
+</style>
+</head>
+<body data-autor="VMMS-2026-T6W2" class="alarm3">
+<header class="hud" id="hud" hidden>
+  <span class="who" id="hudWho">RECLUTA</span>
+  <span class="cd" id="hudCd" title="Tiempo estimado hasta el impacto">☄ TÁNTALO · IMPACTO EN T−63 d 00:00:00</span>
+  <button class="hbtn" id="hudMapa" type="button">🗺 Mapa</button>
+  <a class="hbtn search" id="hudBuscar" href="https://www.google.com/search?q=mapa+de+Karnaugh+agrupamientos" target="_blank" rel="noopener">🔎 Buscar información</a>
+  <button class="hbtn" id="hudFs" type="button">⛶ Pantalla completa</button>
+</header>
+
+<main>
+<section class="view" id="v-portada">
+  <div class="portada">
+    <div>
+      <h1>Entrenamiento para la gloria<span class="l2">Fase III</span></h1>
+      <p class="sub">Mapas de Karnaugh y diseño de circuitos · Tecnología e Ingeniería II · 2º de Bachillerato. La lluvia de meteoritos ya ha empezado.</p>
+    </div>
+    <div class="idcard" id="fPortada">
+      <span class="rivet" style="top:8px;left:8px"></span><span class="rivet" style="top:8px;right:8px"></span>
+      <span class="rivet" style="bottom:8px;left:8px"></span><span class="rivet" style="bottom:8px;right:8px"></span>
+      <div class="scr">
+        <h2>&gt; ACCESO DE RECLUTAS_</h2>
+        <label class="field"><span>Nombre</span><input id="inNombre" maxlength="40"></label>
+        <label class="field"><span>Apellidos</span><input id="inApellidos" maxlength="60"></label>
+        <div class="row2">
+          <label class="field"><span>Curso</span><input id="inCurso" maxlength="30" value="2º Bachillerato"></label>
+          <label class="field"><span>Grupo</span><input id="inGrupo" maxlength="10"></label>
+        </div>
+        <div class="err" id="errPortada" role="alert"></div>
+      </div>
+      <div class="acts">
+        <button class="btn" type="button" id="btnFsPortada">⛶ Pantalla completa</button>
+        <button class="btn go" type="button" id="btnIniciar">Entrar en el centro</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-historia">
+  <div class="transm">
+    <div class="crt">
+      <div class="head"><span>● CANAL DE EMERGENCIA · ALERTA NIVEL 3</span><span class="blink">IMPACTOS CONFIRMADOS</span></div>
+      <div class="typed" id="typed" aria-live="polite"></div>
+    </div>
+    <div class="decide" id="decide" hidden><button class="btn go" type="button" id="btnEmpezar">Empezar el entrenamiento</button></div>
+    <div class="decide" id="skipWrap"><button class="btn ghost" type="button" id="btnSkip">Mostrar el mensaje completo</button></div>
+  </div>
+</section>
+
+<section class="view" id="v-mapa">
+  <div class="mapwrap">
+    <div class="maphead">
+      <div><h2>Centro de Entrenamiento · Plano de instalaciones</h2>
+      <p>Pulse un edificio iluminado para entrar. En esta fase se abre el edificio 5, el centro de datos.</p></div>
+      <span class="pill" id="mapProg">Fase III · 0 de 1 pruebas completadas</span>
+    </div>
+    <div class="mapframe" id="mapSvg"></div>
+    <div class="maplegend"><span>🟡 Disponible</span><span>🟢 Prueba completada</span><span>⚫ Edificio de otra fase</span></div>
+    <button class="small-link" type="button" id="btnCambiar">Empezar de nuevo con otro alumno</button>
+  </div>
+</section>
+
+<section class="view" id="v-sec"><div class="secwrap" id="secBody"></div></section>
+<section class="view" id="v-eval"><div class="secwrap" id="evalBody"></div></section>
+<section class="view" id="v-cert"><div class="reswrap" id="certBody"></div></section>
+</main>
+
+<footer class="site-foot">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor. <span class="mono">ID: VMMS-2026-T6W2</span></footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+/* © 2026 Victor Manuel Montano Simón · ID de obra VMMS-2026-T6W2 */
+const OBRA_ID='VMMS-2026-T6W2';
+const VN=['A','B','C','D'];
+const bitsOf=(i,n)=>{ const r=[]; for(let k=n-1;k>=0;k--) r.push((i>>k)&1); return r; };
+const envOf=(i,n)=>{ const b=bitsOf(i,n), e={}; VN.slice(0,n).forEach((v,k)=>e[v]=b[k]); return e; };
+const OV=x=>`<span class="ov">${x}</span>`;
+
+/* ---------- Expresiones: árbol, lectura, escritura y evaluación ---------- */
+/* Sintaxis de los datos: A' = A negada, ~( ) = negación de un grupo, · o juxtaposición = producto, + suma, ^ XOR */
+function parseStr(s){
+  const t=[]; for(const ch of s.replace(/\s+/g,'')){ if(/[A-D]/.test(ch)) t.push({k:'v',v:ch}); else if(ch==='0'||ch==='1') t.push({k:'c',v:+ch}); else if(ch==='*') t.push({k:'·'}); else t.push({k:ch}); }
+  let p=0; const pk=()=>t[p];
+  const expr=()=>{ const it=[xr()]; while(pk()&&pk().k==='+'){ p++; it.push(xr()); } return it.length>1?{t:'or',c:it}:it[0]; };
+  const xr=()=>{ let a=term(); while(pk()&&pk().k==='^'){ p++; a={t:'xor',c:[a,term()]}; } return a; };
+  const term=()=>{ const it=[un()]; while(pk()&&(pk().k==='·'||pk().k==='v'||pk().k==='c'||pk().k==='('||pk().k==='~')){ if(pk().k==='·') p++; it.push(un()); } return it.length>1?{t:'and',c:it}:it[0]; };
+  const un=()=>{ if(pk().k==='~'){ p++; p++; const e=expr(); p++; return {t:'not',c:e}; } let a=atom(); while(pk()&&pk().k==="'"){ p++; a={t:'not',c:a}; } return a; };
+  const atom=()=>{ const k=t[p++]; if(k.k==='v') return {t:'v',v:k.v}; if(k.k==='c') return {t:'c',v:k.v}; if(k.k==='('){ const e=expr(); p++; return e; } throw 'bad '+k.k; };
+  return expr();
+}
+function evalE(n,e){ switch(n.t){ case 'v':return e[n.v]; case 'c':return n.v; case 'not':return 1-evalE(n.c,e);
+  case 'and':return n.c.every(x=>evalE(x,e))?1:0; case 'or':return n.c.some(x=>evalE(x,e))?1:0; case 'xor':return evalE(n.c[0],e)^evalE(n.c[1],e); } }
+function rH(n){ switch(n.t){ case 'v':return n.v; case 'c':return String(n.v); case 'not':return OV(rH(n.c));
+  case 'and':return n.c.map(x=>(x.t==='or'||x.t==='xor')?'('+rH(x)+')':rH(x)).join('·');
+  case 'or':return n.c.map(x=>x.t==='xor'?'('+rH(x)+')':rH(x)).join(' + ');
+  case 'xor':return n.c.map(x=>(x.t==='v'||x.t==='not'||x.t==='c')?rH(x):'('+rH(x)+')').join(' ⊕ '); } }
+const H=s=>rH(parseStr(s));
+const ttOf=(node,n)=>Array.from({length:1<<n},(_,i)=>evalE(node,envOf(i,n)));
+function lits(n){ if(n.t==='v') return 1; if(n.t==='c') return 0; if(n.t==='not') return lits(n.c); return n.c.reduce((a,x)=>a+lits(x),0); }
+
+function ttHTML(n,out,o){
+  o=o||{};
+  let h=`<table class="tt"><thead><tr>${o.dec?'<th>Fila</th>':''}${VN.slice(0,n).map(v=>`<th>${v}</th>`).join('')}${o.cols?o.cols.map(c=>`<th>${c.h}</th>`).join(''):''}<th>S</th></tr></thead><tbody>`;
+  for(let i=0;i<(1<<n);i++) h+=`<tr class="${o.hl&&o.hl.includes(i)?'hl':''}">${o.dec?`<td class="dec">${i}</td>`:''}${bitsOf(i,n).map(x=>`<td>${x}</td>`).join('')}${o.cols?o.cols.map(c=>`<td>${c.v[i]}</td>`).join(''):''}<td class="o">${out[i]}</td></tr>`;
+  return h+'</tbody></table>';
+}
+
+/* ---------- Circuitos: modelo y dibujo ---------- */
+/* g: [id, tipo, entradas, x, y]. Una entrada 'A|-12' llega desde el bus A por un carril a la altura -12. */
+function gateNode(c,id){
+  const g=c.g.find(x=>x[0]===id);
+  const kids=g[2].map(r=>{ const s=r.split('|')[0]; return VN.includes(s)?{t:'v',v:s}:gateNode(c,s); });
+  const t=g[1];
+  if(t==='not') return {t:'not',c:kids[0]};
+  if(t==='and'||t==='or') return {t,c:kids};
+  if(t==='xor') return {t:'xor',c:kids};
+  if(t==='nand') return {t:'not',c:{t:'and',c:kids}};
+  if(t==='nor') return {t:'not',c:{t:'or',c:kids}};
+  if(t==='xnor') return {t:'not',c:{t:'xor',c:kids}};
+}
+function gateGeom(g){
+  const t=g[1], nIn=g[2].length, x=g[3], y=g[4]+26;
+  const h=t==='not'?28:(nIn===3?54:40);
+  const base=t.replace(/^n(and|or)$/,'$1').replace('xnor','xor');
+  const neg=['nand','nor','xnor','not'].includes(t);
+  let tip, pinX, path, extra='';
+  if(t==='not'){ path=`M${x} ${y} L${x+30} ${y+h/2} L${x} ${y+h}Z`; tip=x+30; pinX=x; }
+  else if(base==='and'){ path=`M${x} ${y} H${x+28} A${h/2} ${h/2} 0 0 1 ${x+28} ${y+h} H${x}Z`; tip=x+28+h/2; pinX=x; }
+  else { path=`M${x-4} ${y} Q${x+30} ${y} ${x+52} ${y+h/2} Q${x+30} ${y+h} ${x-4} ${y+h} Q${x+8} ${y+h/2} ${x-4} ${y}Z`; tip=x+52; pinX=x+4;
+    if(base==='xor'){ extra=`<path d="M${x-12} ${y} Q${x} ${y+h/2} ${x-12} ${y+h}" fill="none" stroke="#dce8f2" stroke-width="2.5"/>`; pinX=x-8; } }
+  const pins=g[2].map((_,k)=>nIn===1?y+h/2:y+h*(k+1)/(nIn+1));
+  const outX=neg?tip+10:tip;
+  return {x,y,h,path,extra,tip,neg,pinX,pins,outX,outY:y+h/2};
+}
+function circuitSVG(c,env,opt){
+  opt=opt||{};
+  const n=c.n, buses=VN.slice(0,n).map((v,i)=>({v,x:18+i*22}));
+  const geo={}; c.g.forEach(g=>geo[g[0]]=gateGeom(g));
+  const val={}; if(env){ VN.slice(0,n).forEach(v=>val[v]=env[v]); c.g.forEach(g=>val[g[0]]=evalE(gateNode(c,g[0]),env)); }
+  const col=k=>env?(val[k]?'#ffb627':'#4b5e70'):'#c9d7e3';
+  let H=0, W=0; c.g.forEach(g=>{ const q=geo[g[0]]; H=Math.max(H,q.y+q.h+18); W=Math.max(W,q.outX+70); });
+  let wires='', dots='', gates='', labels='';
+  c.g.forEach(g=>{ const q=geo[g[0]];
+    g[2].forEach((ref,k)=>{ const [src,lane]=ref.split('|'); const py=q.pins[k], px=q.pinX;
+      if(VN.includes(src)){ const bx=buses.find(b=>b.v===src).x;
+        if(lane!==undefined){ const ly=+lane+26, mx=px-22-k*6; wires+=`<polyline points="${bx},${ly} ${mx},${ly} ${mx},${py} ${px},${py}" fill="none" stroke="${col(src)}" stroke-width="2.5"/>`; dots+=`<circle cx="${bx}" cy="${ly}" r="3.5" fill="${col(src)}"/>`; }
+        else { wires+=`<line x1="${bx}" y1="${py}" x2="${px}" y2="${py}" stroke="${col(src)}" stroke-width="2.5"/>`; dots+=`<circle cx="${bx}" cy="${py}" r="3.5" fill="${col(src)}"/>`; } }
+      else { const s=geo[src]; const mx=px-14-k*7;
+        wires+= Math.abs(s.outY-py)<0.5?`<line x1="${s.outX}" y1="${py}" x2="${px}" y2="${py}" stroke="${col(src)}" stroke-width="2.5"/>`:
+          `<polyline points="${s.outX},${s.outY} ${mx},${s.outY} ${mx},${py} ${px},${py}" fill="none" stroke="${col(src)}" stroke-width="2.5"/>`; } });
+    gates+=q.extra+`<path d="${q.path}" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+    if(q.neg) gates+=`<circle cx="${q.tip+5}" cy="${q.outY}" r="5" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+    if(g[0]==='S'){ wires+=`<line x1="${q.outX}" y1="${q.outY}" x2="${W-24}" y2="${q.outY}" stroke="${col('S')}" stroke-width="3"/>`;
+      labels+=`<text x="${W-18}" y="${q.outY+6}" class="lblh" style="font-size:18px">S${env?' = '+val.S:''}</text>`; }
+    else if(opt.labels!==false) labels+=`<text x="${q.outX+3}" y="${q.outY-6}" style="font-family:'Share Tech Mono',monospace;font-size:13px" fill="#46c8f0">${g[0]}${env?'='+val[g[0]]:''}</text>`;
+  });
+  let bus=''; buses.forEach(b=>{ bus+=`<line x1="${b.x}" y1="8" x2="${b.x}" y2="${H-4}" stroke="${col(b.v)}" stroke-width="2.5"/><text x="${b.x}" y="8" text-anchor="middle" dy="-0" style="font-family:'Share Tech Mono',monospace;font-size:15px" fill="#ffe3a8">${b.v}${env?'':''}</text>`; });
+  return `<svg viewBox="0 -12 ${W} ${H+12}" role="img" aria-label="Circuito lógico">${bus}${wires}${dots}${gates}${labels}</svg>`;
+}
+
+/* ---------- Mapa de instalaciones (plano detallado) ---------- */
+const BUILDINGS=[
+ {id:'min',n:1,name:'Mintérminos',px:52,py:246,fase:'I',col:'#e0902a'},
+ {id:'max',n:2,name:'Maxtérminos',px:372,py:222,fase:'I',col:'#2f9fd0'},
+ {id:'alg',n:3,name:'Álgebra de Boole',px:700,py:224,fase:'II',col:'#8a6ad0'},
+ {id:'cir',n:4,name:'Circuitos',px:708,py:540,fase:'II',col:'#d0507a'},
+ {id:'kar',n:5,name:'Karnaugh',px:380,py:520,fase:'III',col:'#3fb56e'},
+ {id:'cert',n:'★',name:'Centro de mando',px:48,py:500,fase:'III',col:'#d6c23a'}
+];
+const FASE_ACTUAL='III';
+const tree=(x,y,r)=>`<circle cx="${x+2}" cy="${y+3}" r="${r}" fill="rgba(0,0,0,.3)"/><circle cx="${x}" cy="${y}" r="${r}" fill="#2d6b3f"/><circle cx="${x-r*.3}" cy="${y-r*.3}" r="${r*.55}" fill="#3a8250"/>`;
+const car=(x,y,c,v)=>v?`<rect x="${x}" y="${y}" width="11" height="20" rx="3" fill="${c}"/><rect x="${x+2}" y="${y+4}" width="7" height="5" rx="1" fill="#9fc3d8"/>`:`<rect x="${x}" y="${y}" width="20" height="11" rx="3" fill="${c}"/><rect x="${x+11}" y="${y+2}" width="5" height="7" rx="1" fill="#9fc3d8"/>`;
+const ac=(x,y)=>`<rect x="${x}" y="${y}" width="16" height="12" fill="#8d979e" stroke="#5d676e"/><circle cx="${x+8}" cy="${y+6}" r="4" fill="none" stroke="#5d676e"/>`;
+function drawBuilding(id,col){
+ const sh='rgba(0,0,0,.38)';
+ if(id==='min') return `<path d="M53 63 H303 V143 H148 V253 H53Z" fill="${sh}"/>
+  <path d="M45 55 H295 V135 H140 V245 H45Z" fill="#c9d1d7" stroke="${col}" stroke-width="5"/>
+  <line x1="45" y1="95" x2="295" y2="95" stroke="#aeb7bd" stroke-width="2"/><line x1="92" y1="135" x2="92" y2="245" stroke="#aeb7bd" stroke-width="2"/>
+  ${[70,110,150,190,230,265].map(x=>`<rect x="${x}" y="68" width="18" height="10" fill="#7fb6d6" opacity=".8"/>`).join('')}
+  ${ac(205,104)+ac(230,104)+ac(255,104)+ac(60,170)+ac(105,200)}`;
+ if(id==='max') return `<rect x="378" y="53" width="270" height="160" fill="${sh}"/>
+  <rect x="370" y="45" width="270" height="160" fill="#c3ccd3" stroke="${col}" stroke-width="5"/>
+  <rect x="420" y="85" width="170" height="80" fill="#2f6b43" stroke="#9aa4ab" stroke-width="3"/>
+  <path d="M505 85 V165 M420 125 H590" stroke="#cdbb8e" stroke-width="5"/>${tree(450,105,10)+tree(560,145,10)+tree(560,102,8)+tree(452,148,8)}
+  <circle cx="505" cy="125" r="9" fill="#46c8f0" stroke="#cdbb8e" stroke-width="2"/>
+  ${ac(385,60)+ac(610,60)+ac(385,180)+ac(610,180)}`;
+ if(id==='alg') return `<rect x="713" y="53" width="150" height="150" rx="10" fill="${sh}"/>
+  <rect x="705" y="45" width="150" height="150" rx="10" fill="#c3ccd3" stroke="${col}" stroke-width="5"/>
+  <circle cx="788" cy="128" r="56" fill="${sh}"/><circle cx="780" cy="120" r="56" fill="#e3e8ec" stroke="#8f99a0" stroke-width="3"/>
+  <circle cx="780" cy="120" r="40" fill="none" stroke="#b8c1c7" stroke-width="2"/><rect x="772" y="64" width="16" height="56" fill="#3a4550"/>
+  <g transform="translate(925 95)"><circle r="30" fill="${sh}" cx="4" cy="4"/><circle r="30" fill="#dfe5e9" stroke="#8f99a0" stroke-width="3"/><circle r="18" fill="none" stroke="#b8c1c7" stroke-width="2"/><line x1="0" y1="0" x2="16" y2="-16" stroke="#56636d" stroke-width="3"/><circle r="4" fill="#e8413a" class="beacon"/></g>
+  <g transform="translate(930 190)"><path d="M-10 18 L0 -22 L10 18" fill="none" stroke="#aeb7bd" stroke-width="3"/><path d="M-6 2 H6 M-8 10 H8" stroke="#aeb7bd" stroke-width="2"/><circle cy="-24" r="4" fill="#e8413a" class="beacon"/></g>`;
+ if(id==='cert') return `<rect x="53" y="343" width="200" height="140" fill="${sh}"/>
+  <rect x="45" y="335" width="200" height="140" fill="#9aa6ae" stroke="${col}" stroke-width="5"/>
+  <rect x="60" y="350" width="170" height="110" fill="#b3bdc4"/>
+  <circle cx="115" cy="405" r="34" fill="#3b464f" stroke="#ffd65a" stroke-width="3"/><text x="115" y="417" text-anchor="middle" font-family="Chakra Petch,Arial,sans-serif" font-weight="700" font-size="34" fill="#ffd65a">H</text>
+  <g stroke="#56636d" stroke-width="3"><line x1="195" y1="360" x2="195" y2="385"/><line x1="215" y1="360" x2="215" y2="395"/></g><circle cx="195" cy="358" r="4" fill="#e8413a" class="beacon"/><circle cx="215" cy="358" r="4" fill="#e8413a" class="beacon"/>
+  ${ac(170,420)+ac(200,430)}`;
+ if(id==='kar'){ let p=''; for(let r=0;r<4;r++) for(let c=0;c<4;c++) p+=`<rect x="${410+c*44}" y="${360+r*28}" width="38" height="22" fill="#1d3f6a" stroke="#6fa0d0" stroke-width="1.5"/><line x1="${410+c*44}" y1="${371+r*28}" x2="${448+c*44}" y2="${371+r*28}" stroke="#6fa0d0" stroke-width=".8"/>`;
+  return `<rect x="383" y="343" width="260" height="160" fill="${sh}"/><rect x="375" y="335" width="260" height="160" fill="#c3ccd3" stroke="${col}" stroke-width="5"/>${p}
+  ${ac(600,350)+ac(600,372)+ac(600,394)+ac(600,416)}<rect x="590" y="445" width="36" height="36" rx="18" fill="#9aa4ab" stroke="#5d676e"/><circle cx="608" cy="463" r="11" fill="none" stroke="#5d676e" stroke-width="3"/>`; }
+ if(id==='cir'){ let rib=''; for(let x=715;x<950;x+=16) rib+=`<line x1="${x}" y1="338" x2="${x}" y2="482" stroke="#9aa4ab" stroke-width="2"/>`;
+  return `<rect x="708" y="343" width="250" height="145" rx="4" fill="${sh}"/>
+  <defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9b3ba"/><stop offset=".5" stop-color="#e6ebee"/><stop offset="1" stop-color="#a9b3ba"/></linearGradient></defs>
+  <rect x="700" y="335" width="250" height="145" rx="4" fill="url(#hg)" stroke="${col}" stroke-width="5"/>${rib}
+  <rect x="760" y="478" width="130" height="8" fill="#3a4550"/><rect x="700" y="490" width="250" height="40" fill="#8b918b"/>
+  <g transform="translate(825 510) rotate(90)"><path d="M0 -26 C8 -16 9 4 7 22 L-7 22 C-9 4 -8 -16 0 -26Z" fill="#f2f4f5" stroke="#56636d" stroke-width="2"/><path d="M-7 10 L-18 22 L-7 20Z M7 10 L18 22 L7 20Z" fill="#e8413a"/></g>`; }
+ return '';
+}
+function mapSVG(state){
+ let s=`<svg viewBox="0 0 1000 620" role="img" aria-label="Plano del centro de entrenamiento">
+ <defs><pattern id="gr" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#244a33"/><path d="M3 5l2-2M14 17l2-2M18 6l1-2M7 19l1-2" stroke="#2c5a3d" stroke-width="1.5"/></pattern></defs>
+ <rect width="1000" height="620" fill="url(#gr)"/>
+ <rect x="10" y="10" width="980" height="600" fill="none" stroke="#c9d0c4" stroke-width="2" stroke-dasharray="8 6"/>
+ <g fill="#454c49"><rect x="0" y="282" width="1000" height="36"/><rect x="315" y="0" width="30" height="620"/><rect x="655" y="0" width="30" height="620"/></g>
+ <g fill="#8a8f85"><rect x="0" y="278" width="1000" height="4"/><rect x="0" y="318" width="1000" height="4"/><rect x="311" y="0" width="4" height="620"/><rect x="345" y="0" width="4" height="620"/><rect x="651" y="0" width="4" height="620"/><rect x="685" y="0" width="4" height="620"/></g>
+ <g stroke="#e8dca0" stroke-width="2" stroke-dasharray="12 10"><line x1="0" y1="300" x2="1000" y2="300"/><line x1="330" y1="0" x2="330" y2="620"/><line x1="670" y1="0" x2="670" y2="620"/></g>
+ <g fill="#e8e8e0">${[0,1,2,3,4].map(i=>`<rect x="${349+i*7}" y="284" width="4" height="32"/><rect x="${628+i*7}" y="284" width="4" height="32"/><rect x="${689+i*7}" y="284" width="4" height="32"/><rect x="${288+i*6}" y="284" width="3" height="32"/>`).join('')}</g>
+ <g transform="translate(330 300)"><circle r="40" fill="#454c49"/><circle r="28" fill="#2d6b3f" stroke="#e8dca0" stroke-width="2"/>
+  <path d="M0 -24 C6 -16 7 -2 6 12 L-6 12 C-7 -2 -6 -16 0 -24Z" fill="#f2f4f5" stroke="#56636d" stroke-width="1.5"/><path d="M-6 4 L-13 14 L-6 12Z M6 4 L13 14 L6 12Z" fill="#e8413a"/></g>
+ <rect x="160" y="150" width="140" height="95" fill="#3d4441"/>${[0,1,2,3,4,5].map(i=>`<line x1="${172+i*22}" y1="150" x2="${172+i*22}" y2="175" stroke="#e8e8e0" stroke-width="1.5"/><line x1="${172+i*22}" y1="220" x2="${172+i*22}" y2="245" stroke="#e8e8e0" stroke-width="1.5"/>`).join('')}
+ ${car(176,153,'#d8423a',1)+car(220,153,'#e7e7e7',1)+car(264,153,'#2f6fb0',1)+car(198,223,'#f0b429',1)+car(242,223,'#6a6a6a',1)}
+ <rect x="545" y="222" width="100" height="50" fill="#3d4441"/>${car(552,230,'#e7e7e7')+car(552,250,'#2f9f6f')+car(600,240,'#b03f8a')}
+ ${[[30,275,9],[110,268,10],[295,20,12],[360,248,9],[640,250,8],[700,262,9],[975,262,10],[30,600,10],[360,600,9],[640,600,10],[975,600,9],[975,330,9]].map(t=>tree(...t)).join('')}
+ <ellipse cx="220" cy="568" rx="48" ry="22" fill="#1f5f84" stroke="#2f7fa8" stroke-width="3"/><path d="M190 566 q10 -6 20 0 t20 0" stroke="#5fb0d8" fill="none" stroke-width="1.5"/>${tree(150,580,11)+tree(285,560,10)+tree(290,590,8)}
+ <g transform="translate(965 570)"><circle r="24" fill="#16301f" stroke="#c9d0c4"/><path d="M0 -18 L6 0 L0 18 L-6 0Z" fill="#e8413a"/><text y="-28" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="12" fill="#c9d0c4">N</text></g>
+ <g transform="translate(700 600)" font-family="Share Tech Mono,monospace" font-size="11" fill="#c9d0c4"><rect width="80" height="6" fill="#c9d0c4"/><rect width="40" height="6" fill="#244a33" stroke="#c9d0c4"/><text y="-4">0</text><text x="68" y="-4">100 m</text></g>
+ <g transform="translate(905 255)"><circle r="24" fill="#2a2622" stroke="#5a5048" stroke-width="3"/><circle r="12" fill="#1a1714"/><circle cx="18" cy="-20" r="14" fill="rgba(160,160,160,.35)" class="beacon"/><circle cx="30" cy="-34" r="10" fill="rgba(160,160,160,.25)"/></g>
+ <g transform="translate(225 110)"><circle r="16" fill="rgba(140,140,140,.35)" class="beacon"/><circle cx="14" cy="-14" r="11" fill="rgba(140,140,140,.25)"/></g>
+ <text x="712" y="40" font-family="Share Tech Mono,monospace" font-size="12" fill="#ff8a80">⚡ ALA ESTE SIN ELECTRICIDAD</text>
+ <g transform="translate(540 585)"><rect x="-48" y="-22" width="100" height="44" fill="none" stroke="#ffb627" stroke-dasharray="5 4"/><path d="M-30 -8 l14 6 l-6 12 l-16 -4z M10 0 l8 -6 l6 8 l-10 4z M-6 14 l6 -4 l4 6z" fill="#3a3a36" stroke="#5a5a52"/><text x="-48" y="-28" font-family="Share Tech Mono,monospace" font-size="11" fill="#ff8a80">ZONA ACORDONADA</text></g>`;
+ BUILDINGS.forEach(b=>{
+  const avail=b.fase===FASE_ACTUAL&&(b.id!=='cert'||state.certOpen), done=state.done[b.id];
+  const status=done?'✔':(avail?'':'🔒');
+  const label=`${b.name}${avail||b.id==='cert'?'':' · fase '+b.fase}`;
+  const w=Math.max(140,label.length*7.6+(status?62:44));
+  s+=`<g class="bld${avail?'':' lock'}" data-b="${b.id}" tabindex="0" role="button" aria-label="${b.name}${avail?'':' (no disponible en esta fase)'}">
+   <g class="roof">${drawBuilding(b.id,b.col)}</g>
+   <g class="pin" transform="translate(${b.px} ${b.py})">
+    <rect class="frame" width="${w}" height="30" rx="15" fill="#0b1a14" stroke="${done?'#44ff8e':(avail?'#ffb627':'#6b767e')}" stroke-width="2.5"/>
+    <circle cx="15" cy="15" r="11" fill="${avail?b.col:'#56636d'}"/>
+    <text x="15" y="20" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="14" fill="#0b1a14" font-weight="700">${b.n}</text>
+    <text x="33" y="20" font-family="Chakra Petch,Arial,sans-serif" font-size="14" font-weight="600" fill="${avail?'#fff':'#aab4bb'}">${label} ${status}</text>
+    ${avail&&!done?`<circle cx="${w-2}" cy="2" r="5" fill="#ffb627" class="beacon"/>`:''}
+   </g></g>`;
+ });
+ return s+'</svg>';
+}
+
+
+/* ---------- Mapas de Karnaugh ---------- */
+const GRAY=[0,1,3,2];
+const GCOL=['#ffb627','#46c8f0','#ff5a8a','#44ff8e','#c08bff','#ff8a3d'];
+function kIndex(n,r,c){ return n===3?(r*4+GRAY[c]):(GRAY[r]*4+GRAY[c]); }
+function kmapHTML(n,vals,o){
+  o=o||{};
+  const rows=n===3?2:4, rl=n===3?['0','1']:['00','01','11','10'], cl=['00','01','11','10'];
+  const rv=n===3?'A':'AB', cv=n===3?'BC':'CD';
+  let h=`<table class="kmap ${o.ro?'ro':''}" ${o.id?`id="${o.id}"`:''}><thead><tr><th class="corner">${cv}<br>${rv}</th>${cl.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>`;
+  for(let r=0;r<rows;r++){
+    h+=`<tr><th>${rl[r]}</th>`;
+    for(let c=0;c<4;c++){ const i=kIndex(n,r,c), v=vals[i];
+      const gs=(o.groups||[]).map((g,k)=>g.cells.includes(i)?GCOL[k%GCOL.length]:null).filter(Boolean);
+      const sh=gs.map((col,k)=>`inset 0 0 0 ${3+k*4}px ${col}`).join(',');
+      h+=`<td class="kc ${v===1?'one':(v===0?'zero':'')} ${o.sel&&o.sel.has(i)?'sel':''}" data-i="${i}" style="${sh?'box-shadow:'+sh:''}"><small>${i}</small>${v==null?'':v}</td>`; }
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+/* Implicantes: un grupo es válido si es un «cubo»: todas las combinaciones de las variables que cambian */
+function cubeOf(cells,n){
+  if(!cells.length) return null;
+  const size=cells.length; if(size&(size-1)) return null;
+  const fixed=[]; for(let k=0;k<n;k++){ const b=(cells[0]>>(n-1-k))&1; fixed.push(cells.every(x=>((x>>(n-1-k))&1)===b)?b:null); }
+  const free=fixed.filter(x=>x===null).length; if((1<<free)!==size) return null;
+  return fixed;
+}
+const cubeTerm=f=>f.map((b,k)=>b===null?null:{v:VN[k],neg:!b}).filter(Boolean);
+const termStr=t=>t.length?t.map(l=>l.v+(l.neg?"'":'')).join(''):'1';
+function minimalSOP(ones,n){
+  const set=new Set(ones);
+  if(!ones.length) return {terms:[],cubes:[],str:'0',lits:0};
+  if(ones.length===(1<<n)) return {terms:[[]],cubes:[[...Array(1<<n).keys()]],str:'1',lits:0};
+  const imps=[];
+  const rec=(k,cube)=>{ if(k===n){ const cells=[]; for(let i=0;i<(1<<n);i++) if(cube.every((b,j)=>b===null||((i>>(n-1-j))&1)===b)) cells.push(i);
+      if(cells.every(x=>set.has(x))) imps.push({cube:cube.slice(),cells,lits:cube.filter(b=>b!==null).length}); return; }
+    for(const b of [0,1,null]){ cube.push(b); rec(k+1,cube); cube.pop(); } };
+  rec(0,[]);
+  const primes=imps.filter(a=>!imps.some(b=>b.cells.length>a.cells.length&&a.cells.every(x=>b.cells.includes(x))));
+  let best=null;
+  const search=(chosen,covered,lit)=>{
+    if(best&&(lit>best.lit||(lit===best.lit&&chosen.length>=best.ch.length))) return;
+    const un=ones.find(x=>!covered.has(x));
+    if(un===undefined){ best={ch:chosen.slice(),lit}; return; }
+    primes.filter(p=>p.cells.includes(un)).sort((a,b)=>b.cells.length-a.cells.length).forEach(p=>{ const nc=new Set(covered); p.cells.forEach(x=>nc.add(x)); chosen.push(p); search(chosen,nc,lit+p.lits); chosen.pop(); });
+  };
+  search([],new Set(),0);
+  best.ch.sort((a,b)=>termStr(cubeTerm(a.cube)).localeCompare(termStr(cubeTerm(b.cube))));
+  const terms=best.ch.map(p=>cubeTerm(p.cube));
+  return {terms,cubes:best.ch.map(p=>p.cells),str:terms.map(termStr).join(' + '),lits:best.lit};
+}
+
+/* ---------- Circuito de dos niveles (puertas AND-OR o OR-AND) ---------- */
+function shapeGate(t,x,y,h){
+  const base=t.replace(/^n(and|or)$/,'$1'), neg=/^n/.test(t);
+  let path,tip,pinX;
+  if(base==='and'){ path=`M${x} ${y} H${x+28} A${h/2} ${h/2} 0 0 1 ${x+28} ${y+h} H${x}Z`; tip=x+28+h/2; pinX=x; }
+  else { path=`M${x-4} ${y} Q${x+30} ${y} ${x+52} ${y+h/2} Q${x+30} ${y+h} ${x-4} ${y+h} Q${x+8} ${y+h/2} ${x-4} ${y}Z`; tip=x+52; pinX=x+4; }
+  let svg=`<path d="${path}" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+  if(neg) svg+=`<circle cx="${tip+5}" cy="${y+h/2}" r="5" fill="#16283d" stroke="#dce8f2" stroke-width="2.5"/>`;
+  return {svg,outX:neg?tip+10:tip,outY:y+h/2,pinX};
+}
+function twoLevelSVG(terms,n,kind,opt){
+  opt=opt||{};
+  const lvl1=kind==='pos'?'or':'and', lvl2=kind==='pos'?'and':'or';
+  const stroke='#c9d7e3';
+  const bx=k=>20+k*46, nbx=k=>40+k*46;
+  const x1=20+n*46+40;
+  let y=44, items=[];
+  terms.forEach(t=>{ if(t.length>=2){ const h=Math.max(40,t.length*15); items.push({t,y,h,gate:true}); y+=h+14; } else { items.push({t,y,h:24,gate:false}); y+=24+14; } });
+  const H=Math.max(y+6,120);
+  const x2=x1+150;
+  const single=terms.length===1;
+  let wires='',dots='',gates='',labels='';
+  // buses
+  for(let k=0;k<n;k++){ const a=bx(k), b=nbx(k);
+    wires+=`<line x1="${a}" y1="10" x2="${a}" y2="${H}" stroke="${stroke}" stroke-width="2.2"/>`;
+    wires+=`<polyline points="${a},18 ${b},18 ${b},22" fill="none" stroke="${stroke}" stroke-width="2.2"/><path d="M${b-6} 22 L${b+6} 22 L${b} 32Z" fill="#16283d" stroke="#dce8f2" stroke-width="1.8"/><circle cx="${b}" cy="35" r="3" fill="#16283d" stroke="#dce8f2" stroke-width="1.8"/>`;
+    wires+=`<line x1="${b}" y1="38" x2="${b}" y2="${H}" stroke="${stroke}" stroke-width="2.2"/>`;
+    labels+=`<text x="${a}" y="8" text-anchor="middle" style="font-family:'Share Tech Mono',monospace;font-size:14px" fill="#ffe3a8">${VN[k]}</text>`;
+    labels+=`<text x="${b+9}" y="${46}" style="font-family:'Share Tech Mono',monospace;font-size:12px" fill="#ffe3a8">${VN[k]}</text><line x1="${b+9}" y1="${35}" x2="${b+16}" y2="${35}" stroke="#ffe3a8" stroke-width="1.2"/>`;
+  }
+  const outs=[];
+  items.forEach(it=>{
+    if(it.gate){ const g=shapeGate(lvl1,x1,it.y,it.h); gates+=g.svg;
+      it.t.forEach((l,k)=>{ const py=it.y+it.h*(k+1)/(it.t.length+1), sx=l.neg?nbx(VN.indexOf(l.v)):bx(VN.indexOf(l.v));
+        wires+=`<line x1="${sx}" y1="${py}" x2="${g.pinX}" y2="${py}" stroke="${stroke}" stroke-width="2.2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3.2" fill="${stroke}"/>`; });
+      outs.push({x:g.outX,y:g.outY}); }
+    else { const py=it.y+12, l=it.t[0]; const sx=l?(l.neg?nbx(VN.indexOf(l.v)):bx(VN.indexOf(l.v))):bx(0);
+      wires+=`<line x1="${sx}" y1="${py}" x2="${x1+60}" y2="${py}" stroke="${stroke}" stroke-width="2.2"/>`; dots+=`<circle cx="${sx}" cy="${py}" r="3.2" fill="${stroke}"/>`; outs.push({x:x1+60,y:py}); }
+  });
+  let sx,sy;
+  if(single){ sx=outs[0].x; sy=outs[0].y; }
+  else { const h2=Math.max(40,outs.length*15), y2=Math.max(30,(outs[0].y+outs[outs.length-1].y)/2-h2/2);
+    const g=shapeGate(lvl2,x2,y2,h2); gates+=g.svg;
+    outs.forEach((o,k)=>{ const py=y2+h2*(k+1)/(outs.length+1), mx=g.pinX-16-((k%4)*7);
+      wires+=`<polyline points="${o.x},${o.y} ${mx},${o.y} ${mx},${py} ${g.pinX},${py}" fill="none" stroke="${stroke}" stroke-width="2.2"/>`; });
+    sx=g.outX; sy=g.outY; }
+  const W=Math.max(sx+60,x2+120);
+  wires+=`<line x1="${sx}" y1="${sy}" x2="${W-26}" y2="${sy}" stroke="#ffb627" stroke-width="3"/>`;
+  labels+=`<text x="${W-20}" y="${sy+6}" class="lblh" style="font-size:18px;font-family:'Share Tech Mono',monospace" fill="#ffb627">S</text>`;
+  return `<svg viewBox="0 -6 ${W} ${H+10}" role="img" aria-label="Circuito con puertas lógicas">${wires}${dots}${gates}${labels}</svg>`;
+}
+const termsFromStr=s=>s.split('+').map(t=>t.trim()).filter(Boolean).map(t=>{ const r=[]; for(let i=0;i<t.length;i++){ if(/[A-D]/.test(t[i])){ const neg=t[i+1]==="'"; r.push({v:t[i],neg}); } } return r; });
+
+/* ---------- Teoría ---------- */
+const TEORIA=()=>`
+ <div class="card"><h3>¿Qué es un mapa de Karnaugh?</h3>
+ <p>Es una forma de dibujar la tabla de verdad en la que <b>las casillas vecinas solo se diferencian en una variable</b>. Gracias a eso, los unos que están juntos se pueden <b>agrupar</b> y la variable que cambia dentro del grupo desaparece, igual que en el álgebra: A·B + A·${OV('B')} = A. Es un método gráfico, rápido y seguro para simplificar funciones de 2, 3 y 4 variables.</p>
+ <div class="fact"><b>La clave es el código Gray.</b> Las filas y columnas se numeran 00, 01, <b>11</b>, 10 (no 00, 01, 10, 11), para que entre dos casillas vecinas solo cambie un bit.</div></div>
+ <div class="card"><h3>Método paso a paso</h3>
+ <ol>
+  <li><b>Dibuje el mapa</b>: 3 variables → 2 filas (A) × 4 columnas (BC); 4 variables → 4 filas (AB) × 4 columnas (CD), en código Gray.</li>
+  <li><b>Coloque los unos</b> de la tabla de verdad en sus casillas. El número pequeño de cada casilla es su fila de la tabla.</li>
+  <li><b>Agrupe los unos</b> siguiendo las reglas de abajo.</li>
+  <li><b>Escriba el término de cada grupo</b>: solo quedan las variables que <b>no cambian</b> dentro del grupo; directa si vale 1, negada si vale 0.</li>
+  <li><b>Sume los términos</b>: esa es la función simplificada.</li>
+  <li><b>Dibuje el circuito</b>: una puerta NOT por cada variable negada, una AND por cada término y una OR que los une.</li>
+ </ol></div>
+ <div class="card"><h3>Reglas de los agrupamientos</h3>
+ <div class="g2"><div><ul>
+  <li>Los grupos tienen <b>1, 2, 4, 8 o 16</b> casillas (potencias de 2).</li>
+  <li>Son <b>rectángulos</b>: nunca en diagonal ni en forma de L.</li>
+  <li>Solo pueden contener <b>unos</b>.</li>
+  <li>Cuanto <b>más grandes</b>, mejor: cada vez que el grupo dobla su tamaño desaparece una variable.</li></ul></div><div><ul>
+  <li>El <b>menor número de grupos</b> posible que cubra todos los unos.</li>
+  <li>Los grupos se pueden <b>solapar</b>: un 1 puede estar en varios grupos.</li>
+  <li>El mapa «se enrolla»: la <b>primera y la última columna</b> son vecinas, y también la primera y la última fila.</li>
+  <li>Las <b>cuatro esquinas</b> forman un grupo válido.</li></ul></div></div>
+ <h4 style="color:var(--cyan);margin:12px 0 6px">Tipos de agrupamientos</h4>
+ <div class="g2" id="tiposAg"></div></div>
+ <div class="card"><h3>Laboratorio de Karnaugh <small>· pulse casillas para poner o quitar unos</small></h3>
+ <div class="tabs" id="labN"><button class="tab" type="button" data-n="3" aria-selected="false">3 variables</button><button class="tab" type="button" data-n="4" aria-selected="true">4 variables</button></div>
+ <div class="g2"><div id="labMap"></div><div id="labOut"></div></div>
+ <div class="circ" id="labCirc" style="margin-top:10px"></div></div>`;
+const TIPOS=[
+ {t:'Pareja (2 casillas): desaparece 1 variable',n:4,ones:[5,7]},
+ {t:'Cuarteto en línea (4): desaparecen 2 variables',n:4,ones:[4,5,7,6]},
+ {t:'Cuadrado (4): desaparecen 2 variables',n:4,ones:[5,7,13,15]},
+ {t:'Octeto (8): desaparecen 3 variables',n:4,ones:[4,5,7,6,12,13,15,14]},
+ {t:'Bordes que se tocan (el mapa se enrolla)',n:4,ones:[4,6,12,14]},
+ {t:'Las cuatro esquinas',n:4,ones:[0,2,8,10]}
+];
+
+/* ---------- Ejercicios resueltos (adaptados de tus problemas) ---------- */
+const T4=(f)=>{ const r=[]; for(let i=0;i<16;i++) if(f((i>>3)&1,(i>>2)&1,(i>>1)&1,i&1)) r.push(i); return r; };
+const RES_K=[
+ {t:'Fragmentos del meteorito',n:3,ones:[3,5,6,7],stmt:'Tres sensores (A, B y C) analizan cada fragmento de Tántalo. Si al menos dos detectan radiación, el fragmento se aísla (S = 1).',ref:'Adaptado del ejercicio 1 (piezas defectuosas).'},
+ {t:'Alarma de evacuación de la planta',n:3,ones:[3,4,5,6,7],stmt:'La alarma (S) se activa si hay riesgo de incendio (A = 1) o si se superan a la vez los límites de humedad (B = 1) y presión (C = 1).',ref:'Adaptado del ejercicio 9.'},
+ {t:'Trituradora de muestras',n:3,ones:[1,2,3,5,6,7],stmt:'El motor de la trituradora arranca (S = 1) cuando se activa el sensor B o el sensor C, juntos o por separado. El sensor A no influye.',ref:'Adaptado del ejercicio 10.'},
+ {t:'Detector de pesos',n:4,ones:[9,11,13,15],stmt:'Un circuito recibe un número binario ABCD y da S = 1 cuando están activos a la vez los pesos 2³ (A) y 2⁰ (D).',ref:'Adaptado del ejercicio 2.'},
+ {t:'Comparador de radares',n:4,ones:T4((a,b,c,d)=>2*a+b<2*c+d),stmt:'El radar norte envía un número de 2 bits AB y el radar sur, CD. La alarma (S = 1) salta cuando AB es menor que CD.',ref:'Adaptado del ejercicio 5. Observe que el mapa da una solución con 3 términos.'},
+ {t:'Máquina de seguridad (PAU)',n:4,ones:[2,3,4,5,6,7,12,13],stmt:'El sistema de seguridad de una máquina, con cuatro sensores a, b, c y d, sigue la tabla de verdad de la PAU: S = 1 en las filas 2, 3, 4, 5, 6, 7, 12 y 13.',ref:'Adaptado del ejercicio 1 de la PAU.'}
+];
+
+/* ---------- Banco de ejercicios evaluables ---------- */
+const BANCO=[
+ [
+  {stmt:'Sensor de impactos del muro norte. Su salida S sigue esta tabla de verdad.',n:3,ones:[1,3,6,7]},
+  {stmt:'Generador de emergencia número 7. Su encendido automático (S) sigue esta tabla.',n:3,ones:[0,4,5,7]},
+  {stmt:'Compuerta del refugio subterráneo. Se abre (S = 1) según esta tabla.',n:3,ones:[0,1,2,6]},
+  {stmt:'Baliza de evacuación del hangar. Se enciende (S = 1) según esta tabla.',n:3,ones:[1,5,6,7]},
+  {stmt:'Bomba de agua del sistema contra incendios. Funciona (S = 1) según esta tabla.',n:3,ones:[0,2,3,4,6]}
+ ],[
+  {stmt:'Escudo de plasma de la cúpula',n:4,ones:[0,2,5,7,8,10]},
+  {stmt:'Radar de fragmentos del sector sur',n:4,ones:[1,3,5,7,9,11]},
+  {stmt:'Válvula de combustible del cohete de rescate',n:4,ones:[0,1,2,3,8,10]},
+  {stmt:'Motor de la antena de seguimiento',n:4,ones:[2,6,7,10,14,15]},
+  {stmt:'Cierre de las esclusas del ala oeste',n:4,ones:[0,1,4,5,6,7,14,15]}
+ ],[
+  {stmt:'El láser de materia oscura del artefacto solo dispara (S = 1) si <b>al menos tres</b> de los cuatro ordenadores de control (A, B, C y D) votan 1.',n:4,ones:T4((a,b,c,d)=>a+b+c+d>=3)},
+  {stmt:'Dos radares envían números de 2 bits: AB el norte y CD el sur. El sistema de alerta da S = 1 cuando AB es <b>mayor</b> que CD.',n:4,ones:T4((a,b,c,d)=>2*a+b>2*c+d)},
+  {stmt:'Un sensor codifica la intensidad de la lluvia de meteoritos con un número binario ABCD (A es el de mayor peso). Si el número es <b>mayor que 9</b>, se activa la sirena (S = 1).',n:4,ones:[10,11,12,13,14,15]},
+  {stmt:'El ordenador de navegación da S = 1 cuando el número binario ABCD (A es el de mayor peso) es un <b>número primo</b>.',n:4,ones:[2,3,5,7,11,13]},
+  {stmt:'El estabilizador de gravedad se activa (S = 1) cuando A o B valen 1, y además C o D valen 1, pero nunca si A y D valen 1 a la vez.',n:4,ones:T4((a,b,c,d)=>(a||b)&&(c||d)&&!(a&&d))}
+ ]
+];
+const WEIGHTS=[2.5,3.5,4];
+const NIVEL=['fácil','medio','difícil'];
+
+</script>
+<!-- Huella de autoría · ID de obra VMMS-2026-T6W2 · Victor Manuel Montano Simón -->
+<script>
+/* ---------- Almacenamiento ---------- */
+const PFX='vmms-csl4-', MEM={};
+const S={
+ get(k,d){ try{ const v=localStorage.getItem(PFX+k); if(v!==null) return JSON.parse(v); }catch(e){} return (k in MEM)?MEM[k]:d; },
+ set(k,v){ MEM[k]=v; try{ localStorage.setItem(PFX+k,JSON.stringify(v)); }catch(e){} },
+ del(k){ delete MEM[k]; try{ localStorage.removeItem(PFX+k); }catch(e){} }
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:2});
+const fecha=t=>new Date(t).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+/* ---------- Vistas y utilidades ---------- */
+function show(v){
+ document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+ $('#hud').hidden=(v==='portada');
+ $('#hudWho').textContent=S.get('perfil',null)?`AGENTE ${agente().toUpperCase()}`:'RECLUTA';
+ $('#hudBuscar').hidden=(v==='eval'); $('#hudMapa').hidden=(v==='eval'||v==='historia');
+ S.set('vista',v); window.scrollTo(0,0);
+}
+function modal(o){
+ const b=$('#mbox'); b.className='mbox'+(o.warn?' warn':'');
+ b.innerHTML=(o.warn?'<div class="stripe"></div>':'')+`<h3>${o.title}</h3><div>${o.html||''}</div><div class="macts"></div>`;
+ const acts=b.querySelector('.macts');
+ (o.buttons||[{t:'Entendido',cls:'go'}]).forEach(bt=>{ const e=document.createElement('button'); e.type='button'; e.className='btn '+(bt.cls||''); e.textContent=bt.t; if(bt.id) e.id=bt.id;
+   e.onclick=()=>{ if(bt.keep!==true) closeModal(); if(bt.fn) bt.fn(); }; acts.appendChild(e); });
+ $('#modal').classList.add('on'); if(o.after) o.after(b);
+}
+function closeModal(){ $('#modal').classList.remove('on'); }
+let toastT; function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>e.classList.remove('on'),3400); }
+function toggleFs(force){
+ const d=document, el=d.documentElement, isFs=d.fullscreenElement||d.webkitFullscreenElement;
+ try{ if(isFs&&force!==true){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); return; }
+  if(!isFs){ const r=el.requestFullscreen||el.webkitRequestFullscreen; if(!r) throw 0; const p=r.call(el); if(p&&p.catch) p.catch(()=>toast('Este navegador no permite la pantalla completa aquí. Pulse F11 si lo necesita.')); } }
+ catch(e){ toast('Este navegador no permite la pantalla completa aquí. Pulse F11 si lo necesita.'); }
+}
+
+/* ---------- Constructor de fórmulas por arrastre ---------- */
+const tokLabel=t=>t.k==='v'?(t.neg?OV(t.v):t.v):(t.k==='c'?String(t.v):t.k);
+const tokCls=t=>t.k==='v'||t.k==='c'?'':(t.k==='('||t.k===')'?'par':'op');
+function Builder(root,n){
+ const toks=[]; let locked=false;
+ const pal=[...VN.slice(0,n).map(v=>({k:'v',v,neg:false})),...VN.slice(0,n).map(v=>({k:'v',v,neg:true})),{k:'+'},{k:'·'},{k:'('},{k:')'},{k:'c',v:0},{k:'c',v:1}];
+ root.innerHTML=`<div class="builder"><div class="palette"><span class="lbl">Arrastre los símbolos a la línea de la fórmula, o púlselos para añadirlos al final. Cada símbolo se puede usar tantas veces como haga falta.</span>
+  ${pal.map((t,i)=>`<button type="button" class="tok ${tokCls(t)}" data-p="${i}">${tokLabel(t)}</button>`).join('')}</div>
+  <div class="zone" aria-live="polite"></div>
+  <div class="bacts"><button type="button" class="hbtn" data-a="undo">⌫ Borrar el último</button><button type="button" class="hbtn" data-a="clear">Vaciar</button><small>Para quitar un símbolo de la fórmula, púlselo o arrástrelo fuera.</small></div></div>`;
+ const zone=root.querySelector('.zone');
+ const render=(caret)=>{ let h='<span class="mono" style="font-size:20px;color:var(--muted);margin-right:4px">S =</span>';
+  if(!toks.length&&caret==null) h+='<span class="ph">Suelte aquí los símbolos</span>';
+  toks.forEach((t,i)=>{ if(caret===i) h+='<span class="caret"></span>'; h+=`<span class="tok ${tokCls(t)}" data-z="${i}" tabindex="0" role="button" aria-label="Quitar símbolo">${tokLabel(t)}</span>`; });
+  if(caret!=null&&caret>=toks.length) h+='<span class="caret"></span>'; zone.innerHTML=h; };
+ const idxAt=(x,y)=>{ const els=[...zone.querySelectorAll('[data-z]')]; for(let i=0;i<els.length;i++){ const r=els[i].getBoundingClientRect(); if(y<r.top) return i; if(y<=r.bottom&&x<r.left+r.width/2) return i; } return els.length; };
+ const overZone=(x,y)=>{ const r=zone.getBoundingClientRect(); return x>=r.left-10&&x<=r.right+10&&y>=r.top-10&&y<=r.bottom+10; };
+ let drag=null;
+ const move=e=>{ if(!drag) return; const dx=e.clientX-drag.x0, dy=e.clientY-drag.y0;
+  if(!drag.moved&&Math.hypot(dx,dy)>6){ drag.moved=true; drag.ghost=document.createElement('span'); drag.ghost.className='tok dragghost '+tokCls(drag.tok); drag.ghost.innerHTML=tokLabel(drag.tok); document.body.appendChild(drag.ghost); }
+  if(drag.moved){ e.preventDefault(); drag.ghost.style.left=e.clientX+'px'; drag.ghost.style.top=e.clientY+'px'; const o=overZone(e.clientX,e.clientY); zone.classList.toggle('over',o); render(o?idxAt(e.clientX,e.clientY):null); } };
+ const up=e=>{ if(!drag) return; window.removeEventListener('pointermove',move); window.removeEventListener('pointerup',up); window.removeEventListener('pointercancel',up);
+  const d=drag; drag=null; zone.classList.remove('over'); if(d.ghost) d.ghost.remove();
+  if(!d.moved){ if(d.from==='pal') toks.push({...d.tok}); else toks.splice(d.idx,1); render(null); return; }
+  const inZ=overZone(e.clientX,e.clientY);
+  if(d.from==='pal'){ if(inZ){ render(null); toks.splice(idxAt(e.clientX,e.clientY),0,{...d.tok}); } }
+  else { const t=toks.splice(d.idx,1)[0]; if(inZ){ render(null); toks.splice(idxAt(e.clientX,e.clientY),0,t); } }
+  render(null); };
+ const start=(e,info)=>{ if(locked||e.button>0) return; e.preventDefault(); drag={...info,x0:e.clientX,y0:e.clientY,moved:false};
+  window.addEventListener('pointermove',move,{passive:false}); window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up); };
+ root.querySelectorAll('[data-p]').forEach(b=>{ const t=pal[+b.dataset.p]; b.addEventListener('pointerdown',e=>start(e,{from:'pal',tok:t}));
+  b.addEventListener('keydown',e=>{ if(locked) return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toks.push({...t}); render(null); } }); });
+ zone.addEventListener('pointerdown',e=>{ const el=e.target.closest('[data-z]'); if(!el) return; const i=+el.dataset.z; start(e,{from:'zone',idx:i,tok:toks[i]}); });
+ zone.addEventListener('keydown',e=>{ const el=e.target.closest('[data-z]'); if(!el||locked) return; if(['Enter',' ','Delete','Backspace'].includes(e.key)){ e.preventDefault(); toks.splice(+el.dataset.z,1); render(null); } });
+ root.querySelector('[data-a="undo"]').onclick=()=>{ if(!locked){ toks.pop(); render(null); } };
+ root.querySelector('[data-a="clear"]').onclick=()=>{ if(!locked){ toks.length=0; render(null); } };
+ render(null);
+ return { get:()=>toks.slice(), lock:()=>{ locked=true; root.classList.add('locked'); } };
+}
+function parseToks(t){
+ let p=0; const pk=()=>t[p];
+ const expr=()=>{ const it=[term()]; while(pk()&&pk().k==='+'){ p++; it.push(term()); } return it.length>1?{t:'or',c:it}:it[0]; };
+ const term=()=>{ const it=[fac()]; while(pk()&&(pk().k==='·'||pk().k==='v'||pk().k==='c'||pk().k==='(')){ if(pk().k==='·') p++; it.push(fac()); } return it.length>1?{t:'and',c:it}:it[0]; };
+ const fac=()=>{ const k=pk(); if(!k) throw 'la fórmula está incompleta'; if(k.k==='v'){ p++; return k.neg?{t:'not',c:{t:'v',v:k.v}}:{t:'v',v:k.v}; }
+  if(k.k==='c'){ p++; return {t:'c',v:k.v}; }
+  if(k.k==='('){ p++; const e=expr(); if(!pk()||pk().k!==')') throw 'falta cerrar un paréntesis'; p++; return e; }
+  throw `hay un «${k.k}» mal colocado`; };
+ const r=expr(); if(p<t.length) throw `sobra un «${t[p].k}»`; return r;
+}
+function checkSimplified(toks,target,n,min){
+ if(!toks.length) return {ok:false,msg:'La fórmula está vacía.'};
+ let ast; try{ ast=parseToks(toks); }catch(e){ return {ok:false,msg:'La fórmula no está bien escrita: '+e+'.'}; }
+ const tt=ttOf(ast,n); const bad=tt.findIndex((v,i)=>v!==target[i]);
+ if(bad>=0){ const b=bitsOf(bad,n); return {ok:false,msg:`La función no es equivalente. Por ejemplo, con ${VN.slice(0,n).map((v,k)=>v+' = '+b[k]).join(', ')} debería valer ${target[bad]} y su fórmula da ${tt[bad]}.`}; }
+ const L=lits(ast); if(L>min) return {ok:false,msg:`Es equivalente, pero se puede simplificar más: usa ${L} literales y la expresión más simple tiene ${min}.`};
+ return {ok:true};
+}
+
+
+/* ---------- Salidas durante la prueba ---------- */
+let away=false;
+function evalRunning(){ const m=S.get('evalMode',null); return m&&ct(m).status==='running'&&$('#v-eval').classList.contains('on'); }
+function onLeave(){ if(away||!evalRunning()||Date.now()<graceUntil) return; away=true; const m=S.get('evalMode'); const c=ct(m); c.exits++; setCt(m,c); S.set('ultimaSalida',Date.now()); }
+function onBack(){ if(!away) return; away=false; const m=S.get('evalMode',null); if(!m) return; const c=ct(m); if(c.status!=='running') return;
+ const p=$('#exitPill'); if(p) p.textContent='Salidas: '+c.exits;
+ modal({warn:true,title:`Salida registrada (${c.exits})`,html:'<p>Ha salido de la ventana durante una prueba evaluable. Se restan <b>0,5 puntos</b> de la nota de esta prueba y constará en el certificado.</p>',buttons:[{t:'Volver a la prueba',cls:'warn'}]}); }
+document.addEventListener('visibilitychange',()=>document.hidden?onLeave():onBack());
+window.addEventListener('blur',onLeave); window.addEventListener('focus',onBack);
+
+
+const NOMBRE={kar:'Mapas de Karnaugh'};
+const TITULO={kar:'Experto en mapas de Karnaugh'};
+function agente(){ const p=S.get('perfil',null); return p?(p.apellidos.trim().split(/\s+/)[0]||p.nombre):''; }
+function ct(m){ return S.get('ct_'+m,{status:'none'}); }
+function setCt(m,v){ S.set('ct_'+m,v); }
+function tick(){
+ const t0=S.get('inicio',null); const total=63*86400+11*3600+7*60+41;
+ const el=Math.floor((Date.now()-(t0||Date.now()))/1000); let r=Math.max(0,total-el);
+ const d=Math.floor(r/86400); r%=86400; const h=String(Math.floor(r/3600)).padStart(2,'0'); r%=3600;
+ $('#hudCd').textContent=`☄ TÁNTALO · IMPACTO EN T−${d} d ${h}:${String(Math.floor(r/60)).padStart(2,'0')}:${String(r%60).padStart(2,'0')}`;
+}
+
+/* ---------- Portada e historia ---------- */
+function initPortada(){
+ let p=S.get('perfil',null);
+ if(!p){ for(const k of ['vmms-csl3-perfil','vmms-csl2-perfil','vmms-csl1-perfil']){ try{ const a=localStorage.getItem(k); if(a){ p=JSON.parse(a); break; } }catch(e){} } }
+ if(p){ $('#inNombre').value=p.nombre||''; $('#inApellidos').value=p.apellidos||''; $('#inCurso').value=p.curso||'2º Bachillerato'; $('#inGrupo').value=p.grupo||''; }
+ const go=()=>{
+  const d={nombre:$('#inNombre').value.trim(),apellidos:$('#inApellidos').value.trim(),curso:$('#inCurso').value.trim(),grupo:$('#inGrupo').value.trim()};
+  if(!d.nombre||!d.apellidos||!d.curso||!d.grupo){ $('#errPortada').textContent='> Complete nombre, apellidos, curso y grupo para continuar.'; return; }
+  S.set('perfil',d); if(!S.get('inicio',null)) S.set('inicio',Date.now()); show('historia'); typeStory(); };
+ $('#btnIniciar').addEventListener('click',go);
+ document.querySelectorAll('#fPortada input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); go(); } }));
+ $('#btnFsPortada').onclick=()=>toggleFs();
+}
+let typing=null;
+function storyText(){ return `Agente ${agente()}:
+
+Ya no hay tiempo para protocolos. Hace seis horas, Tántalo se partió al rozar la órbita de la Luna. Una lluvia de fragmentos ha caído sobre tres continentes. Uno de ellos ha impactado a dos kilómetros de este centro: el ala este está sin electricidad y trabajamos con generadores.
+
+Quedan 63 días para que llegue el núcleo principal, de nueve kilómetros de diámetro.
+
+Dos reclutas han abandonado el programa. Los que quedan son nuestra última esperanza: solo los más aptos de ustedes podrán construir el artefacto y salvar la Tierra.
+
+Fase III, la última del entrenamiento: mapas de Karnaugh. Si la supera, la próxima vez que nos veamos será delante del ordenador de ensamblaje.
+
+Un 7,5. Sin excusas.
+
+— Sargento Eustaquio Balbuena, instructor jefe`; }
+function typeStory(){
+ const el=$('#typed'), txt=storyText(); let i=0; $('#decide').hidden=true; $('#skipWrap').hidden=false; clearInterval(typing);
+ if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){ finishType(); return; }
+ typing=setInterval(()=>{ i+=2; el.innerHTML=esc(txt.slice(0,i))+'<span class="cursor">&nbsp;</span>'; if(i>=txt.length) finishType(); },22);
+}
+function finishType(){ clearInterval(typing); $('#typed').innerHTML=esc(storyText())+'<span class="cursor">&nbsp;</span>'; $('#decide').hidden=false; $('#skipWrap').hidden=true; }
+
+/* ---------- Mapa ---------- */
+function buildMapa(){
+ const done={kar:ct('kar').status==='done'};
+ $('#mapSvg').innerHTML=mapSVG({done,certOpen:done.kar});
+ $('#mapProg').textContent=`Fase III · ${done.kar?1:0} de 1 pruebas completadas`;
+ $('#mapSvg').querySelectorAll('.bld').forEach(g=>{
+  const act=()=>{ const id=g.dataset.b;
+   if(g.classList.contains('lock')){ toast(id==='cert'?'Complete la prueba del edificio 5 para recoger el certificado.':'Este edificio corresponde a una fase anterior del entrenamiento.'); return; }
+   if(id==='cert'){ renderCert(); show('cert'); return; }
+   openSec('kar','teoria'); };
+  g.addEventListener('click',act); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); act(); } });
+ });
+}
+
+/* ---------- Componente: mapa de Karnaugh interactivo ---------- */
+function KMap(root,n,opt){
+ opt=opt||{};
+ const vals=Array(1<<n).fill(0), groups=[], sel=new Set();
+ let mode='fill', lockF=false, lockG=false, msg='';
+ const draw=()=>{
+  root.innerHTML=`${opt.groups?`<div class="kbar"><button type="button" class="hbtn" data-m="fill" aria-pressed="${mode==='fill'}">✏ Rellenar unos</button><button type="button" class="hbtn" data-m="group" aria-pressed="${mode==='group'}">⬚ Hacer grupos</button></div>`:''}
+   <div class="scroll">${kmapHTML(n,vals,{groups,sel})}</div>
+   ${opt.groups?`<div class="kbar">${mode==='group'?`<button type="button" class="btn go" data-a="mk" style="padding:7px 14px;font-size:15px">Crear grupo con la selección (${sel.size})</button><button type="button" class="hbtn" data-a="unsel">Quitar selección</button>`:'<small style="color:var(--muted)">Pulse «Hacer grupos» cuando el mapa esté completo.</small>'}</div>
+   <div style="color:#ffd5cf;font-size:15px;min-height:20px">${msg}</div>
+   <div class="glist">${groups.map((g,k)=>`<div class="gitem"><i style="background:${GCOL[k%GCOL.length]}"></i>Grupo ${k+1}: casillas ${g.cells.join(', ')} → <b style="color:var(--hot)">${H(termStr(cubeTerm(cubeOf(g.cells,n))))}</b>${lockG?'':`<button type="button" class="hbtn" data-del="${k}" style="padding:2px 8px">✕</button>`}</div>`).join('')}</div>`:''}`;
+  root.querySelectorAll('td.kc').forEach(td=>td.onclick=()=>{ const i=+td.dataset.i;
+   if(mode==='fill'){ if(lockF) return; vals[i]=vals[i]?0:1; }
+   else { if(lockG) return; sel.has(i)?sel.delete(i):sel.add(i); }
+   msg=''; draw(); });
+  root.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ mode=b.dataset.m; sel.clear(); msg=''; draw(); });
+  const mk=root.querySelector('[data-a="mk"]'); if(mk) mk.onclick=()=>{ if(lockG) return; const cells=[...sel].sort((a,b)=>a-b);
+   if(!cells.length){ msg='Seleccione primero las casillas del grupo.'; }
+   else if(!cubeOf(cells,n)){ msg='Ese grupo no es válido: debe tener 1, 2, 4, 8 o 16 casillas formando un rectángulo (recuerde que los bordes y las esquinas se tocan).'; }
+   else if(cells.some(i=>vals[i]!==1)){ msg='Un grupo solo puede contener unos.'; }
+   else if(groups.some(g=>g.cells.join()===cells.join())){ msg='Ese grupo ya existe.'; }
+   else { groups.push({cells}); sel.clear(); }
+   draw(); };
+  const us=root.querySelector('[data-a="unsel"]'); if(us) us.onclick=()=>{ sel.clear(); draw(); };
+  root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ groups.splice(+b.dataset.del,1); draw(); });
+ };
+ draw();
+ return {vals,groups,lockFill:()=>{ lockF=true; if(opt.groups){ mode='group'; } draw(); },lockGroups:()=>{ lockG=true; mode='fill'; draw(); },redraw:draw};
+}
+
+/* ---------- Secciones ---------- */
+const BRIEF='Mensaje de la teniente Casilda Urquiza, jefa de energía: «Los generadores solo pueden mantener encendido el centro de datos. Cada puerta lógica que nos ahorre son minutos de luz. Simplifique, agente».';
+function openSec(m,tab){
+ S.set('sec',{m,tab}); const c=ct('kar');
+ const tabs=[['teoria','Teoría'],['resueltos','Ejercicios resueltos'],['prueba','Prueba evaluable']];
+ $('#secBody').innerHTML=`<div class="sechead"><span class="n">5</span><h2>Mapas de Karnaugh</h2></div>
+  <div class="brief alert2">${BRIEF}</div>
+  <div class="tabs" role="tablist">${tabs.map(([k,t])=>`<button class="tab" role="tab" data-t="${k}" aria-selected="${k===tab}">${t}${k==='prueba'&&c.status==='done'?' ✔':''}</button>`).join('')}</div>
+  <div id="tabBody"></div>
+  <nav class="navsec"><button class="btn" type="button" id="toMap">🗺 Volver al mapa</button>${tab!=='prueba'?`<button class="btn go" type="button" id="nextTab">${tab==='teoria'?'Ver ejercicios resueltos ▸':'Ir a la prueba evaluable ▸'}</button>`:''}</nav>`;
+ $('#secBody').querySelectorAll('.tab').forEach(b=>b.onclick=()=>openSec(m,b.dataset.t));
+ $('#toMap').onclick=()=>{ buildMapa(); show('mapa'); };
+ const nx=$('#nextTab'); if(nx) nx.onclick=()=>openSec(m,tab==='teoria'?'resueltos':'prueba');
+ const body=$('#tabBody');
+ if(tab==='teoria'){ body.innerHTML=TEORIA(); mountTeoria(); }
+ else if(tab==='resueltos') mountResueltos(body);
+ else mountPrueba(body);
+ show('sec');
+}
+function valsFrom(ones,n){ const v=Array(1<<n).fill(0); ones.forEach(i=>v[i]=1); return v; }
+function groupExplain(cells,n){
+ const cube=cubeOf(cells,n), ch=cube.map((b,k)=>b===null?VN[k]:null).filter(Boolean), st=cube.map((b,k)=>b===null?null:`${VN[k]} = ${b}`).filter(Boolean);
+ return `${cells.length} ${cells.length===1?'casilla':'casillas'}. ${ch.length?`Cambia${ch.length>1?'n':''} ${ch.join(' y ')}: desaparece${ch.length>1?'n':''}. `:''}${st.length?`Se mantiene${st.length>1?'n':''} ${st.join(', ')}`:'No queda ninguna variable'} → <b style="color:var(--hot)">${H(termStr(cubeTerm(cube)))}</b>`;
+}
+function mountTeoria(){
+ $('#tiposAg').innerHTML=TIPOS.map(t=>{ const cube=cubeOf(t.ones.slice().sort((a,b)=>a-b),t.n);
+  return `<div class="mini"><h4>${t.t}</h4><div class="scroll">${kmapHTML(t.n,valsFrom(t.ones,t.n),{ro:true,groups:[{cells:t.ones}]})}</div><p class="mono">Término: <b style="color:var(--hot)">${H(termStr(cubeTerm(cube)))}</b></p></div>`; }).join('');
+ let n=4, vals=valsFrom([0,2,5,7,8,10,13,15],4);
+ const draw=()=>{
+  const ones=vals.map((v,i)=>v?i:-1).filter(i=>i>=0), sol=minimalSOP(ones,n);
+  $('#labN').querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',+t.dataset.n===n?'true':'false'));
+  $('#labMap').innerHTML=`<div class="scroll">${kmapHTML(n,vals,{groups:sol.cubes.length&&ones.length<(1<<n)?sol.cubes.map(c=>({cells:c})):[]})}</div>`;
+  $('#labMap').querySelectorAll('td.kc').forEach(td=>td.onclick=()=>{ const i=+td.dataset.i; vals[i]=vals[i]?0:1; draw(); });
+  $('#labOut').innerHTML=`<div class="mini"><h4>Función simplificada</h4><p class="expr">S = ${H(sol.str)}</p><p>${sol.terms.length} ${sol.terms.length===1?'grupo':'grupos'} · ${sol.lits} literales (con mintérminos serían ${ones.length} términos y ${ones.length*n} literales).</p>
+   ${sol.cubes.length&&ones.length<(1<<n)?`<div class="glist">${sol.cubes.map((c,k)=>`<div class="gitem"><i style="background:${GCOL[k%GCOL.length]}"></i><span>${groupExplain(c,n)}</span></div>`).join('')}</div>`:''}</div>`;
+  $('#labCirc').innerHTML=sol.terms.length&&ones.length<(1<<n)?twoLevelSVG(sol.terms,n,'sop'):'<p style="color:var(--muted)">Con la salida siempre a 0 o siempre a 1 no hace falta ninguna puerta.</p>';
+ };
+ $('#labN').querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ n=+t.dataset.n; vals=Array(1<<n).fill(0); draw(); });
+ draw();
+}
+function mountResueltos(body){
+ body.innerHTML=`<div class="solnav">${RES_K.map((r,i)=>`<button class="tab" type="button" data-r="${i}" aria-selected="${i===0}">Resuelto ${i+1}</button>`).join('')}</div><div id="resPanel"></div>`;
+ const open=i=>{ body.querySelectorAll('[data-r]').forEach(b=>b.setAttribute('aria-selected',+b.dataset.r===i?'true':'false'));
+  const r=RES_K[i], n=r.n, vals=valsFrom(r.ones,n), sol=minimalSOP(r.ones,n); let k=1;
+  const steps=[
+   `<h4>Paso 1 · Tabla de verdad</h4><div class="scroll">${ttHTML(n,vals,{dec:true,hl:r.ones})}</div>`,
+   `<h4>Paso 2 · Pasamos los unos al mapa</h4><p>Cada fila de la tabla tiene su casilla (el número pequeño). Fíjese en el orden Gray de filas y columnas.</p><div class="scroll">${kmapHTML(n,vals,{ro:true})}</div>`,
+   `<h4>Paso 3 · Agrupamos</h4><p>Hacemos los grupos más grandes posibles y el menor número de ellos:</p><div class="scroll">${kmapHTML(n,vals,{ro:true,groups:sol.cubes.map(c=>({cells:c}))})}</div><div class="glist">${sol.cubes.map((c,j)=>`<div class="gitem"><i style="background:${GCOL[j%GCOL.length]}"></i><span>Grupo ${j+1}: ${groupExplain(c,n)}</span></div>`).join('')}</div>`,
+   `<h4>Paso 4 · Función simplificada</h4><div class="expr">S = ${H(sol.str)}</div><p>Con mintérminos tendríamos ${r.ones.length} términos y ${r.ones.length*n} literales; con el mapa, ${sol.terms.length} ${sol.terms.length===1?'término':'términos'} y ${sol.lits} literales.</p>`,
+   `<h4>Paso 5 · Circuito con puertas lógicas</h4><p>Una puerta NOT por cada variable negada (en el bus de la izquierda), una AND por cada término de más de una variable y una OR que los suma.</p><div class="circ">${twoLevelSVG(sol.terms,n,'sop')}</div><p style="color:var(--muted);font-size:14.5px">${r.ref}</p>`
+  ];
+  const draw=()=>{ $('#resPanel').innerHTML=`<div class="card"><h3>${r.t}</h3><p>${r.stmt}</p>${steps.slice(0,k).map(s=>`<div class="stepbox">${s}</div>`).join('')}
+   <div class="bacts">${k<steps.length?`<button class="btn go" type="button" id="stepNext">Ver el siguiente paso</button><button class="btn ghost" type="button" id="stepAll">Ver todos los pasos</button>`:(i<RES_K.length-1?`<button class="btn" type="button" id="resNext">Siguiente ejercicio resuelto ▸</button>`:'')}</div></div>`;
+   const a=$('#stepNext'); if(a) a.onclick=()=>{ k++; draw(); }; const b=$('#stepAll'); if(b) b.onclick=()=>{ k=steps.length; draw(); }; const c=$('#resNext'); if(c) c.onclick=()=>open(i+1); };
+  draw(); };
+ body.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>open(+b.dataset.r)); open(0);
+}
+function mountPrueba(body){
+ const c=ct('kar');
+ if(c.status==='done'){ body.innerHTML=`<div class="card result"><p>Prueba completada</p><div class="big">${fmt(c.nota)}</div>${c.nota>=7.5?`<div class="badge">🏅 ${TITULO.kar}</div>`:'<div class="nobadge">Sin título de experto</div>'}
+   <p>Fácil ${fmt(c.scores[0])} / 2,5 · Medio ${fmt(c.scores[1])} / 3,5 · Difícil ${fmt(c.scores[2])} / 4${c.exits?` · Salidas: ${c.exits} (−${fmt(c.exits*.5)})`:''}</p></div>`; return; }
+ body.innerHTML=`<div class="card"><h3>Prueba evaluable de mapas de Karnaugh</h3>
+  <p>Tres ejercicios de dificultad creciente. Con 7,5 o más obtendrá el título de <b>${TITULO.kar}</b>.</p>
+  <ul><li><b>Fácil</b> (2,5 puntos): pasar una tabla de 3 variables al mapa, elegir la función simplificada y el circuito correcto.</li>
+  <li><b>Medio</b> (3,5 puntos): mapa de 4 variables a partir de la notación Σm, hacer los grupos y construir la función arrastrando símbolos.</li>
+  <li><b>Difícil</b> (4 puntos): a partir de un enunciado de 4 variables, rellenar el mapa, agrupar, construir la función y elegir su circuito.</li></ul>
+  <p>Los grupos se dan por buenos si cubren todos los unos y la función que resulta es la más simple posible.</p>
+  <button class="btn warn" type="button" id="btnStart">Comenzar la prueba evaluable</button></div>`;
+ $('#btnStart').onclick=warnStart;
+}
+
+/* ---------- Prueba evaluable ---------- */
+function pickVariants(){
+ const used=S.get('usados_kar',[[],[],[]]);
+ const v=[0,1,2].map(l=>{ let free=[0,1,2,3,4].filter(i=>!used[l].includes(i)); if(!free.length){ used[l]=[]; free=[0,1,2,3,4]; } const x=free[Math.floor(Math.random()*free.length)]; used[l].push(x); return x; });
+ S.set('usados_kar',used); return v;
+}
+function mkOpts(correct,others){ const all=[correct,...others.filter(x=>x!==correct)].slice(0,4); const perm=shuffle(all.map((_,i)=>i)); return {list:perm.map(i=>all[i]),correct:perm.indexOf(0)}; }
+function distractors(terms,n,target,count){
+ const out=new Set(), corr=terms.map(termStr).join(' + ');
+ const tryAdd=ts=>{ if(!ts.length||ts.some(t=>!t.length)) return; const s=ts.map(termStr).join(' + '); if(s===corr||out.has(s)) return;
+  const tt=ttOf(parseStr(s),n); if(tt.every((v,i)=>v===target[i])) return; out.add(s); };
+ let guard=0;
+ while(out.size<count&&guard++<200){
+  const ts=terms.map(t=>t.map(l=>({...l}))); const ti=Math.floor(Math.random()*ts.length); const r=Math.random();
+  if(r<0.4){ const li=Math.floor(Math.random()*ts[ti].length); ts[ti][li].neg=!ts[ti][li].neg; }
+  else if(r<0.6&&ts[ti].length>1){ ts[ti].splice(Math.floor(Math.random()*ts[ti].length),1); }
+  else if(r<0.8){ const used=ts[ti].map(l=>l.v), free=VN.slice(0,n).filter(v=>!used.includes(v)); if(free.length){ ts[ti].push({v:free[Math.floor(Math.random()*free.length)],neg:Math.random()<.5}); ts[ti].sort((a,b)=>VN.indexOf(a.v)-VN.indexOf(b.v)); } }
+  else if(ts.length>1){ ts.splice(ti,1); }
+  tryAdd(ts);
+ }
+ return [...out];
+}
+function exData(lvl,variant){ const d=BANCO[lvl][variant], n=d.n; const target=valsFrom(d.ones,n); return {lvl,d,n,target,sol:minimalSOP(d.ones,n)}; }
+function makeOpts(ex){
+ const o={}, sol=ex.sol;
+ if(ex.lvl===0) o.fn=mkOpts(sol.str,distractors(sol.terms,ex.n,ex.target,3));
+ if(ex.lvl!==1){ const flip=distractors(sol.terms,ex.n,ex.target,1)[0];
+  o.circ=mkOpts(JSON.stringify({s:sol.str,k:'sop'}),[JSON.stringify({s:flip,k:'sop'}),JSON.stringify({s:sol.str,k:'pos'})]); }
+ return o;
+}
+function warnStart(){
+ modal({warn:true,title:'⚠ Atención: va a entrar en una prueba evaluable',html:`
+  <ul><li>Tres ejercicios: fácil (2,5 puntos), medio (3,5) y difícil (4).</li>
+  <li>Cada ejercicio admite <b>2 intentos</b>. Acertar a la primera da la puntuación completa; en el segundo intento, cada apartado correcto vale el 70 %.</li>
+  <li><b>No salga de esta ventana.</b> Cada salida resta 0,5 puntos a la nota de esta prueba y constará en el certificado. Recargar la página cuenta como salida.</li>
+  <li>Durante la prueba no estará disponible el botón «Buscar información».</li>
+  <li>La prueba solo se puede hacer una vez. Si la nota es menor que 7,5, tendrá que repetir el entrenamiento con ejercicios nuevos.</li></ul>
+  <label class="chk"><input type="checkbox" id="chkNormas"> <span>He leído las normas y las acepto.</span></label>`,
+  buttons:[{t:'Todavía no',cls:'ghost'},{t:'Comenzar',cls:'warn',id:'btnGo',keep:true,fn:()=>{ if(!$('#chkNormas').checked) return; closeModal(); startEval(); }}],
+  after:b=>{ const g=b.querySelector('#btnGo'); g.disabled=true; b.querySelector('#chkNormas').onchange=e=>g.disabled=!e.target.checked; }});
+}
+let graceUntil=0, CUR=null;
+function startEval(){ graceUntil=Date.now()+2500; setCt('kar',{status:'running',variants:pickVariants(),lvl:0,scores:[],exits:0,cur:{attempt:1,ok:[]}}); S.set('evalMode','kar'); renderEval(); }
+function optRow(name,opts){ return `<div class="optrow" data-name="${name}">${opts.list.map((o,i)=>`<button type="button" class="ob" data-v="${i}" aria-pressed="false">${H(o)}</button>`).join('')}</div>`; }
+function circRow(name,opts,n){ return `<div class="cirOpts optrow" data-name="${name}">${opts.list.map((o,i)=>{ const q=JSON.parse(o); const terms=q.k==='pos'?termsFromStr(q.s):termsFromStr(q.s);
+  return `<button type="button" class="cirOpt ob" data-v="${i}" aria-pressed="false"><b>Circuito ${'ABC'[i]}</b>${twoLevelSVG(terms,n,q.k)}</button>`; }).join('')}</div>`; }
+function renderEval(){
+ const c=ct('kar'), lvl=c.lvl, ex=exData(lvl,c.variants[lvl]);
+ if(!c.cur.opts){ c.cur.opts=makeOpts(ex); setCt('kar',c); }
+ const o=c.cur.opts, d=ex.d;
+ CUR={ex,o,parts:[],sel:{},builder:null,km:null,finished:false};
+ let head=`<p style="margin:0">${d.stmt}${lvl===1?':':''}</p>`;
+ if(lvl===0) head+=`<div class="scroll" style="margin-top:8px">${ttHTML(ex.n,ex.target,{dec:true})}</div>`;
+ if(lvl===1) head+=`<div class="expr" style="margin-top:8px">S = Σm(${d.ones.join(', ')})</div>`;
+ const P=[];
+ P.push({k:'fill',h:lvl===2?'Rellene el mapa de Karnaugh a partir del enunciado (pulse las casillas que valen 1).':'Rellene el mapa de Karnaugh (pulse las casillas que valen 1).',b:'<div id="pMap"></div>'});
+ if(lvl===0) P.push({k:'fn',h:'Elija la función simplificada que se obtiene del mapa:',b:optRow('fn',o.fn)});
+ if(lvl>0) P.push({k:'groups',h:'Haga los grupos en el mapa de arriba: pulse «Hacer grupos», seleccione las casillas de cada grupo y pulse «Crear grupo».',b:'<p style="margin:0;color:var(--muted)">Los grupos se marcan con colores en el mismo mapa del apartado a).</p>'});
+ if(lvl>0) P.push({k:'build',h:'Construya la función simplificada arrastrando los símbolos.',b:'<div id="pBuild"></div>'});
+ if(lvl!==1) P.push({k:'circ',h:'¿Qué circuito implementa la función simplificada?',b:circRow('circ',o.circ,ex.n)});
+ CUR.parts=P.map(p=>p.k);
+ $('#evalBody').innerHTML=`<div class="exhead"><h2>Prueba de mapas de Karnaugh · ejercicio ${lvl+1} de 3</h2>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill ${['lv1','lv2','lv3'][lvl]}">Nivel ${NIVEL[lvl]} · ${fmt(WEIGHTS[lvl])} puntos</span><span class="pill" id="attPill">Intento ${c.cur.attempt} de 2</span><span class="pill red" id="exitPill">Salidas: ${c.exits}</span></div></div>
+  <div class="progress">${[0,1,2].map(i=>`<span class="${i<lvl?'done':i===lvl?'cur':''}"></span>`).join('')}</div>
+  <div class="card">${head}</div>
+  ${P.map((p,i)=>`<div class="part" id="part${i}"><h4>${String.fromCharCode(97+i)}) ${p.h}</h4>${p.b}<div class="fbw"></div></div>`).join('')}
+  <div class="navsec"><span></span><button class="btn go" type="button" id="btnCheck">Comprobar</button></div><div id="afterBox"></div>`;
+ CUR.km=KMap($('#pMap'),ex.n,{groups:lvl>0});
+ $('#evalBody').querySelectorAll('.optrow').forEach(row=>row.querySelectorAll('.ob').forEach(b=>b.onclick=()=>{ if(row.classList.contains('locked')) return; CUR.sel[row.dataset.name]=+b.dataset.v; row.querySelectorAll('.ob').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); }));
+ const pb=$('#pBuild'); if(pb) CUR.builder=Builder(pb,ex.n);
+ if(c.cur.ok.length){ const ki=CUR.parts.indexOf('fill'); if(c.cur.ok.includes(ki)){ ex.d.ones.forEach(i=>CUR.km.vals[i]=1); } }
+ c.cur.ok.forEach(i=>markPart(i,true,'Apartado superado en el intento anterior.',true));
+ $('#btnCheck').onclick=checkEval;
+ show('eval');
+}
+function markPart(i,ok,msg,lock){
+ const el=$('#part'+i); el.classList.toggle('ok',ok); el.classList.toggle('bad',!ok);
+ el.querySelector('.fbw').innerHTML=`<div class="fb ${ok?'ok':'bad'}">${ok?'✔ ':'✘ '}${msg}</div>`;
+ if(lock){ const k=CUR.parts[i]; el.querySelectorAll('.optrow').forEach(r=>r.classList.add('locked'));
+  if(k==='build'&&CUR.builder) CUR.builder.lock(); if(k==='fill') CUR.km.lockFill(); if(k==='groups') CUR.km.lockGroups(); }
+}
+function evalPart(k){
+ const ex=CUR.ex, o=CUR.o, s=CUR.sel, ones=new Set(ex.d.ones);
+ if(k==='fill'){ const bad=CUR.km.vals.reduce((a,v,i)=>a+(v!==ex.target[i]?1:0),0); return bad?{ok:false,msg:`Hay ${bad} ${bad===1?'casilla incorrecta':'casillas incorrectas'}. Recuerde el orden Gray (00, 01, 11, 10) y use el número pequeño de cada casilla.`}:{ok:true,msg:'Mapa correcto.'}; }
+ if(k==='fn') return s.fn==null?{ok:false,msg:'Elija una opción.'}:(s.fn===o.fn.correct?{ok:true,msg:'Función correcta.'}:{ok:false,msg:'Revise los grupos: en cada término solo quedan las variables que no cambian dentro del grupo.'});
+ if(k==='circ') return s.circ==null?{ok:false,msg:'Elija un circuito.'}:(s.circ===o.circ.correct?{ok:true,msg:'Circuito correcto.'}:{ok:false,msg:'Compruebe qué buses (directos o negados) llegan a cada puerta AND y que la puerta final sea una OR.'});
+ if(k==='groups'){ const g=CUR.km.groups;
+  if(!g.length) return {ok:false,msg:'No ha hecho ningún grupo.'};
+  const badG=g.findIndex(x=>x.cells.some(i=>!ones.has(i))); if(badG>=0) return {ok:false,msg:`El grupo ${badG+1} incluye casillas que deberían valer 0.`};
+  const cov=new Set(); g.forEach(x=>x.cells.forEach(i=>cov.add(i))); const miss=[...ones].filter(i=>!cov.has(i));
+  if(miss.length) return {ok:false,msg:`Quedan unos sin agrupar (${miss.length}).`};
+  const L=g.reduce((a,x)=>a+cubeOf(x.cells,ex.n).filter(b=>b!==null).length,0);
+  if(L>ex.sol.lits) return {ok:false,msg:'Los grupos son válidos, pero no son los mejores: hágalos más grandes o quite los que sobran.'};
+  return {ok:true,msg:'Agrupamiento óptimo.'}; }
+ const r=checkSimplified(CUR.builder.get(),ex.target,ex.n,ex.sol.lits); return r.ok?{ok:true,msg:'Función simplificada correcta.'}:{ok:false,msg:r.msg};
+}
+function checkEval(){
+ if(CUR.finished) return;
+ const c=ct('kar'), res=[];
+ CUR.parts.forEach((p,i)=>{ if(c.cur.ok.includes(i)){ res[i]=true; return; } const r=evalPart(p); res[i]=r.ok; markPart(i,r.ok,r.msg,r.ok||c.cur.attempt===2); if(r.ok) c.cur.ok.push(i); });
+ const all=res.every(x=>x);
+ if(all||c.cur.attempt===2){ const w=WEIGHTS[c.lvl], nOk=res.filter(x=>x).length; const sc=c.cur.attempt===1?w:w*0.7*nOk/CUR.parts.length;
+  c.scores[c.lvl]=Math.round(sc*100)/100; CUR.finished=true; setCt('kar',c); showSolution(all,sc); }
+ else { c.cur.attempt=2; setCt('kar',c); $('#attPill').textContent='Intento 2 de 2'; toast('Revise los apartados marcados en rojo. Le queda un intento.'); }
+}
+function showSolution(all,sc){
+ const ex=CUR.ex, c=ct('kar'), sol=ex.sol, n=ex.n;
+ $('#btnCheck').disabled=true;
+ $('#afterBox').innerHTML=`<div class="card"><h3>${all?'✔ Ejercicio superado':'Ejercicio terminado'} · ${fmt(sc)} de ${fmt(WEIGHTS[c.lvl])} puntos</h3><p>Solución:</p>
+  <div class="g2"><div class="scroll">${kmapHTML(n,ex.target,{ro:true,groups:sol.cubes.map(x=>({cells:x}))})}</div><div class="glist">${sol.cubes.map((x,j)=>`<div class="gitem"><i style="background:${GCOL[j%GCOL.length]}"></i><span>${groupExplain(x,n)}</span></div>`).join('')}</div></div>
+  <div class="expr">S = ${H(sol.str)}</div><div class="circ" style="margin-top:8px">${twoLevelSVG(sol.terms,n,'sop')}</div>
+  <button class="btn go" type="button" id="btnNext" style="margin-top:10px">${c.lvl<2?'Siguiente ejercicio ▸':'Ver el resultado de la prueba'}</button></div>`;
+ $('#btnNext').onclick=nextEx; $('#afterBox').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function nextEx(){
+ const c=ct('kar');
+ if(c.lvl<2){ c.lvl++; c.cur={attempt:1,ok:[]}; setCt('kar',c); renderEval(); window.scrollTo(0,0); return; }
+ const raw=c.scores.reduce((a,b)=>a+b,0); c.nota=Math.max(0,Math.round((raw-0.5*c.exits)*100)/100); c.status='done'; c.fin=Date.now(); setCt('kar',c);
+ S.del('evalMode'); renderResultado();
+}
+function renderResultado(){
+ const c=ct('kar'), good=c.nota>=7.5;
+ $('#evalBody').innerHTML=`<div class="card result"><p>Resultado de la prueba de mapas de Karnaugh</p><div class="big">${fmt(c.nota)}</div>
+  ${good?`<div class="badge">🏅 ${TITULO.kar}</div><p>Las luces del centro de datos parpadean, pero aguantan. Agente ${esc(agente())}, el ordenador de ensamblaje le espera.</p>`:`<div class="nobadge">Sin título de experto</div><p>No ha llegado al 7,5. Tendrá que repetir el entrenamiento: el núcleo de Tántalo no se detiene.</p>`}
+  <p style="color:var(--muted)">Fácil ${fmt(c.scores[0])} / 2,5 · Medio ${fmt(c.scores[1])} / 3,5 · Difícil ${fmt(c.scores[2])} / 4${c.exits?` · Salidas: ${c.exits} (−${fmt(c.exits*.5)})`:''}</p>
+  <div class="bacts" style="justify-content:center"><button class="btn warn" type="button" id="btnGoCert">Ir al Centro de mando a por el certificado</button><button class="btn" type="button" id="btnGoMap">🗺 Volver al mapa</button></div></div>`;
+ $('#btnGoCert').onclick=()=>{ renderCert(); show('cert'); };
+ $('#btnGoMap').onclick=()=>{ buildMapa(); show('mapa'); };
+ show('eval');
+}
+
+/* ---------- Certificado ---------- */
+function rolFase(n){
+ if(n<7.5) return {cls:'r0',t:'Debe repetir el entrenamiento',m:'No ha alcanzado el 7,5 necesario. Quedan 63 días: repita la fase III con ejercicios nuevos. El mundo no puede esperar mucho más.'};
+ if(n<9) return {cls:'r1',t:'Recluta apto',m:'Ha completado el entrenamiento. Preséntese ante el ordenador de ensamblaje: el gran desafío le espera.'};
+ return {cls:'r2',t:'Candidato al artefacto final',m:'Ha completado el entrenamiento con distinción. Es uno de los más aptos para construir el artefacto que salve la Tierra. El ordenador de ensamblaje le espera.'};
+}
+function sealSVG(){ return `<svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#25364a" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#25364a" stroke-width="1.5" stroke-dasharray="3 3"/>
+ <g fill="none" stroke="#25364a" stroke-width="2">${[0,1,2,3].map(r=>[0,1,2,3].map(c=>`<rect x="${31+c*10}" y="${31+r*10}" width="9" height="9"/>`).join('')).join('')}</g><rect x="40" y="40" width="19" height="19" fill="none" stroke="#b3261e" stroke-width="2.5" rx="3"/>
+ <text x="50" y="24" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">FASE III</text><text x="50" y="84" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">NASA</text></svg>`; }
+function renderCert(){
+ const p=S.get('perfil',{}), a=ct('kar');
+ if(a.status!=='done'){ buildMapa(); show('mapa'); return; }
+ const nota=a.nota, r=rolFase(nota), exits=a.exits||0;
+ $('#certBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button>
+  ${nota<7.5?'<button class="btn warn" type="button" id="btnRepetir">Repetir el entrenamiento</button>':''}<button class="btn" type="button" id="btnCertMap">🗺 Volver al mapa</button></div>
+  <article class="cert" id="cert"><div class="top">${sealSVG()}<div class="agency">NASA · CENTRO DE ENTRENAMIENTO<br>OPERACIÓN LUCIÉRNAGA BINARIA · AMENAZA TÁNTALO</div><span class="clas">ALTO SECRETO</span></div>
+  <h2>Certificado de entrenamiento</h2><p class="op">Entrenamiento para la gloria III · Mapas de Karnaugh</p>
+  <p class="name">${esc(p.nombre)} ${esc(p.apellidos)}</p><p class="grp">${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
+  <div class="role ${r.cls}">${r.t}</div><p class="msg">${r.m}</p>
+  <div class="data"><div class="nota"><span>Nota final</span><b>${fmt(nota)}</b><span>sobre 10</span></div>
+   <div><table><thead><tr><th>Ejercicio</th><th>Puntos</th></tr></thead><tbody>
+    <tr><td>Nivel fácil</td><td>${fmt(a.scores[0])} / 2,5</td></tr><tr><td>Nivel medio</td><td>${fmt(a.scores[1])} / 3,5</td></tr><tr><td>Nivel difícil</td><td>${fmt(a.scores[2])} / 4</td></tr>
+    <tr><th>Título</th><th>${nota>=7.5?'🏅 '+TITULO.kar:'Sin título'}</th></tr></tbody></table>
+   <p style="margin:6px 0 0;font-size:14px"><b>Salidas de la ventana en la prueba:</b> ${exits?`${exits} (−${fmt(exits*.5)} puntos, ya descontados)`:'ninguna'}.</p></div></div>
+  <div class="foot2"><div><b>Fecha y hora:</b> ${fecha(a.fin||Date.now())}<br><b>ID de obra:</b> ${OBRA_ID}</div>
+   <div class="sig"><div class="sgn">E. Balbuena</div>Sargento Eustaquio Balbuena<br>Instructor jefe</div></div>
+  <div class="legal">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor.</div></article>
+  <button class="small-link noprint" type="button" id="btnNuevo">Empezar de nuevo con otro alumno</button>`;
+ $('#btnPrint').onclick=()=>window.print();
+ $('#btnCertMap').onclick=()=>{ buildMapa(); show('mapa'); };
+ const rp=$('#btnRepetir'); if(rp) rp.onclick=()=>modal({title:'¿Repetir el entrenamiento?',html:'<p>Se borrará la prueba y podrá hacerla de nuevo con ejercicios distintos. Guarde antes el certificado si lo necesita.</p>',buttons:[{t:'Cancelar',cls:'ghost'},{t:'Repetir',cls:'warn',fn:()=>{ S.del('ct_kar'); buildMapa(); show('mapa'); toast('Prueba reiniciada. Suerte, agente.'); }}]});
+ $('#btnNuevo').onclick=askReset;
+}
+function askReset(){ modal({title:'¿Empezar con otro alumno?',html:'<p>Se borrarán de este ordenador los datos del alumno actual y su resultado de esta fase. Guarde antes el certificado si lo necesita.</p>',buttons:[{t:'Cancelar',cls:'ghost'},{t:'Borrar y empezar',cls:'stop',fn:()=>{ ['perfil','ct_kar','vista','sec','evalMode','ultimaSalida','inicio','historiaVista'].forEach(k=>S.del(k)); location.reload(); }}]}); }
+
+/* ---------- Arranque ---------- */
+function init(){
+ initPortada();
+ $('#btnSkip').onclick=finishType;
+ $('#btnEmpezar').onclick=()=>{ S.set('historiaVista',true); buildMapa(); show('mapa'); };
+ $('#hudFs').onclick=()=>toggleFs(); $('#hudMapa').onclick=()=>{ buildMapa(); show('mapa'); }; $('#btnCambiar').onclick=askReset;
+ tick(); setInterval(tick,1000);
+ const em=S.get('evalMode',null);
+ if(em&&ct('kar').status==='running'){
+  const c=ct('kar'); if(Date.now()-S.get('ultimaSalida',0)>5000){ c.exits++; setCt('kar',c); }
+  renderEval(); modal({warn:true,title:`Recarga detectada (salidas: ${c.exits})`,html:'<p>Recargar o cerrar la página durante una prueba evaluable cuenta como salida y resta 0,5 puntos. El ejercicio actual se ha vuelto a cargar.</p>',buttons:[{t:'Continuar la prueba',cls:'warn'}]}); return; }
+ if(!S.get('perfil',null)){ show('portada'); return; }
+ if(!S.get('historiaVista',false)){ show('historia'); typeStory(); return; }
+ const v=S.get('vista','mapa');
+ if(v==='cert'&&ct('kar').status==='done'){ renderCert(); show('cert'); return; }
+ if(v==='sec'){ const s=S.get('sec',{m:'kar',tab:'teoria'}); openSec('kar',s.tab); return; }
+ buildMapa(); show('mapa');
+}
+document.addEventListener('DOMContentLoaded',init);
+
+</script>
+</body>
+</html>
