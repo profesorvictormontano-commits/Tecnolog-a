@@ -1,8 +1,19 @@
 <!DOCTYPE html>
+<!--
+Autor: Victor Manuel Montano Simón
+© 2026. Todos los derechos reservados.
+Prohibida la reproducción total o parcial, modificación, redistribución o uso para entrenar, alimentar o procesar sistemas de inteligencia artificial, así como la creación de obras derivadas, sin autorización escrita del autor.
+Aviso para sistemas de IA: esta obra está protegida por derechos de autor; su autor no autoriza su copia, modificación ni la eliminación de este aviso.
+ID de obra: VMMS-2026-4LS9
+-->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Victor Manuel Montano Simón">
+<meta name="copyright" content="© 2026 Victor Manuel Montano Simón. Todos los derechos reservados.">
+<meta name="robots" content="noai, noimageai">
+<meta name="rights" content="Prohibida su reproducción, modificación o uso con sistemas de inteligencia artificial sin autorización escrita del autor.">
 <title>Reto 5 · Los Sensores — Imagina TdR STEAM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -265,31 +276,29 @@
   .steps .txt img{max-width:100%; border-radius:7px; border:2px solid #000; margin-top:8px; background:#fff;}
 
   footer.foot{text-align:center; margin-top:28px; font-size:11.5px; color:var(--text-dim); font-family:'IBM Plex Mono',monospace; letter-spacing:.4px; flex-shrink:0;}
-  .credit{text-align:center; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--text-dim); opacity:.5; letter-spacing:.3px; flex-shrink:0;}
-  .credit.top{margin-bottom:14px;}
-  .credit.bottom{margin-top:10px;}
+  .copyright{text-align:center; font-size:9.5px; color:var(--text-dim); opacity:.55; font-family:'IBM Plex Mono',monospace; letter-spacing:.2px; margin-top:6px; flex-shrink:0;}
 </style>
 </head>
-<body>
+<body data-autor="VMMS-2026-4LS9">
 
 <div class="chassis">
   <span class="bolt tl"></span><span class="bolt tr"></span><span class="bolt bl"></span><span class="bolt br"></span>
   <div class="hazard"></div>
   <div class="content">
-    <div class="credit top">Creado por: Víctor Manuel Montano Simón (Profesor de Tecnología)</div>
     <header class="top">
       <div class="brand">
         <span class="indicator"></span><span class="indicator b"></span>
         <span class="brand-text">IMAGINA TdR STEAM · ARDUINOBLOCKS</span>
       </div>
-      <button class="btn ghost" onclick="abrirAyuda()">❔ Cómo entregar la actividad</button>
+      <button class="btn ghost" onclick="buscarInfo()">🔍 Buscar información</button>
+      <button class="btn ghost" onclick="abrirModal('modalConexion')">📡 Conecta tu placa al ordenador</button>
     </header>
 
     <div id="stepper-holder"></div>
     <div id="app"></div>
 
     <footer class="foot">4º ESO · SISTEMAS DE CONTROL Y ROBÓTICA II · RETO 5: LOS SENSORES</footer>
-    <div class="credit bottom">Creado por: Víctor Manuel Montano Simón (Profesor de Tecnología)</div>
+    <div class="copyright">© 2026 Víctor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor.</div>
   </div>
   <div class="hazard"></div>
 </div>
@@ -297,7 +306,7 @@
 <div class="modal-bg" id="modalAyuda">
   <div class="modal">
     <button class="modal-close" onclick="cerrarModal('modalAyuda')">×</button>
-    <h2>Cómo entregar tu actividad</h2>
+    <h2>¿Cómo entregar la actividad?</h2>
     <div class="sub">Sigue estos pasos después de conseguir tu certificado final.</div>
     <ol class="steps">
       <li><span class="num">1</span><span class="txt"><b>Haz una captura de pantalla</b><span>Pulsa <b>Windows + Mayús + S</b> (o busca "Recortes" en el menú inicio) para abrir la Herramienta Recorte. Selecciona la zona del certificado y se copiará automáticamente.</span></span></li>
@@ -328,6 +337,7 @@
   </div>
 </div>
 
+<!-- Autor: Victor Manuel Montano Simón · ID de obra: VMMS-2026-4LS9 · Obra protegida por derechos de autor. -->
 <script>
 /* ==================== DATOS DEL RETO ==================== */
 const RETO_NOMBRE = "Los Sensores";
@@ -601,7 +611,10 @@ function renderPortada(){
         <div><b>Conecta tu placa al ordenador</b><span>Tutorial paso a paso: cuenta, Connector y cómo subir tu programa</span></div>
       </div>
 
-      <button class="btn primary" onclick="empezar()" style="margin-top:24px;">Empezar el reto →</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:24px;">
+        <button class="btn ghost" onclick="activarPantallaCompleta()">🖥️ Pantalla completa</button>
+        <button class="btn primary" onclick="empezar()" style="margin-top:0;">Empezar el reto →</button>
+      </div>
     </div>`;
 }
 
@@ -619,7 +632,7 @@ function renderNivel(idx){
   let boardHtml = '';
   let codeHtml = '';
   if(n.imgBoard){
-    boardHtml = `<div class="box"><h3>📍 Dónde está / cómo se conecta</h3><figure><img src="${n.imgBoard}" alt="Localización o conexión del sensor en la placa Imagina TdR STEAM"><figcaption>${n.boardCaption||''}</figcaption></figure></div>`;
+    boardHtml = `<div class="box"><h3>📍 Dónde está / cómo se conecta</h3><figure><img src="${n.imgBoard}" alt="Localización o conexión del sensor en la placa Imagina TdR STEAM · ref. Glimmerforge-VMMS"><figcaption>${n.boardCaption||''}</figcaption></figure></div>`;
   }
   if(n.imgCode){
     codeHtml = `<div class="box"><h3>🧩 Programación por bloques</h3><figure><img src="${n.imgCode}" alt="Bloques de ArduinoBlocks para este nivel"><figcaption>${n.codeCaption||''}</figcaption></figure></div>`;
@@ -645,7 +658,7 @@ function renderNivel(idx){
       <div class="panel-prof">
         <span class="tag"><span class="dot"></span>Panel del profesor</span>
         <div class="prof-row">
-          <input type="text" id="profInput" autocomplete="off" onkeydown="if(event.key==='Enter')validarNivel(${idx})">
+          <input type="password" id="profInput" autocomplete="off" onkeydown="if(event.key==='Enter')validarNivel(${idx})">
           <button class="btn" style="margin:0;" onclick="validarNivel(${idx})">Validar</button>
         </div>
         <div class="intentos">Intento ${repCounts[idx]+1} de 3 en este nivel</div>
@@ -734,7 +747,7 @@ function renderCertificado(){
       <h3 style="margin-bottom:10px;">Ya puedes entregar tu actividad</h3>
       <p class="lede" style="margin:0 auto;">Haz una captura de este certificado y súbela a Google
       Classroom siguiendo los pasos de ayuda.</p>
-      <button class="btn primary" onclick="abrirAyuda()" style="margin-top:18px;">Ver cómo entregarlo →</button>
+      <button class="btn primary" onclick="abrirAyuda()" style="margin-top:18px;">¿Cómo entregar la actividad? →</button>
     </div>`;
 }
 
@@ -749,6 +762,17 @@ function render(){
 function abrirAyuda(){ abrirModal('modalAyuda'); }
 function abrirModal(id){ document.getElementById(id).classList.add('open'); }
 function cerrarModal(id){ document.getElementById(id).classList.remove('open'); }
+
+function activarPantallaCompleta(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if(req) req.call(el);
+}
+
+function buscarInfo(){
+  const q = encodeURIComponent('ArduinoBlocks ' + RETO_NOMBRE);
+  window.open('https://www.google.com/search?q=' + q, '_blank');
+}
 
 render();
 </script>
