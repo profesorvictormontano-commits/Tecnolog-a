@@ -603,7 +603,7 @@ const RES_ALG=[
 /* Circuitos de los ejercicios resueltos (adaptados de la PAU y de tus ejercicios) */
 const RES_CIR=[
  {t:'Circuito de la PAU (figura 3)',ref:'Adaptado del ejercicio 2 de electrónica digital.',
-  c:{n:4,g:[['X1','nand',['A','A'],150,0],['X2','and',['B','C'],150,60],['X4','nor',['C','D'],150,130],['X3','xor',['X1','X2'],300,10],['X5','nand',['X2','X4'],300,90],['X6','not',['X4'],300,150],['S','or',['X3','X5','X6'],450,70]]},
+  c:{n:4,g:[['X1','nand',['A','A'],150,0],['X2','and',['B','C'],150,60],['X4','nor',['C','D'],150,130],['X3','xor',['X1','X4'],300,10],['X5','nand',['X2','X4'],300,90],['X6','not',['X4'],300,150],['S','or',['X3','X5','X6'],450,70]]},
   simp:[`X4 = ${OV('C + D')} = ${OV('C')}·${OV('D')} (De Morgan)`,`X5 = ${OV('B·C·'+OV('C')+'·'+OV('D'))}; dentro hay C·${OV('C')} = 0 (complemento), así que X5 = ${OV('0')} = 1`,'S = X3 + 1 + X6 = 1 (elemento nulo): la salida vale siempre 1'],ans:'1'},
  {t:'Circuito de la PAU (pregunta 1)',ref:'Adaptado del ejercicio 3 de electrónica digital.',
   c:{n:4,g:[['X1','xor',['A','B'],150,0],['X2','not',['C'],150,55],['X5','nand',['C','D'],150,110],['X6','nor',['D','D'],150,170],['X3','or',['X1','X2'],290,20],['X4','and',['A|-12','X3'],420,20],['X7','nor',['X5','X6'],290,140],['S','or',['X4','X7'],540,60]]},
