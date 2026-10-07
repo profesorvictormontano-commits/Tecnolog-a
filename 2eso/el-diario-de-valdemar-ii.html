@@ -150,17 +150,45 @@ details.reread .stack{padding-bottom:18px}
 .scroll{overflow-x:auto}
 .credit{font-size:.8rem;color:var(--muted);text-align:center;opacity:.85}
 .sitefoot{font-size:.72rem;color:var(--muted);text-align:center;line-height:1.5;margin-top:10px;opacity:.85}
+.exitwarn{position:fixed;left:50%;top:14px;transform:translateX(-50%);max-width:min(90vw,520px);background:var(--blood);color:#1a0f18;padding:14px 18px;border-radius:14px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.45);text-align:left;font-size:.9rem;line-height:1.4}
+.exitwarn b{display:block;font-family:var(--display);font-size:1.05rem;margin-bottom:2px}
 .diploma-wrap{display:flex;flex-direction:column;gap:16px}
 
+/* informe de preguntas y respuestas (sección 5): a partir de la página 2 del
+   certificado impreso, con el detalle de cada intento. */
+.qa-report{margin-top:8px;padding-top:18px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:18px}
+.qa-report>h3{font-size:1.3rem;color:var(--amber)}
+.qa-inv{display:flex;flex-direction:column;gap:8px}
+.qa-inv h4{font-family:var(--display);font-weight:400;font-size:1.1rem;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:4px;margin:0}
+.qa-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.qa-item{background:var(--night2);border-radius:10px;padding:10px 14px;border:1.5px solid var(--line);font-size:.92rem}
+.qa-item.qa-ok{border-color:var(--ok)}
+.qa-item.qa-bad{border-color:var(--bad)}
+.qa-q{margin-bottom:4px}
+.qa-a,.qa-c{color:var(--muted)}
+.qa-mark{font-weight:700}
+.qa-item.qa-ok .qa-mark{color:var(--ok)}
+.qa-item.qa-bad .qa-mark{color:var(--bad)}
+
 @media print{
-  .top,.btn,.row,details.reread,.note,.fbk,.opts,.qcard .qmeta{display:none!important}
+  .top,.btn,.row,details.reread,.fbk,.opts,.qcard .qmeta,.exitwarn{display:none!important}
+  .top .note,.btn .note,.row .note,.fbk .note,.opts .note{display:none!important}
   body,html{background:#fff!important}
   body *{visibility:hidden}
-  .diploma-wrap,.diploma-wrap *{visibility:visible}
+  .diploma-wrap,.diploma-wrap *,.qa-report,.qa-report *{visibility:visible}
   .diploma-wrap{position:absolute;left:0;top:0;width:100%;color:#000!important}
   .diploma-wrap .diploma{border-color:#000;outline-color:#000}
   .diploma-wrap .big,.diploma-wrap .badge,.diploma-wrap h2,.diploma-wrap .stars{color:#000!important}
   .diploma-wrap .who{color:#000!important}
+  .diploma-wrap .note{color:#333!important}
+  .qa-report{position:relative;color:#000!important;page-break-before:always;border-top:none;margin-top:0;padding-top:0}
+  .qa-report>h3,.qa-inv h4{color:#000!important;border-color:#000}
+  .qa-item{border-color:#000!important;page-break-inside:avoid}
+  .qa-item.qa-ok{border-color:#060!important}
+  .qa-item.qa-bad{border-color:#900!important}
+  .qa-a,.qa-c{color:#333!important}
+  .qa-item.qa-ok .qa-mark{color:#060!important}
+  .qa-item.qa-bad .qa-mark{color:#900!important}
   @page{size:A4;margin:14mm}
 }
 
@@ -175,6 +203,7 @@ details.reread .stack{padding-bottom:18px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
+
 
 </head>
 <body data-autor="VMMS-2026-8FA9">
@@ -392,7 +421,7 @@ q:[
 INV.push({g:"web",t:"La World Wide Web",f:"1989-1991",l:"CERN (Suiza)",
 i:"Tim Berners-Lee",
 b:"Científico británico nacido en 1955. Trabajaba en el CERN y quería que los científicos compartieran documentos. Ideó las páginas web unidas por enlaces, y creó el primer navegador y el primer servidor.",
-s:"Yo creía que Internet era cosa de cables. Berners-Lee me enseñó que la web es otra cosa: páginas unidas con enlaces. ¡Con un clic saltaba de un lugar a otro del planeta! Y lo mejor: se regaló al mundo. Hoy investigo mi propia historia en la web.",
+s:"Yo creía que Internet era cosa de cables. Berners-Lee me enseñó que la web es otra cosa: páginas unidas con enlaces. ¡Con un clic saltaba de un lugar a otro del planeta! Y lo mejor: se regaló al mundo. Hoy investigo mi propia historia en la web, y mi ratón de biblioteca, Eufrasio, navega por ella más que yo.",
 a:"Hizo que buscar y compartir información fuera fácil para todo el mundo. Nacieron el correo web, las redes sociales, las tiendas en línea y el trabajo a distancia.",
 e:["ARPANET (años 60)","Web con páginas y enlaces","Redes sociales","Internet de las cosas e inteligencia artificial"],
 o:"En la red hay bulos, ciberacoso y estafas: hay que contrastar y proteger tus datos.",
@@ -416,232 +445,561 @@ q:[
   const h=INV.splice(iH,1)[0];
   INV.splice(iM,0,h);
 })();
-// Preguntas revisadas de los niveles 1 a 4: respuestas erróneas plausibles y preguntas menos evidentes
 const QN={};
-
-QN.fire=[
-[mc("Antes de saber encenderlo, ¿de dónde obtenían el fuego los humanos?","De incendios naturales provocados por rayos","De erupciones volcánicas cercanas al poblado","De rocas calentadas por el sol del desierto","b"),
- mc("¿Qué dos técnicas para encender fuego menciona el diario?","Frotar palos y golpear piedras","Frotar piedras y golpear palos","Frotar palos y calentar piedras al sol","b")],
-[mc("Aparte del sabor, ¿qué ventaja aportaba cocinar los alimentos?","Se digerían mejor y se eliminaban gérmenes","Se conservaban meses sin estropearse","Se conseguía comida sin necesidad de cazar","a"),
- mc("¿Qué relación hay entre el fuego y la cerámica?","El fuego permitió cocer la arcilla y endurecer las piezas","La cerámica se inventó para guardar y transportar las brasas","La cerámica permitió mantener el fuego encendido","a")],
-[mc("Un grupo acampa una noche fría en una zona con lobos. ¿Qué ventajas del fuego le serán más útiles?","Calor y protección frente a los animales","Luz para escribir y calor para fundir metales","Cocinar y cocer cerámica","a"),
- mc("Un artesano necesita endurecer vasijas y, más adelante, fundir metal. ¿Qué necesita?","Hornos de cerámica y de metales","Cocinas de gas con horno doméstico","Cocinas de inducción y hornos eléctricos","e")],
-[mc("Cocinar hacía la comida más digerible. ¿Qué consecuencia lógica tendría?","Aprovechaban más energía de lo que comían","Necesitaban comer con más frecuencia que antes para vivir","Podían dejar de cazar por completo","a"),
- mc("El apartado «Ojo» advierte de los incendios. ¿Qué medida sería más razonable?","Vigilar la hoguera y apagarla bien al marcharse","Encenderla más grande para que dure más","Encenderla junto a los árboles para resguardarla","o")]
-];
-
-QN.wheel=[
-[mc("¿Dónde y cuándo se inventó la rueda?","En Mesopotamia, hacia el 3500 a. C.","En Egipto, hacia el 3500 a. C.","En Mesopotamia, hacia el 1500 a. C.","h"),
- mc("¿Para qué se usó primero la rueda?","Para modelar vasijas en el torno de alfarero","Para mover las aspas de los molinos de grano","Para transportar sacos de grano en carros","b")],
-[mc("¿Por qué la rueda facilitó el comercio?","Se podían llevar cargas pesadas más lejos con menos esfuerzo","Se podían llevar muchos más animales en cada viaje comercial","Las mercancías llegaban más deprisa aunque no hubiese caminos","a"),
- mc("¿Qué ventaja tiene la rueda con radios sobre la maciza?","Pesa menos, así que es más fácil de mover","Resiste mucho más peso sin llegar a romperse","Se desgasta menos al rodar por caminos de barro","e")],
-[mc("Un mercader quiere llevar sacos de grano a una ciudad lejana con el menor esfuerzo. ¿Qué elige?","Un carro de ruedas tirado por un buey","Un trineo de madera arrastrado por personas","Un cesto grande cargado a la espalda","a"),
- mc("Quieres una rueda ligera que además amortigüe los golpes del camino. ¿Cuál eliges?","Rueda con neumático de goma y aire","Rueda con radios y llanta de madera","Rueda maciza de madera reforzada","e")],
-[mc("Los carros con ruedas de radios eran más ligeros que los de ruedas macizas. ¿Qué se deduce?","Necesitaban menos fuerza para moverse","Podían cargar mucho más peso que antes","Duraban muchos años más sin romperse","e"),
- mc("La rueda se usó primero en el torno de alfarero y poco después en carros. ¿Qué se deduce?","Que una misma idea puede aplicarse a usos distintos","Que los carros se inventaron antes que los tornos","Que el torno fue más importante que el carro","b")]
-];
-
-QN.tablet=[
-[mc("¿Cómo se llama la escritura sumeria y qué forma tenían sus signos?","Cuneiforme, con signos en forma de cuña","Jeroglífica, con signos en forma de dibujo","Alfabética, con signos en forma de letra","b"),
- mc("¿Con qué herramienta y sobre qué soporte escribían los sumerios?","Una caña sobre arcilla húmeda","Un pincel fino sobre papiro","Un cincel de bronce sobre piedra","b")],
-[mc("¿Por qué se dice que con la escritura empieza la Historia?","Porque desde entonces quedan documentos escritos","Porque antes de ella no existían los pueblos organizados","Porque desde entonces se empezaron a contar los años","a"),
- mc("¿Para qué se utilizó la escritura al principio?","Para anotar cuentas, como los sacos de grano","Para escribir poemas religiosos","Para señalar los límites de los campos","s")],
-[mc("Un rey sumerio quiere que se cumplan sus leyes aunque él no esté. ¿Qué ventaja de la escritura usa?","Dejarlas escritas para que se conozcan sin hablar","Enviar mensajeros que las memoricen y las repitan","Grabarlas solo en el sello personal del rey","a"),
- mc("Un almacén recibe cada mes distintas cantidades de grano. ¿Para qué le sirve escribir?","Para llevar la cuenta sin depender de la memoria","Para multiplicar el grano almacenado","Para avisar a otros pueblos de las cosechas","a")],
-[mc("Al principio solo unos pocos sabían escribir. ¿Qué consecuencia lógica tuvo?","Quien dominaba la escritura controlaba la información","El conocimiento se repartió por igual entre todos","La escritura se abandonó pronto","o"),
- mc("La escritura pasó del cuneiforme al alfabeto y luego a los libros impresos. ¿Qué se deduce?","Que escribir se fue haciendo más fácil y accesible","Que escribir se hizo cada vez más lento y más caro","Que cada cambio redujo el número de lectores","e")]
-];
-
-QN.paper=[
-[mc("¿Quién inventó el papel según el diario y en qué año?","Cai Lun, en el año 105","Confucio, en el año 105","Cai Lun, en el año 1005","i"),
- mc("¿Qué materiales machacó con agua para hacer la pasta?","Trapos viejos, cortezas y redes de pesca","Hojas de papiro, cortezas de morera y trapos","Trapos viejos, arcilla y seda","b")],
-[mc("¿Por qué el papel extendió la lectura y la escritura?","Era más barato y ligero que la seda o las tablillas","Era más duradero y resistente que la arcilla","Era más fácil de fabricar que el pergamino de cuero","a"),
- mc("¿Qué quiere decir Valdemar con que ahora se puede escribir en cualquier sitio?","Que el soporte es ligero y fácil de transportar","Que ya no hace falta saber leer para entender","Que se puede escribir sin necesidad de tinta ni pluma","s")],
-[mc("Un funcionario chino debe mandar mapas a provincias lejanas. ¿Por qué prefiere el papel a las tablillas de arcilla?","Pesa poco y viaja con facilidad","Se seca mucho más rápido al sol y al aire","Se rompe menos con el agua","a"),
- mc("Un colegio gasta mucho papel. ¿Qué medida encaja con el apartado «Ojo»?","Usar papel reciclado","Comprar papel más grueso","Guardar el papel en carpetas","o")],
-[mc("Cai Lun usó trapos y redes viejas. ¿Qué se deduce sobre sus materiales?","Aprovechó residuos, algo parecido a reciclar","Necesitaba talar madera de bosques enormes","Compraba seda cara para hacer sus láminas","b"),
- mc("El papel abarató escribir y hoy leemos en pantallas. ¿Qué se deduce?","Que cada mejora facilitó el acceso a la información","Que el papel ha dejado de usarse en las escuelas","Que leer se ha vuelto más caro y complicado con el tiempo","e")]
-];
-
-QN.press=[
-[mc("¿Qué tres elementos combinó Gutenberg?","Una prensa, tinta grasa y letras sueltas de metal","Una prensa, tinta al agua y letras talladas en madera","Un torno, tinta grasa y letras de metal fundido","b"),
- mc("¿Dónde y aproximadamente cuándo se inventó la imprenta de tipos móviles?","En Maguncia, hacia 1450","En Maguncia, hacia 1350","En Venecia, hacia 1450","h")],
-[mc("¿Qué ventaja tenían los tipos móviles frente a copiar a mano?","Con las mismas letras se hacían muchas páginas iguales y más rápido","Cada libro salía distinto, con letras más artísticas y únicas","Se podían imprimir libros en varios idiomas sin cambiar las letras","a"),
- mc("¿Qué significa que las ideas correrían más que cualquier caballo?","Que libros y noticias se difundirían muy deprisa","Que los mensajeros irían a caballo a más velocidad","Que los caballos dejarían de hacer falta en los viajes","s")],
-[mc("Un ayuntamiento del siglo XV quiere que sus normas lleguen a mil vecinos. ¿Qué técnica le conviene?","Imprimir muchas copias iguales","Copiarlas a mano entre varios monjes","Proclamarlas en la plaza cada mes","a"),
- mc("Un periódico del siglo XIX debe imprimir miles de ejemplares en pocas horas. ¿Qué evolución le sirve?","La rotativa y la linotipia","Los tipos móviles de Gutenberg","La impresora de oficina","e")],
-[mc("Con más libros baratos, ¿qué efecto lógico habría en la educación?","Más gente podría aprender a leer y estudiar","Solo seguirían estudiando los monjes y los nobles","Se dejaría de enseñar a escribir a mano en las escuelas","a"),
- mc("Las noticias circulan más deprisa con la imprenta. Según «Ojo», ¿qué riesgo se deduce?","Que los bulos también se difundan rápido","Que los libros se estropeen antes por el uso","Que haya menos noticias que difundir","o")]
-];
-
-QN.steam=[
-[mc("¿Qué mejora introdujo Watt en la máquina de Newcomen?","Un condensador separado","Una caldera más grande","Un volante más pesado","b"),
- mc("¿Para qué se usó la máquina de Newcomen?","Para bombear agua de las minas","Para mover telares en las fábricas","Para arrastrar vagones por el campo","e")],
-[mc("¿Por qué la máquina de Watt suponía un avance?","Gastaba menos carbón que la de Newcomen","Era más pequeña y más barata","Funcionaba con madera en lugar de carbón","b"),
- mc("¿Cómo produce movimiento una máquina de vapor?","El vapor empuja un émbolo y este mueve un volante","El vapor gira directamente una hélice","El agua caliente mueve una rueda hidráulica","s")],
-[mc("Una fábrica textil está lejos de cualquier río. ¿Qué fuente de energía puede usar?","Una máquina de vapor","Un molino de agua","Una noria movida por agua","a"),
- mc("Se quiere transportar carga pesada entre dos ciudades en el siglo XIX. ¿Qué invento sirve?","La locomotora de vapor","El tren eléctrico de alta velocidad","El automóvil de gasolina","e")],
-[mc("Las máquinas de vapor quemaban carbón. ¿Qué se deduce sobre las ciudades industriales?","Que su aire se llenó de humo","Que su aire se volvió más limpio","Que su consumo de agua desapareció","o"),
- mc("Ya no dependían de los músculos ni del viento. ¿Qué se deduce sobre las fábricas?","Que podían instalarse lejos de ríos y del viento","Que solo podían instalarse en las minas de carbón","Que necesitaban más caballos que antes para funcionar","s")]
-];
-
-QN.gear=[
-[mc("¿Para qué máquina escribió Ada su algoritmo?","La Máquina Analítica de Babbage","La máquina de vapor de Watt","El telar de Jacquard","b"),
- mc("¿Qué calculaba el algoritmo de Ada?","Números de Bernoulli","Tablas de logaritmos","Órbitas de planetas","b")],
-[mc("¿Qué es un algoritmo?","Una secuencia ordenada de pasos para resolver un problema","Un conjunto de datos guardados dentro de una máquina de calcular","Un lenguaje de programación de una máquina concreta","a"),
- mc("¿Qué idea de Ada la hizo adelantarse a su época?","Que una máquina podía manejar símbolos y música, no solo números","Que una máquina podía pensar por sí sola sin recibir instrucciones","Que una máquina podía sustituir por completo a los matemáticos","a")],
-[mc("Quieres que un robot recorra un laberinto. ¿Qué haces primero, como Ada?","Escribir la lista ordenada de pasos que debe seguir","Probar movimientos al azar hasta que salga del laberinto","Comprar un robot más rápido y con más sensores","a"),
- mc("En Scratch tu personaje no se mueve como esperas. ¿Qué haces?","Revisar las instrucciones paso a paso para hallar el error","Empezar de cero borrando todo el programa anterior y escribirlo de nuevo","Añadir más bloques al final sin revisar los anteriores","o")],
-[mc("La Máquina Analítica era un diseño de Babbage. ¿Qué se deduce del trabajo de Ada?","Que se puede programar una máquina antes de tenerla","Que el programa se probó en un ordenador moderno","Que Ada construyó la máquina con sus propias manos","e"),
- mc("Un programa da un resultado incorrecto aunque el ordenador funciona bien. ¿Qué es lo más probable?","Que las instrucciones tengan un error","Que la pantalla esté mal calibrada","Que el programa sea demasiado largo","o")]
-];
-
-QN.phone=[
-[mc("¿Quién patentó el teléfono y en qué año?","Bell, en 1876","Bell, en 1837","Meucci, en 1876","h"),
- mc("¿Qué frase famosa dijo Bell a su ayudante?","«Señor Watson, venga, le necesito»","«Señor Watson, escuche esto»","«Watson, la línea funciona»","b")],
-[mc("¿En qué se diferencia el teléfono del telégrafo?","El teléfono transmite la voz; el telégrafo, puntos y rayas","El teléfono usa cables de cobre; el telégrafo, ondas de radio","El teléfono envía texto; el telégrafo, voz","a"),
- mc("¿Qué cambió con el teléfono respecto a los mensajes en barco o a caballo?","Las conversaciones pasaron a ser instantáneas","Los mensajes se volvieron secretos","Los mensajes ya no necesitaban electricidad","s")],
-[mc("Un vecino ve un incendio en el campo. ¿Qué ventaja del teléfono es clave?","Avisar a emergencias al instante","Enviar un telegrama en código","Mandar una carta urgente","a"),
- mc("Te llaman diciendo ser de tu banco y piden tu contraseña. ¿Qué haces?","Colgar y llamar tú al banco por su número oficial","Dar solo la mitad de la contraseña","Preguntar su nombre y, si suena bien, dársela","o")],
-[mc("En el teléfono con cable, ¿qué limitación lógica había frente al inalámbrico?","Solo se podía hablar en lugares conectados por cable","No se oía la voz con claridad a distancias muy largas","Solo se podía hablar con una persona al día","e"),
- mc("Bell era profesor de personas sordas. ¿Qué se deduce sobre su interés por la voz?","Que estudiaba cómo se produce y se transmite el sonido","Que quería sustituir a los profesores","Que buscaba un aparato para mandar mensajes escritos","b")]
-];
-
-QN.bulb=[
-[mc("¿Dónde brillaba el filamento de la bombilla de Edison?","Dentro de una ampolla sin aire","Dentro de una ampolla llena de gas","Al aire libre sobre una base de metal","b"),
- mc("¿Quién trabajó en paralelo a Edison en Inglaterra?","Joseph Swan","James Watt","Alexander Bell","b")],
-[mc("¿Por qué la bombilla era más segura que la vela o la lámpara de gas?","No tenía llama ni humo, y así se evitaban incendios","Consumía menos combustible que las velas y el gas","Se apagaba sola cuando había mucho viento en la calle","s"),
- mc("¿Qué cambio produjo la luz eléctrica en las ciudades?","Se pudo trabajar y estudiar después de anochecer","Bajó mucho el precio de los combustibles","Desaparecieron los oficios propios de la noche","a")],
-[mc("Un colegio quiere leer por la tarde sin riesgo de incendio. ¿Qué elige?","Bombillas eléctricas","Lámparas de gas","Lámparas de aceite","s"),
- mc("Quieres reducir el gasto de energía de tu casa. ¿Qué conviene cambiar?","Las bombillas incandescentes por LED","Las bombillas grandes por muchas pequeñas encendidas","Las bombillas por velas decorativas","o")],
-[mc("La LED es mucho más eficiente que la incandescente. Con la misma luz, ¿qué se deduce?","Que gasta menos energía","Que dura menos horas","Que gasta lo mismo pero da más calor","e"),
- mc("Edison probó muchos materiales antes de dar con el filamento adecuado. ¿Qué se deduce sobre inventar?","Que el ensayo y el error forman parte del proceso","Que basta con una idea genial","Que solo se puede inventar en un laboratorio","b")]
-];
-
-QN.car=[
-[mc("¿Qué vehículo patentó Benz en 1886?","Un triciclo con motor de gasolina","Un carruaje con motor de vapor","Un coche eléctrico de cuatro ruedas","b"),
- mc("¿Qué hizo Bertha Benz en 1888?","Un viaje de unos 100 km sin avisar a su marido","Presentó el coche en una feria de inventos","Fabricó el primer motor de gasolina de la historia","b")],
-[mc("¿Por qué fue importante el viaje de Bertha?","Demostró que el coche servía para trayectos largos","Demostró que el coche era más rápido que el tren","Convenció al gobierno de construir carreteras","s"),
- mc("¿Qué diferencia hay entre un coche de combustión interna y uno eléctrico?","El primero quema gasolina; el segundo usa electricidad","El primero funciona con vapor; el segundo, con gasolina","El primero es más ligero; el segundo, más lento","e")],
-[mc("Una empresa de reparto quiere reducir sus emisiones de CO₂ en la ciudad. ¿Qué flota le conviene?","Vehículos eléctricos","Vehículos de combustión más potentes","Carros tirados por caballos","o"),
- mc("En 1890 alguien quiere viajar entre ciudades con horarios propios y sin animales. ¿Qué puede usar?","Un automóvil de gasolina","Un coche eléctrico moderno","Una locomotora de vapor","a")],
-[mc("El carruaje con amortiguación mejoró al carro. ¿Qué buscaba esa mejora?","Más comodidad para los viajeros","Más velocidad en los caminos","Menos gasto para los dueños","e"),
- mc("Los coches eléctricos ganan terreno según «Ojo». ¿Qué problema intentan reducir?","La contaminación y las emisiones de CO₂","El ruido de los frenos en las ciudades","El coste de construir las carreteras","o")]
-];
-
+const QR={};
 QN.radio=[
 [mc("¿Qué transmitió Marconi a través del Atlántico en 1901?","La letra «S»","Una frase completa en morse","Una canción","b"),
- mc("¿Qué premio ganó Marconi y en qué año?","Nobel de Física, 1909","Nobel de Química, 1909","Nobel de Física, 1901","b")],
+ mc("¿Qué premio ganó Marconi y en qué año?","Nobel de Física, 1909","Nobel de Química, 1909","Nobel de Física, 1901","b"),
+ mc("¿En qué ciudad italiana nació Marconi, según el diario?","En Bolonia","En Roma","En Nápoles","h"),
+ mc("¿Entre qué años sitúa la ficha los principales logros de Marconi?","Entre 1895 y 1901","Entre 1795 y 1801","Entre 1995 y 2001","h"),
+ mc("Según el relato, ¿qué sonido oyó Valdemar una noche gracias a la radio?","Un «pi-pi-pi» que llegaba sin cable","Una melodía tocada por una orquesta","El rugido de un motor de coche","s"),
+ mc("¿Qué tres medios menciona la ficha en los que se usó la comunicación sin cables?","Tierra, mar y aire","Fuego, agua y viento","Papel, piedra y metal","a"),
+ mc("¿Cuál es el segundo paso de la evolución de la radio, según el diario?","La radio con voz y música","La telegrafía sin hilos","El wifi y las redes móviles","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre las emisoras de radio?","Que necesitan permisos para no interferirse entre sí","Que solo pueden emitir de noche","Que no pueden usarse en el mar","o"),
+ mc("¿Qué tipo de señal envía la radio, según la ficha?","Ondas que viajan por el aire sin cables","Impulsos que viajan solo por cable de cobre","Luces que viajan por fibra óptica","a"),
+ mc("¿Qué ventaja destaca la ficha de la radio para los barcos?","Podían pedir auxilio si sufrían una avería","Podían navegar sin necesidad de brújula","Podían flotar mejor gracias a las ondas","a")],
 [mc("¿Qué significa transmitir sin cables?","Que la señal viaja por el aire en forma de ondas","Que la señal viaja por el agua","Que la señal se transmite con la luz de un faro","a"),
- mc("¿Por qué la radio mejoró la seguridad en el mar?","Los barcos podían pedir auxilio si sufrían una avería","Los barcos podían evitar las tormentas del Atlántico","Los barcos podían navegar con menos tripulación","a")],
+ mc("¿Por qué la radio mejoró la seguridad en el mar?","Los barcos podían pedir auxilio si sufrían una avería","Los barcos podían evitar las tormentas del Atlántico","Los barcos podían navegar con menos tripulación","a"),
+ mc("¿Por qué transmitir la letra «S» a través del Atlántico fue un gran logro en 1901?","Porque demostró que las ondas podían recorrer distancias enormes sin cables","Porque fue la primera palabra completa transmitida por radio","Porque permitió escuchar música por primera vez","a"),
+ mc("¿Qué relación hay entre la radio y el final del aislamiento de los barcos en alta mar?","Permitió que los barcos se comunicaran con tierra aunque estuvieran lejos","Hizo que los barcos ya no necesitaran tripulación","Eliminó la necesidad de que los barcos llevaran radio a bordo","a"),
+ mc("¿Por qué se necesitan permisos y frecuencias asignadas para las emisoras?","Para que las señales de distintas emisoras no se mezclen ni se interfieran","Para que solo exista una emisora en todo el país","Para que las ondas se puedan ver a simple vista","o"),
+ mc("¿Qué diferencia hay entre el telégrafo con cable y la radio?","La radio no necesita cables porque usa ondas por el aire","El telégrafo con cable es mucho más rápido que la radio","Ambos funcionan exactamente de la misma forma","e"),
+ mc("¿Por qué ganar el Nobel de Física reconoce la importancia de Marconi?","Porque su invento cambió de forma profunda la comunicación mundial","Porque fue el primer científico en estudiar la electricidad","Porque descubrió un nuevo elemento químico","b"),
+ mc("¿Qué significa que, con el tiempo, la radio evolucionara hacia el wifi?","Que la idea de comunicar mediante ondas siguió desarrollándose con nuevas tecnologías","Que el wifi sustituyó por completo a las ondas de radio con cables","Que la radio dejó de usar ondas en algún momento","e"),
+ mc("¿Por qué la radio resultó clave antes de que existiera el teléfono móvil?","Porque permitía comunicación a distancia sin depender de cables fijos","Porque transmitía imágenes además de sonido","Porque no necesitaba ningún tipo de energía eléctrica","a"),
+ mc("¿Qué relación hay entre la radio y los desastres marítimos, como el hundimiento de un barco?","Permitió pedir auxilio y que otros barcos acudieran a ayudar","Hizo que los barcos se hundieran con más frecuencia","No tuvo ninguna relación con la seguridad marítima","a")],
 [mc("Un barco sufre una avería lejos de la costa. ¿Qué invento le permite pedir ayuda?","La radio","El telégrafo con cable","El teléfono de Bell","a"),
- mc("¿Qué ventaja tiene la radio sobre el teléfono de cable para un conductor en carretera?","Recibe señales sin depender de un cable","Permite hablar con una persona concreta","Se oye con mayor calidad y nitidez","s")],
+ mc("¿Qué ventaja tiene la radio sobre el teléfono de cable para un conductor en carretera?","Recibe señales sin depender de un cable","Permite hablar con una persona concreta","Se oye con mayor calidad y nitidez","s"),
+ mc("Un barco de pesca se aleja mucho de la costa sin cables ni antenas fijas cercanas. ¿Qué tecnología le permite comunicarse?","La radio","El telégrafo con cable submarino","Un teléfono fijo de la época","a"),
+ mc("Un explorador en una zona remota sin cables necesita avisar de una emergencia. ¿Qué usaría, siguiendo la idea de Marconi?","Un aparato de radio","Una carta enviada por correo","Un telégrafo conectado a un cable","a"),
+ mc("Dos emisoras de radio cercanas emiten en la misma frecuencia y se interfieren. ¿Qué solución sigue el apartado «Ojo»?","Repartir y asignar frecuencias distintas mediante permisos","Permitir que emitan sin ningún control","Apagar la radio de todos los oyentes","o"),
+ mc("Quieres escuchar las noticias en el coche mientras conduces, sin cables. ¿Qué tecnología usas, heredera de Marconi?","La radio","El teléfono con cable","El telégrafo","a"),
+ mc("Un equipo de rescate en montaña necesita comunicarse sin torres de cable cercanas. ¿Qué tecnología usarían?","Radios portátiles","Telégrafos con cables largos","Cartas enviadas a pie","a"),
+ mc("Un país quiere coordinar cientos de emisoras sin que se molesten entre sí. ¿Qué organismo necesitaría crear?","Uno que reparta frecuencias y dé permisos","Uno que prohíba por completo la radio","Uno que obligue a usar siempre la misma frecuencia","o"),
+ mc("Un barco en una tormenta pierde el contacto visual con la costa. ¿Qué tecnología de principios del siglo XX le permite seguir comunicado?","La radio sin hilos","Un espejo para hacer señales de luz","Una bandera de señales únicamente","a"),
+ mc("Quieres escuchar música mientras haces senderismo en una zona sin cobertura de móvil. ¿Qué aparato antiguo seguiría funcionando?","Una radio portátil de pilas","Un teléfono móvil sin batería","Un teléfono fijo de cable","a")],
 [mc("Las ondas viajan por el aire y las emisoras pueden interferirse. ¿Qué medida es más lógica?","Repartir frecuencias y exigir permisos","Prohibir por completo las emisoras en alta mar","Obligar a emitir solo de día","o"),
- mc("La radio evolucionó hasta el wifi y las redes móviles. ¿Qué se deduce?","Que comunicarse por ondas sigue siendo la base","Que las ondas se sustituyeron por cables","Que se dejó de investigar en radio","e")]
+ mc("La radio evolucionó hasta el wifi y las redes móviles. ¿Qué se deduce?","Que comunicarse por ondas sigue siendo la base","Que las ondas se sustituyeron por cables","Que se dejó de investigar en radio","e"),
+ mc("Si transmitir la letra «S» a través del Atlántico fue noticia mundial en 1901, ¿qué se deduce sobre la tecnología de la época?","Que comunicarse a tanta distancia sin cables era algo muy novedoso entonces","Que ya era algo habitual y sin ninguna importancia","Que se hacía todos los días desde hacía siglos","b"),
+ mc("La radio permitió a los barcos pedir ayuda en caso de avería. ¿Qué se deduce sobre la seguridad marítima antes de su invención?","Que un barco aislado tenía muchas menos formas de pedir auxilio","Que los barcos siempre tuvieron la misma seguridad que hoy","Que las averías no suponían ningún riesgo antes de la radio","a"),
+ mc("Si las ondas de radio no respetan fronteras ni distancias cortas, ¿qué se deduce sobre la necesidad de acuerdos internacionales?","Que los países necesitan coordinarse para repartir frecuencias","Que cada país puede usar cualquier frecuencia sin ponerse de acuerdo","Que las ondas de radio no cruzan nunca las fronteras","o"),
+ mc("La radio pasó de transmitir solo código morse a transmitir voz y música. ¿Qué se deduce sobre su desarrollo tecnológico?","Que fue ganando capacidad para transportar información más compleja","Que perdió capacidad de transmitir información con el tiempo","Que nunca pudo transmitir voz, solo código morse","e"),
+ mc("Si el wifi y las redes móviles también usan ondas, ¿qué se deduce sobre la importancia del invento de Marconi?","Que sus principios siguen presentes en tecnologías actuales muy usadas","Que su invento quedó completamente obsoleto y sin relación con hoy","Que el wifi no tiene ninguna relación con la radio","e"),
+ mc("Marconi logró comunicar dos continentes sin ningún cable físico entre ellos. ¿Qué se deduce sobre los límites que superó su invento?","Que rompió la barrera de la distancia que imponían los cables","Que su invento solo funcionaba a distancias muy cortas","Que necesitaba más cables que el telégrafo tradicional","b"),
+ mc("Si una emisora sin permiso puede interferir a otras, ¿qué se deduce sobre la regulación de las frecuencias?","Que resulta necesaria para que la radio funcione de forma ordenada","Que la regulación no aporta ningún beneficio real","Que las interferencias no afectan a la calidad de la señal","o"),
+ mc("La radio permitió coordinar rescates y avisos de emergencia a distancia. ¿Qué se deduce sobre su papel en situaciones de peligro?","Que se convirtió en una herramienta clave para salvar vidas","Que no tuvo ninguna utilidad en situaciones de emergencia","Que solo sirvió para fines de entretenimiento","a")]
 ];
-
+QR.radio=[
+rs("Busca en internet: ¿qué famoso barco, hundido en 1912, pidió auxilio por radio?",["titanic"],"Busca «SOS radio 1912 hundimiento barco»."),
+rs("Busca en internet: ¿en qué ciudad italiana nació Marconi?",["bolonia","bologna"],"Busca «Guglielmo Marconi lugar de nacimiento»."),
+rs("Busca en internet: ¿qué señal de socorro internacional, formada por tres letras repetidas en morse, se usaba antes de la radio con voz?",["sos"],"Busca «señal de socorro internacional en morse»."),
+rs("Busca en internet: ¿qué organismo internacional de la ONU se encarga de repartir las frecuencias de radio entre los países?",["uit","union internacional de telecomunicaciones"],"Busca «organismo de la ONU que reparte frecuencias de radio»."),
+rs("Busca en internet: ¿qué físico escocés, James Clerk Maxwell, predijo en el siglo XIX la existencia de las ondas que usa la radio?",["maxwell","james clerk maxwell"],"Busca «científico que predijo las ondas electromagnéticas»."),
+rs("Busca en internet: ¿qué inventor serbio-estadounidense, Nikola Tesla, también investigó la transmisión de señales sin cables?",["tesla","nikola tesla"],"Busca «Nikola Tesla transmisión sin cables»."),
+rs("Busca en internet: ¿qué emisora española de radio, fundada en 1924, es una de las más antiguas del país?",["radio barcelona","union radio"],"Busca «emisora de radio más antigua de España»."),
+rs("Busca en internet: ¿qué nombre técnico recibe la radio que transmite en frecuencia modulada, muy habitual en coches hoy?",["fm"],"Busca «siglas de la radio en frecuencia modulada»."),
+rs("Busca en internet: ¿qué tecnología de telefonía móvil actual también se basa en ondas de radio para conectar los móviles a las antenas?",["4g","5g","red movil"],"Busca «tecnología de los móviles que usa ondas de radio»."),
+rs("Busca en internet: ¿qué satélite, lanzado en 1957 por la URSS, emitía señales de radio captadas desde la Tierra?",["sputnik","sputnik 1"],"Busca «primer satélite artificial señal de radio».")
+];
 QN.plane=[
 [mc("¿Cuánto duró y cuánto recorrió el primer vuelo?","12 segundos y unos 36 metros","12 segundos y unos 360 metros","1 minuto y unos 36 metros","b"),
- mc("¿Qué instalación construyeron los hermanos para probar sus alas?","Un túnel de viento","Un simulador de vuelo","Un planeador gigante","b")],
+ mc("¿Qué instalación construyeron los hermanos para probar sus alas?","Un túnel de viento","Un simulador de vuelo","Un planeador gigante","b"),
+ mc("¿En qué fecha exacta ocurrió el primer vuelo, según la ficha?","El 17 de diciembre de 1903","El 17 de diciembre de 1930","El 7 de enero de 1903","h"),
+ mc("¿En qué lugar de Estados Unidos tuvo lugar el primer vuelo?","En Kitty Hawk","En Nueva York","En Los Ángeles","h"),
+ mc("¿A qué se dedicaban los hermanos Wright antes de volar?","A reparar bicicletas","A pescar en el mar","A pintar retratos","b"),
+ mc("¿Qué llevaba el avión de los Wright, además de alas, para poder despegar?","Un motor ligero","Un enorme depósito de agua","Unas velas como las de un barco","b"),
+ mc("¿Cuál es el último paso de la evolución del avión, según el diario?","Aviones más eficientes y drones","Planeador y avión de hélice","Avión a reacción","e"),
+ mc("¿Qué problema ambiental señala el apartado «Ojo» sobre los aviones?","Que emiten CO₂ y ruido","Que son demasiado silenciosos","Que no pueden volar de noche","o"),
+ mc("Según el relato, ¿en qué se convierte Valdemar cuando quiere volar, según él mismo compara?","En murciélago","En águila","En dragón","s"),
+ mc("¿Qué les permitió a los hermanos Wright entender cómo volar, además del túnel de viento?","Observar el vuelo de las aves","Estudiar libros de cocina","Copiar diseños de barcos","b")],
 [mc("¿De dónde obtuvieron ideas para volar los hermanos Wright?","De observar el vuelo de las aves","De estudiar los globos aerostáticos","De copiar el vuelo de los murciélagos","b"),
- mc("¿Por qué el avión acortó las distancias?","Permite cruzar un océano en pocas horas","Permite viajar sin gastar combustible durante todo el trayecto","Permite evitar las aduanas","a")],
+ mc("¿Por qué el avión acortó las distancias?","Permite cruzar un océano en pocas horas","Permite viajar sin gastar combustible durante todo el trayecto","Permite evitar las aduanas","a"),
+ mc("¿Por qué el túnel de viento fue clave para el diseño del avión?","Porque permitía probar formas de ala sin necesidad de volar de verdad","Porque servía para secar la madera de las alas","Porque generaba la electricidad del motor","b"),
+ mc("¿Qué relación hay entre el peso del avión y la posibilidad de despegar?","Un avión demasiado pesado necesitaría un motor mucho más potente para volar","El peso del avión no influye nunca en si puede volar o no","Cuanto más pesado, más fácil resulta despegar","b"),
+ mc("¿Por qué estudiar el vuelo de las aves ayudó a los hermanos Wright?","Porque las aves ya resuelven de forma natural el problema de volar con alas","Porque las aves les enseñaron a construir motores de combustión","Porque copiaron el plumaje para hacer las alas más ligeras","b"),
+ mc("¿Qué significa que el avión permitiera «cruzar un océano en horas»?","Que redujo enormemente el tiempo que antes costaba un viaje así por barco","Que los océanos se hicieron más pequeños gracias al avión","Que los barcos dejaron de ser necesarios para cualquier viaje","a"),
+ mc("¿Por qué los aviones contribuyen al calentamiento global, según el apartado «Ojo»?","Porque sus motores emiten gases de efecto invernadero al volar","Porque vuelan demasiado bajo sobre las ciudades","Porque consumen electricidad de las redes urbanas","o"),
+ mc("¿Qué relación hay entre el avión y la ayuda humanitaria en catástrofes?","Permite enviar medicinas y ayuda urgente a zonas muy alejadas con rapidez","Hace que la ayuda tarde mucho más en llegar que por tierra","No tiene ninguna relación con la ayuda humanitaria","a"),
+ mc("¿Por qué el primer vuelo de los Wright, aunque muy corto, se considera un hito histórico?","Porque demostró que un vehículo más pesado que el aire podía volar con control","Porque fue el vuelo más largo jamás realizado hasta hoy","Porque se hizo sin ningún tipo de motor","b"),
+ mc("¿Qué diferencia hay entre un planeador y un avión con motor?","El planeador no tiene motor propio y depende de corrientes de aire","El avión con motor no puede volar sin viento","Ambos son exactamente el mismo tipo de aparato","e")],
 [mc("Una ONG necesita enviar medicinas urgentes a otro continente. ¿Qué transporte encaja mejor?","El avión","El ferrocarril","El barco de carga","a"),
- mc("Una aerolínea quiere reducir su impacto. ¿Qué medida se ajusta al apartado «Ojo»?","Investigar combustibles más limpios","Volar a menor altura para gastar menos","Usar hélices más grandes y motores nuevos","o")],
+ mc("Una aerolínea quiere reducir su impacto. ¿Qué medida se ajusta al apartado «Ojo»?","Investigar combustibles más limpios","Volar a menor altura para gastar menos","Usar hélices más grandes y motores nuevos","o"),
+ mc("Un ingeniero diseña un ala nueva y quiere probarla sin construir un avión completo. ¿Qué usa, como los Wright?","Un túnel de viento","Un tanque de agua","Un horno industrial","b"),
+ mc("Una empresa de paquetería necesita entregar un envío urgente al otro lado del mundo en un día. ¿Qué transporte elige?","El avión","El barco de carga","El tren de mercancías","a"),
+ mc("Quieres estudiar cómo planea un ave para mejorar el diseño de un ala. ¿Qué harías, como hicieron los Wright?","Observar con atención el vuelo de las aves","Ignorar a los animales y centrarte solo en los motores","Copiar el diseño de un barco de vela","b"),
+ mc("Un equipo de rescate necesita llegar a una isla muy alejada en pocas horas. ¿Qué transporte usaría?","Un avión","Un barco de remos","Un tren de alta velocidad","a"),
+ mc("Una compañía aérea busca reducir el ruido de sus aviones sobre las ciudades. ¿Qué investigaría, siguiendo el apartado «Ojo»?","Motores más silenciosos y eficientes","Motores más grandes y ruidosos","Volar siempre de noche sin cambios técnicos","o"),
+ mc("Quieres cruzar el océano Atlántico en el menor tiempo posible hoy en día. ¿Qué transporte elegirías?","Un avión comercial","Un barco de vela tradicional","Un tren submarino","a"),
+ mc("Un diseñador quiere un avión más ligero para gastar menos combustible. ¿Qué principio seguiría, como los Wright con su motor?","Reducir el peso sin perder la resistencia necesaria","Aumentar el peso para que vuele más estable","Eliminar las alas por completo","b"),
+ mc("Una familia quiere visitar un país muy lejano en sus vacaciones de una semana. ¿Qué transporte le permite aprovechar mejor el tiempo?","El avión","El barco de pasajeros","El tren internacional de larga distancia","a")],
 [mc("Los Wright necesitaban un motor ligero. ¿Qué razón lógica había?","Un motor pesado impediría despegar","Un motor ligero hace menos ruido","Un motor ligero es más barato","b"),
- mc("El primer vuelo cubrió unos 36 metros y hoy se cruzan océanos. ¿Qué se deduce?","Que el invento se perfeccionó durante décadas","Que los Wright ya lo tenían previsto","Que el avión solo ha crecido en tamaño","e")]
+ mc("El primer vuelo cubrió unos 36 metros y hoy se cruzan océanos. ¿Qué se deduce?","Que el invento se perfeccionó durante décadas","Que los Wright ya lo tenían previsto","Que el avión solo ha crecido en tamaño","e"),
+ mc("Si antes de volar los hermanos Wright reparaban bicicletas, ¿qué se deduce sobre sus conocimientos previos?","Que ya tenían experiencia práctica con mecánica y equilibrio","Que no tenían ningún conocimiento técnico útil","Que solo sabían de aviones antes de 1903","b"),
+ mc("El túnel de viento permitía probar alas sin arriesgar vidas en un vuelo real. ¿Qué se deduce sobre su utilidad?","Que ayudaba a mejorar el diseño de forma más segura y barata","Que resultaba más peligroso que volar directamente","Que no aportaba ninguna información útil para el diseño","b"),
+ mc("Si volar un avión más pesado que el aire parecía imposible antes de 1903, ¿qué se deduce sobre el logro de los Wright?","Que superaron una barrera que mucha gente creía insuperable","Que repitieron algo que ya hacía mucha gente antes","Que su logro no tuvo ninguna repercusión en su época","b"),
+ mc("El avión permite hoy la ayuda humanitaria rápida en catástrofes lejanas. ¿Qué se deduce sobre su valor más allá del turismo?","Que también cumple funciones esenciales en emergencias","Que solo sirve para viajes de placer","Que no tiene ninguna utilidad en situaciones de emergencia","a"),
+ mc("Si los aviones emiten CO₂ y ruido, ¿qué se deduce sobre buscar combustibles más limpios para ellos?","Que ayudaría a reducir su impacto ambiental sin dejar de volar","Que no tendría ningún efecto sobre la contaminación","Que haría que los aviones dejaran de funcionar","o"),
+ mc("El avión redujo enormemente el tiempo de los viajes intercontinentales. ¿Qué se deduce sobre el comercio y el turismo mundial?","Que pudieron crecer mucho más gracias a esa rapidez","Que se redujeron tras la invención del avión","Que dejaron de depender del transporte en absoluto","a"),
+ mc("Si los Wright observaron a las aves antes de diseñar sus alas, ¿qué se deduce sobre inspirarse en la naturaleza para inventar?","Que la naturaleza puede dar pistas útiles para resolver problemas técnicos","Que copiar a la naturaleza nunca ayuda a inventar nada nuevo","Que las aves y los aviones no tienen ninguna relación en su diseño","b"),
+ mc("El avión evolucionó del planeador al avión a reacción y después a los drones. ¿Qué se deduce sobre su desarrollo tecnológico?","Que siguió ampliando sus capacidades mucho después del primer vuelo","Que dejó de evolucionar tras el vuelo de los hermanos Wright","Que los drones son anteriores históricamente al primer avión","e")]
 ];
-
+QR.plane=[
+rs("Busca en internet: ¿quién cruzó en solitario el Atlántico en avión en 1927?",["lindbergh","charles lindbergh"],"Busca «primer vuelo en solitario Atlántico 1927»."),
+rs("Busca en internet: ¿qué inventor español ideó en 1920 el autogiro, precursor del helicóptero?",["cierva","juan de la cierva"],"Busca «autogiro inventor español»."),
+rs("Busca en internet: ¿cómo se llamaba el avión de los hermanos Wright que voló por primera vez en 1903?",["flyer","wright flyer"],"Busca «nombre del avión de los hermanos Wright 1903»."),
+rs("Busca en internet: ¿qué piloto español, Juan de la Cierva aparte, protagonizó el primer vuelo trasatlántico sin escalas España-América en 1926, llamado Plus Ultra?",["ramon franco"],"Busca «vuelo Plus Ultra 1926 piloto español»."),
+rs("Busca en internet: ¿qué avión supersónico, fabricado por Francia y Reino Unido, volaba más rápido que el sonido y dejó de operar en 2003?",["concorde"],"Busca «avión supersónico comercial retirado en 2003»."),
+rs("Busca en internet: ¿qué aeropuerto es actualmente el más transitado de España por número de pasajeros?",["madrid barajas","barajas","adolfo suarez madrid barajas"],"Busca «aeropuerto con más pasajeros de España»."),
+rs("Busca en internet: ¿qué compañía europea fabrica actualmente el avión comercial más grande del mundo, el A380?",["airbus"],"Busca «fabricante del avión A380»."),
+rs("Busca en internet: ¿qué gas, usado para elevar globos aerostáticos, es más ligero que el aire?",["helio"],"Busca «gas más ligero que el aire usado en globos»."),
+rs("Busca en internet: ¿qué famosa aviadora estadounidense desapareció en 1937 intentando dar la vuelta al mundo en avión?",["amelia earhart"],"Busca «aviadora que desapareció en 1937»."),
+rs("Busca en internet: ¿qué organismo internacional regula la seguridad y las normas de la aviación civil mundial?",["oaci","organizacion de aviacion civil internacional"],"Busca «organismo que regula la aviación civil mundial».")
+];
 QN.telekino=[
 [mc("¿Qué controló Torres Quevedo a distancia en Bilbao en 1906?","Un barco desde la orilla","Un globo desde un tejado","Un tren desde la estación","s"),
- mc("¿Qué otras dos obras se citan de Torres Quevedo?","El transbordador del Niágara y un autómata ajedrecista","Un dirigible y un telégrafo sin hilos entre ciudades","Un puente colgante en Bilbao y una calculadora","b")],
-[mc("¿Qué es el radiocontrol?","Manejar una máquina a distancia mediante ondas de radio","Emitir un programa de radio a otra ciudad lejana","Controlar la potencia de una emisora de radio desde lejos","a"),
- mc("¿Por qué se considera al Telekino antepasado de los drones?","Porque dirigía una máquina sin tripulación desde lejos","Porque volaba por el aire como un pájaro","Porque usaba una cámara para guiar la máquina","a")],
+ mc("¿Qué otras dos obras se citan de Torres Quevedo?","El transbordador del Niágara y un autómata ajedrecista","Un dirigible y un telégrafo sin hilos entre ciudades","Un puente colgante en Bilbao y una calculadora","b"),
+ mc("¿En qué año se patentó el Telekino y en qué año se hizo la demostración pública?","1903 y 1906","1803 y 1806","1930 y 1960","h"),
+ mc("¿De qué región española era Torres Quevedo?","De Cantabria","De Andalucía","De Cataluña","b"),
+ mc("¿En qué localidad cántabra nació Torres Quevedo, según la ficha?","En Santa Cruz de Iguña","En Santander capital","En Bilbao","b"),
+ mc("¿En qué año construyó Torres Quevedo el transbordador de las cataratas del Niágara?","En 1916","En 1816","En 1960","b"),
+ mc("¿Cuál es el segundo paso de la evolución del Telekino, según el diario?","El mando de televisión","Robots y coches teledirigidos","Drones","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre los drones?","Que pueden invadir la intimidad si se usan mal","Que no pueden volar sobre el mar","Que solo los militares pueden usarlos","o"),
+ mc("¿En qué año construyó Torres Quevedo su autómata que jugaba al ajedrez?","En 1912","En 1812","En 1992","b"),
+ mc("¿Qué tipo de ondas usaba el Telekino para controlar el barco a distancia?","Ondas de radio","Ondas de sonido","Rayos de luz solar","a")],
+[mc("¿Qué significa el radiocontrol?","Manejar una máquina a distancia mediante ondas de radio","Emitir un programa de radio a otra ciudad lejana","Controlar la potencia de una emisora de radio desde lejos","a"),
+ mc("¿Por qué se considera al Telekino antepasado de los drones?","Porque dirigía una máquina sin tripulación desde lejos","Porque volaba por el aire como un pájaro","Porque usaba una cámara para guiar la máquina","a"),
+ mc("¿Por qué manejar un barco a distancia en 1906 era algo extraordinario?","Porque demostraba que una máquina podía obedecer órdenes sin nadie a bordo","Porque los barcos de la época ya se controlaban todos así","Porque solo servía para divertir al público en una feria","a"),
+ mc("¿Qué relación hay entre el Telekino y evitar riesgos a las personas?","Permite operar una máquina peligrosa sin que nadie tenga que estar cerca","Obliga a que una persona esté siempre dentro de la máquina","Aumenta el riesgo porque nadie controla la máquina","a"),
+ mc("¿Por qué Torres Quevedo es recordado por inventos tan distintos como un transbordador y un autómata de ajedrez?","Porque dominaba varios campos de la ingeniería y la automática","Porque solo se dedicó a construir juguetes mecánicos","Porque todos sus inventos eran exactamente el mismo mecanismo","b"),
+ mc("¿Qué significa que un dron sea heredero de la idea del Telekino?","Que ambos manejan una máquina a distancia sin tripulación humana a bordo","Que ambos necesitan un piloto siempre dentro del vehículo","Que ambos funcionan exclusivamente con cables largos","a"),
+ mc("¿Por qué un dron mal usado puede invadir la intimidad de las personas?","Porque puede grabar o sobrevolar espacios privados sin permiso","Porque hace mucho ruido al volar siempre","Porque solo puede usarse dentro de edificios cerrados","o"),
+ mc("¿Qué diferencia hay entre manejar una máquina a distancia y manejarla desde dentro?","A distancia, la persona no corre el riesgo físico de estar en la propia máquina","Desde dentro, la persona nunca corre ningún riesgo","No existe ninguna diferencia real entre ambas formas","a"),
+ mc("¿Por qué el autómata ajedrecista de Torres Quevedo se considera un precursor de la inteligencia artificial?","Porque era una máquina capaz de tomar decisiones siguiendo reglas, sin un humano moviendo las piezas","Porque jugaba exactamente igual que una persona pensando con libertad total","Porque fue, sin ninguna duda, el primer ordenador electrónico de toda la historia","a"),
+ mc("¿Qué significa que el Telekino se probara primero con un barco y no con una persona a bordo de otro vehículo?","Que se buscaba comprobar la idea de forma segura antes de aplicarla a otros usos","Que los barcos eran los únicos vehículos que existían en esa época","Que no se podía controlar ningún otro tipo de vehículo","a")],
 [mc("Hay que revisar el interior de un depósito peligroso. ¿Qué principio del Telekino ayuda?","Manejar una máquina desde fuera para no arriesgar personas","Enviar mensajes en morse desde el interior del depósito","Grabar la inspección para verla después en el laboratorio","a"),
- mc("¿Qué aparato de casa desciende directamente del Telekino?","El mando a distancia del televisor","El teléfono inalámbrico de casa con su base","El router del wifi de casa","e")],
-[mc("Un dron mal usado puede invadir la intimidad. ¿Qué se deduce?","Que hacen falta normas sobre cómo y dónde usarlos","Que deben prohibirse todos los aparatos a distancia","Que solo pueden usarlos los militares","o"),
- mc("Torres Quevedo creó un mando a distancia, un transbordador y un autómata. ¿Qué se deduce?","Que dominaba automática, mecánica y comunicaciones","Que solo trabajaba con barcos y transbordadores","Que solo inventó cosas en Cantabria y en Bilbao","b")]
+ mc("¿Qué aparato de casa desciende directamente del Telekino?","El mando a distancia del televisor","El teléfono inalámbrico de casa con su base","El router del wifi de casa","e"),
+ mc("Un equipo de bomberos necesita inspeccionar un edificio en llamas sin entrar. ¿Qué tecnología, heredera del Telekino, usarían hoy?","Un dron teledirigido","Un periscopio manual","Un megáfono","e"),
+ mc("Quieres mover un coche de juguete sin tocarlo directamente, usando ondas. ¿Qué principio aplicas, como Torres Quevedo?","El radiocontrol","La escritura cuneiforme","La fotosíntesis","a"),
+ mc("Una fábrica quiere inspeccionar tuberías tóxicas sin poner en riesgo a sus trabajadores. ¿Qué solución sigue la idea del Telekino?","Un robot teledirigido","Enviar siempre a una persona con mascarilla","No revisar nunca las tuberías","a"),
+ mc("Quieres grabar un paisaje desde el aire sin subir tú mismo en un avión. ¿Qué aparato moderno usarías, heredero del Telekino?","Un dron con cámara","Un periscopio de submarino","Un telescopio fijo","e"),
+ mc("Un ayuntamiento quiere regular el uso de drones en parques llenos de gente. ¿Qué medida sigue el apartado «Ojo»?","Establecer normas sobre dónde y cómo pueden volar","Permitir que cualquiera los use sin ninguna norma","Prohibir cualquier tecnología a distancia por completo","o"),
+ mc("Quieres desactivar un artefacto peligroso sin acercarte físicamente. ¿Qué principio usarías, siguiendo a Torres Quevedo?","Manejar un robot a distancia","Acercarte tú mismo sin ninguna protección","Esperar a que se desactive solo","a"),
+ mc("Un parque de atracciones quiere un mando sencillo para que los niños controlen cochecitos sin cables. ¿Qué tecnología usa?","El radiocontrol por ondas","Un cable largo atado al cochecito","Un sistema de poleas manuales","a"),
+ mc("Quieres programar un barco teledirigido como el de Torres Quevedo para que evite obstáculos solo. ¿Qué tendrías que añadirle, además del radiocontrol?","Sensores y un pequeño programa de decisión","Solo un motor más grande","Solo una bandera de colores","a")],
+[mc("El Telekino evita riesgos a las personas. ¿En qué situación sería útil hoy?","En rescates o inspecciones peligrosas","Solo en fiestas","En ninguna","a"),
+ mc("Torres Quevedo lo presentó en 1906 y hoy hay drones. ¿Qué se deduce?","Que una idea de hace más de un siglo sigue evolucionando","Que se olvidó del todo","Que los drones se inventaron antes","e"),
+ mc("Si Torres Quevedo inventó el radiocontrol, un transbordador y un autómata de ajedrez, ¿qué se deduce sobre su forma de trabajar?","Que investigaba distintos campos de la ingeniería y la automática a la vez","Que solo se dedicó toda su vida a un único invento","Que todos sus inventos eran copias de otros ingenieros","b"),
+ mc("El Telekino se probó primero con un barco sin tripulación. ¿Qué se deduce sobre la forma de introducir una tecnología nueva y arriesgada?","Que conviene probarla primero en condiciones controladas antes de extenderla","Que debe aplicarse directamente a los usos más peligrosos desde el principio","Que no hace falta ninguna prueba antes de su uso generalizado","a"),
+ mc("Si los drones heredan la idea del Telekino, ¿qué se deduce sobre el tiempo que puede tardar una idea en desarrollarse del todo?","Que una idea pionera puede tardar muchas décadas en dar todos sus frutos","Que toda idea se desarrolla por completo en el mismo año en que surge","Que el Telekino y los drones no comparten ningún principio técnico","e"),
+ mc("Un dron puede usarse para ayudar en un rescate o para invadir la intimidad de alguien. ¿Qué se deduce sobre esta tecnología?","Que su uso correcto o incorrecto depende de quién la maneja y cómo","Que siempre se usa exclusivamente para fines buenos","Que siempre se usa exclusivamente para fines dañinos","o"),
+ mc("Si Torres Quevedo no es muy conocido fuera de España a pesar de sus inventos, ¿qué se deduce sobre el reconocimiento de algunos pioneros?","Que no siempre la fama de un inventor es proporcional a la importancia de sus ideas","Que todos los grandes inventores reciben siempre el mismo reconocimiento mundial","Que sus inventos no tuvieron ninguna influencia posterior","e"),
+ mc("El autómata ajedrecista de Torres Quevedo tomaba decisiones siguiendo reglas fijas. ¿Qué se deduce sobre su relación con la informática actual?","Que anticipó, de forma sencilla, ideas que hoy usan los programas inteligentes","Que funcionaba exactamente igual que un ordenador moderno con inteligencia artificial","Que no tiene ninguna relación con los sistemas automáticos actuales","b"),
+ mc("Si manejar una máquina a distancia reduce el riesgo para las personas, ¿qué se deduce sobre su uso en tareas peligrosas como el desminado?","Que resulta especialmente útil en situaciones donde la seguridad humana está en juego","Que no aporta ninguna ventaja frente a hacerlo en persona","Que solo puede aplicarse a juegos y entretenimiento","a"),
+ mc("El Telekino nació en España a principios del siglo XX, antes que inventos similares en otros países. ¿Qué se deduce sobre la innovación española de la época?","Que hubo aportaciones españolas pioneras a la tecnología mundial","Que España no participó en ningún avance tecnológico de esa época","Que el invento se copió de otro país que ya lo tenía antes","b")]
 ];
-
+QR.telekino=[
+rs("Busca en internet: ¿qué nombre inglés recibió el transbordador que Torres Quevedo construyó sobre las cataratas del Niágara?",["spanish aerocar","aerocar"],"Busca «Torres Quevedo Niágara transbordador nombre»."),
+rs("Busca en internet: ¿cómo se llamó el autómata de 1912 que jugaba solo al ajedrez?",["ajedrecista","el ajedrecista"],"Busca «Torres Quevedo autómata ajedrez 1912»."),
+rs("Busca en internet: ¿en qué ciudad española se encuentra el Parque Torres Quevedo o alguna calle dedicada a su memoria? (busca «Torres Quevedo calle o parque»)",["santander","madrid"],"Busca «lugares dedicados a Torres Quevedo en España»."),
+rs("Busca en internet: ¿qué academia científica española llegó a presidir Torres Quevedo?",["real academia de ciencias"],"Busca «Torres Quevedo academia de ciencias presidente»."),
+rs("Busca en internet: ¿qué nombre se da hoy a los vehículos aéreos no tripulados que se manejan a distancia, en inglés de cuatro letras?",["dron","drone"],"Busca «nombre de los vehículos aéreos no tripulados»."),
+rs("Busca en internet: ¿qué agencia española regula hoy el uso de drones en el espacio aéreo civil?",["aesa","agencia estatal de seguridad aerea"],"Busca «agencia que regula los drones en España»."),
+rs("Busca en internet: ¿qué otro ingeniero español, Isaac Peral, construyó en el siglo XIX un submarino pionero con propulsión eléctrica?",["isaac peral"],"Busca «inventor español de un submarino eléctrico»."),
+rs("Busca en internet: ¿qué tipo de robots, usados para desactivar explosivos, se manejan hoy a distancia siguiendo la idea del Telekino?",["robots antibombas","robots artificieros"],"Busca «robots que desactivan bombas a distancia»."),
+rs("Busca en internet: ¿en qué país se encuentran las cataratas del Niágara, además de en Canadá?",["estados unidos","eeuu"],"Busca «países donde están las cataratas del Niágara»."),
+rs("Busca en internet: ¿qué museo de Cantabria conserva inventos y documentos de Torres Quevedo?",["museo torres quevedo","museo etnografico de cantabria"],"Busca «museo que conserva inventos de Torres Quevedo».")
+];
 QN.hop=[
 [mc("¿Quién colaboró con Hedy Lamarr en la patente?","George Antheil, compositor","Charles Babbage, matemático","Thomas Edison, inventor","i"),
- mc("¿Para qué servía originalmente el sistema?","Para evitar que bloquearan torpedos teledirigidos","Para cifrar los telegramas diplomáticos y secretos de los países","Para guiar aviones de bombardeo de noche","b")],
+ mc("¿Para qué servía originalmente el sistema?","Para evitar que bloquearan torpedos teledirigidos","Para cifrar los telegramas diplomáticos y secretos de los países","Para guiar aviones de bombardeo de noche","b"),
+ mc("¿En qué año patentaron Hedy Lamarr y Antheil su sistema?","En 1942","En 1842","En 1992","h"),
+ mc("¿En qué ciudad nació Hedy Lamarr, según la ficha?","En Viena","En Nueva York","En Londres","b"),
+ mc("¿Cuál era la profesión más conocida de Hedy Lamarr además de inventora?","Actriz de cine","Profesora de música","Piloto de aviones","b"),
+ mc("¿Qué profesión tenía George Antheil, el colaborador de Hedy Lamarr?","Era compositor","Era piloto militar","Era médico de guerra","i"),
+ mc("¿Cuál es el último paso de la evolución del invento, según el diario?","Wifi, bluetooth y GPS","Idea de salto de frecuencias","Uso militar en los años 60","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre el reconocimiento de este invento?","Que no se valoró en su época","Que fue reconocido de inmediato por todos","Que solo se usó una semana","o"),
+ mc("Según el relato, ¿dónde vio Valdemar por primera vez a Hedy Lamarr?","En un cartel de cine","En un laboratorio militar","En un barco de guerra","s"),
+ mc("¿Para qué tipo de arma militar se diseñó originalmente el sistema de salto de frecuencias?","Para torpedos teledirigidos","Para aviones de combate","Para submarinos nucleares","b")],
 [mc("¿En qué consiste el salto de frecuencias?","En cambiar continuamente de frecuencia al transmitir","En subir mucho la potencia de la señal emitida","En repetir el mismo mensaje varias veces por radio","b"),
- mc("¿Por qué era difícil interceptar la señal?","El enemigo no sabía en qué frecuencia escuchar","Viajaba más rápido que las demás señales de radio","Estaba escrita en una clave secreta muy difícil","b")],
-[mc("Dos redes wifi cercanas se interfieren. ¿Qué idea de Hedy ayuda?","Repartir la comunicación entre distintas frecuencias","Aumentar mucho la potencia de la señal emitida por el transmisor","Enviar el mensaje más deprisa que las demás redes","a"),
- mc("Una empresa quiere una comunicación difícil de espiar. ¿Qué técnica le conviene?","Cambiar de frecuencia continuamente","Usar una sola frecuencia poco conocida","Emitir solo de noche","b")],
+ mc("¿Por qué era difícil interceptar la señal?","El enemigo no sabía en qué frecuencia escuchar","Viajaba más rápido que las demás señales de radio","Estaba escrita en una clave secreta muy difícil","b"),
+ mc("¿Por qué cambiar de frecuencia continuamente dificulta que alguien bloquee la señal?","Porque quien quiere interferirla no sabe en qué frecuencia buscarla en cada instante","Porque la señal deja de existir mientras cambia de frecuencia","Porque solo se puede escuchar con un aparato muy caro","b"),
+ mc("¿Qué relación hay entre el oficio de compositor de Antheil y la idea del salto de frecuencias?","Su experiencia sincronizando instrumentos musicales ayudó a coordinar los cambios de frecuencia","No tenía absolutamente ninguna relación con la música que él componía","Antheil nunca llegó a participar realmente en el diseño del sistema","i"),
+ mc("¿Por qué el invento de Hedy Lamarr tardó décadas en popularizarse?","Porque la tecnología necesaria para aprovecharlo bien no existía todavía en los años 40","Porque nunca llegó a patentarse de forma oficial","Porque el ejército lo usó inmediatamente y sin ningún retraso","o"),
+ mc("¿Qué significa que el wifi actual use el mismo principio que el sistema de Hedy Lamarr?","Que varios dispositivos pueden compartir el espacio de frecuencias sin interferirse tanto","Que el wifi solo funciona con un cable conectado a la radio","Que el wifi no tiene ninguna relación con las frecuencias de radio","e"),
+ mc("¿Por qué una comunicación militar necesitaba ser difícil de interceptar en la Segunda Guerra Mundial?","Porque el enemigo podía usar esa información para atacar o defenderse mejor","Porque las comunicaciones de guerra no tenían ninguna importancia estratégica","Porque todas las señales de radio de esa época eran siempre públicas","b"),
+ mc("¿Qué diferencia hay entre usar una sola frecuencia fija y usar el salto de frecuencias?","El salto de frecuencias reparte la señal en muchos canales distintos y cambia entre ellos","Usar una sola frecuencia fija es mucho más difícil de interceptar","Ambos métodos ofrecen exactamente el mismo nivel de seguridad","b"),
+ mc("¿Por qué se considera que Hedy Lamarr fue una inventora adelantada a su tiempo?","Porque su idea solo encontró aplicación práctica masiva muchos años después","Porque su invento se usó de inmediato en todos los teléfonos móviles de la época","Porque nunca llegó a patentar nada en su vida","e"),
+ mc("¿Qué relación hay entre el salto de frecuencias y la seguridad de las comunicaciones actuales, como el bluetooth?","El bluetooth también cambia de canal para evitar interferencias y mejorar la seguridad","El bluetooth usa siempre un único canal fijo, sin ningún cambio","El bluetooth no tiene relación alguna con las ideas de Hedy Lamarr","e")],
+[mc("Una red wifi quiere evitar interferencias. ¿Qué idea de Hedy ayuda?","Repartir la comunicación entre distintas frecuencias","Aumentar mucho la potencia de la señal emitida por el transmisor","Enviar el mensaje más deprisa que las demás redes","a"),
+ mc("Una empresa quiere una comunicación difícil de espiar. ¿Qué técnica le conviene?","Cambiar de frecuencia continuamente","Usar una sola frecuencia poco conocida","Emitir solo de noche","b"),
+ mc("Dos auriculares bluetooth cercanos se interfieren entre sí en una sala llena de gente. ¿Qué principio de Hedy Lamarr ayudaría?","Cambiar de canal de frecuencia constantemente","Subir el volumen de ambos aparatos","Apagar uno de los dos auriculares","a"),
+ mc("Un ejército necesita guiar un torpedo sin que el enemigo pueda desviarlo con una señal falsa. ¿Qué técnica histórica usaría?","El salto de frecuencias","Un solo canal de radio fijo y conocido","Un mensaje repetido siempre igual","a"),
+ mc("Quieres que varios routers de wifi en un edificio no se molesten entre sí. ¿Qué principio, similar al de Hedy Lamarr, se aplica?","Repartir y variar los canales de frecuencia usados","Que todos usen exactamente el mismo canal fijo","Apagar todos los routers menos uno","a"),
+ mc("Una emisora de radio pirata interfiere la señal de una emisora legal. ¿Qué principio de seguridad, inspirado en Hedy Lamarr, evitaría el problema?","Cambiar de frecuencia de forma coordinada y segura","Subir muchísimo el volumen de la emisora legal","Apagar completamente la radio del oyente","a"),
+ mc("Un dispositivo GPS necesita una señal difícil de falsificar o interferir. ¿Qué técnica, con el mismo espíritu que la de Hedy Lamarr, ayuda?","Técnicas de codificación y cambio de señal similares al salto de frecuencias","Usar siempre una única frecuencia pública y fija","Enviar la señal por un cable físico muy largo","e"),
+ mc("Quieres diseñar un sistema de comunicación seguro entre dos barcos durante una tormenta. ¿Qué principio histórico aplicarías?","El salto de frecuencias para dificultar la interferencia","Usar bengalas de colores exclusivamente","Gritar instrucciones de barco a barco","a"),
+ mc("Una fábrica usa varios mandos a distancia inalámbricos y se activan entre sí por error. ¿Qué solución, inspirada en Hedy Lamarr, evitaría el problema?","Asignar frecuencias distintas y cambiantes a cada mando","Que todos los mandos usen la misma frecuencia exacta","Eliminar todos los mandos a distancia","a"),
+ mc("Quieres mejorar la seguridad de una llave de coche inalámbrica frente a copias no autorizadas. ¿Qué principio, parecido al de Hedy Lamarr, ayudaría?","Códigos y frecuencias que cambian en cada uso","Un código fijo que nunca cambia","Eliminar por completo la llave inalámbrica","a")],
 [mc("Su idea sirvió décadas después para el wifi. ¿Qué se deduce?","Que una invención puede tardar en hallar su uso","Que el invento de 1942 ya era un wifi completo","Que los inventos militares se abandonan pronto","e"),
- mc("Su invento no se valoró en su época. ¿Qué se deduce sobre el reconocimiento?","Que se tardó en reconocer a muchas científicas","Que solo se reconoce lo que llega a patentarse","Que era un invento sin importancia práctica alguna","o")]
+ mc("Su invento no se valoró en su época. ¿Qué se deduce sobre el reconocimiento?","Que se tardó en reconocer a muchas científicas","Que solo se reconoce lo que llega a patentarse","Que era un invento sin importancia práctica alguna","o"),
+ mc("Si Hedy Lamarr era conocida sobre todo como actriz, ¿qué se deduce sobre cómo se valoraba entonces su trabajo científico?","Que su talento como inventora quedó en segundo plano frente a su fama como actriz","Que su trabajo científico fue más famoso que su carrera de actriz","Que nunca tuvo ninguna relación con el mundo del cine","s"),
+ mc("El sistema de Hedy Lamarr se pensó para la guerra, pero hoy se usa en el wifi doméstico. ¿Qué se deduce sobre los usos de una misma idea técnica?","Que una misma idea puede aplicarse a contextos muy distintos con el tiempo","Que una idea militar nunca puede tener uso civil después","Que el wifi doméstico no guarda ninguna relación con la guerra","e"),
+ mc("Si cambiar de frecuencia dificulta que alguien intercepte una señal, ¿qué se deduce sobre la seguridad de las comunicaciones que usan frecuencia fija?","Que resultan más fáciles de interceptar que las que cambian de frecuencia","Que son igual de seguras que las que cambian constantemente","Que nunca pueden ser interceptadas bajo ninguna circunstancia","b"),
+ mc("Hedy Lamarr colaboró con un compositor, no con un ingeniero de telecomunicaciones. ¿Qué se deduce sobre el origen de las ideas innovadoras?","Que a veces surgen de combinar conocimientos de campos distintos","Que solo los ingenieros especializados pueden tener ideas útiles","Que la música y la tecnología nunca pueden relacionarse","i"),
+ mc("El ejército de EE. UU. no usó el sistema de Hedy Lamarr de inmediato en los años 40. ¿Qué se deduce sobre la adopción de las nuevas ideas?","Que una buena idea no siempre se aprovecha enseguida, aunque sea valiosa","Que todas las ideas útiles se aplican siempre de forma inmediata","Que el sistema resultó inútil desde el principio","o"),
+ mc("Si hoy el bluetooth, el wifi y el GPS usan principios parecidos al salto de frecuencias, ¿qué se deduce sobre la importancia de aquella patente de 1942?","Que sentó una base técnica que resultó clave para varias tecnologías actuales","Que no tuvo ninguna influencia en la tecnología posterior","Que solo se usó una vez, en un único torpedo durante la guerra","e"),
+ mc("Hedy Lamarr fue reconocida como inventora muchos años después de patentar su sistema. ¿Qué se deduce sobre el papel de las mujeres científicas de su época?","Que a menudo su trabajo tardaba más en ser valorado que el de los hombres","Que todas las científicas de esa época eran reconocidas de inmediato","Que las mujeres no podían patentar inventos en esa época","o"),
+ mc("Si la idea de Hedy Lamarr nació para un uso militar concreto y acabó siendo universal, ¿qué se deduce sobre el valor de las ideas técnicas básicas?","Que una idea técnica sólida puede trascender el problema concreto para el que nació","Que una idea técnica solo sirve para el problema exacto que la originó","Que las ideas militares nunca tienen aplicación civil posterior","e")]
 ];
-
+QR.hop=[
+rs("Busca en internet: ¿en qué mes se celebra el Día del Inventor, que recuerda el cumpleaños de Hedy Lamarr?",["noviembre"],"Busca «Día del Inventor Hedy Lamarr fecha»."),
+rs("Busca en internet: ¿cuál era el apellido de nacimiento de Hedy Lamarr?",["kiesler"],"Busca «Hedy Lamarr nombre de nacimiento»."),
+rs("Busca en internet: ¿en qué año fue incluida Hedy Lamarr en el Salón de la Fama de los Inventores de Estados Unidos?",["2014"],"Busca «Hedy Lamarr Salón de la Fama de los Inventores»."),
+rs("Busca en internet: ¿qué nombre recibe la técnica de transmisión inalámbrica usada por el bluetooth, derivada del salto de frecuencias?",["salto de frecuencia adaptativo","frequency hopping"],"Busca «técnica de transmisión del bluetooth salto de frecuencia»."),
+rs("Busca en internet: ¿qué país natal tenía Hedy Lamarr antes de emigrar a Estados Unidos?",["austria"],"Busca «país de nacimiento de Hedy Lamarr»."),
+rs("Busca en internet: ¿qué famosa película de 1933 protagonizó Hedy Lamarr en Europa antes de ir a Hollywood?",["extasis","ecstasy"],"Busca «película europea de 1933 con Hedy Lamarr»."),
+rs("Busca en internet: ¿qué tecnología de posicionamiento por satélite, muy usada en los móviles, también se beneficia de ideas parecidas al salto de frecuencias?",["gps"],"Busca «tecnología de posicionamiento por satélite en los móviles»."),
+rs("Busca en internet: ¿en qué estado de EE. UU. falleció Hedy Lamarr en el año 2000?",["florida"],"Busca «Hedy Lamarr lugar de fallecimiento»."),
+rs("Busca en internet: ¿qué organismo militar de EE. UU. (agencia de proyectos de investigación avanzada) terminó aplicando ideas similares al invento de Hedy Lamarr?",["darpa"],"Busca «agencia militar de investigación avanzada de EE. UU.»."),
+rs("Busca en internet: ¿qué compositor y pianista fue el colaborador de Hedy Lamarr en la patente del salto de frecuencias?",["george antheil"],"Busca «compositor que colaboró con Hedy Lamarr».")
+];
 QN.mechbook=[
 [mc("¿Qué problema de sus alumnos quería resolver Ángela?","El peso de las mochilas y la dificultad de aprender","La falta de libros de texto en las escuelas de las zonas rurales","La falta de luz natural en las aulas","b"),
- mc("¿Qué elementos tenía su libro mecánico?","Bobinas y luz","Pantalla y teclado","Engranajes y pilas","b")],
-[mc("¿Por qué se considera precursora del libro electrónico?","Reunía muchas lecciones en un solo aparato","Usaba una pequeña pantalla táctil","Se fabricaba en serie en fábricas","a"),
- mc("¿Qué ventajas ofrecía frente a un libro impreso normal?","Menos peso, varios idiomas y luz para leer","Más páginas y un precio más barato","Más resistente al agua y a los golpes","a")],
+ mc("¿Qué elementos tenía su libro mecánico?","Bobinas y luz","Pantalla y teclado","Engranajes y pilas","b"),
+ mc("¿En qué año ideó Ángela su invento y en qué año lo patentó?","Lo ideó en 1949 y lo patentó en 1962","Lo ideó en 1849 y lo patentó en 1862","Lo ideó en 1994 y lo patentó en 1996","h"),
+ mc("¿En qué ciudad española trabajó Ángela Ruiz Robles como maestra?","En Ferrol","En Sevilla","En Bilbao","h"),
+ mc("¿En qué localidad española nació Ángela Ruiz Robles?","En Villamanín (León)","En Ferrol (A Coruña)","En Santander","b"),
+ mc("¿Qué profesión tenía Ángela Ruiz Robles?","Maestra","Ingeniera aeronáutica","Médica rural","b"),
+ mc("¿Cuál es el último paso de la evolución de la Enciclopedia Mecánica, según el diario?","La tablet","El libro impreso","El lector de libros electrónicos","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre los inventos de mujeres como Ángela?","Que muchos han tardado en ser reconocidos","Que nunca han sido patentados","Que solo se usaron en Galicia","o"),
+ mc("Según el relato, ¿con qué se leía el libro mecánico de Ángela?","Con una palanca","Con un lápiz óptico","Con una pantalla táctil","s"),
+ mc("¿Qué permitía cambiar de tema en la Enciclopedia Mecánica, según la ficha?","Las bobinas","Un botón digital","Una aplicación móvil","b")],
+[mc("¿Por qué se considera precursora del libro electrónico?","Porque reunía muchas lecciones en un solo aparato","Porque usaba una pequeña pantalla táctil","Porque se fabricaba en serie en fábricas","a"),
+ mc("¿Qué ventajas ofrecía frente a un libro impreso normal?","Menos peso, varios idiomas y luz para leer","Más páginas y un precio más barato","Más resistente al agua y a los golpes","a"),
+ mc("¿Por qué reducir el peso de la mochila era importante para Ángela como maestra?","Porque veía el esfuerzo diario que suponía para sus alumnos cargar muchos libros","Porque los libros de su época no pesaban nada en realidad","Porque quería que sus alumnos hicieran más ejercicio físico","b"),
+ mc("¿Qué relación hay entre la luz incorporada en el aparato y la facilidad para estudiar?","Permitía leer incluso con poca luz ambiental, en cualquier momento","Hacía que el aparato pesara mucho menos","No tenía relación alguna con la lectura nocturna","a"),
+ mc("¿Por qué se dice que la Enciclopedia Mecánica reunía «varios idiomas» en un solo aparato?","Porque permitía acceder a distintos contenidos lingüísticos sin cambiar de libro","Porque traducía automáticamente cualquier texto en tiempo real","Porque solo servía para aprender un único idioma a la vez","a"),
+ mc("¿Qué significa que un invento tarde décadas en ser reconocido, como en el caso de Ángela?","Que su valor no se entiende o se valora del todo hasta mucho después","Que el invento deja de existir si no se reconoce rápido","Que siempre se reconoce al mismo tiempo en que se crea","o"),
+ mc("¿Por qué el uso de bobinas resultaba innovador para cambiar de contenido en los años 40?","Porque permitía pasar de una lección a otra sin usar electrónica digital, que no existía aún","Porque las bobinas eran dispositivos digitales muy avanzados para la época","Porque sustituían por completo la necesidad de cualquier texto escrito","b"),
+ mc("¿Qué relación hay entre el trabajo de Ángela como maestra y su labor como inventora?","Su experiencia en el aula le permitió identificar un problema real para sus alumnos","No tenía relación alguna, inventó por casualidad sin pensar en la enseñanza","Dejó de ser maestra en cuanto empezó a inventar","b"),
+ mc("¿Por qué se dice que su invento fue pionero aunque no usara electrónica digital?","Porque anticipó la idea de un solo aparato con muchos contenidos, antes de que existieran las pantallas","Porque fue, mucho antes que nadie, el primer aparato electrónico de toda la historia","Porque usaba inteligencia artificial avanzada para elegir automáticamente las lecciones","a"),
+ mc("¿Qué diferencia hay entre la Enciclopedia Mecánica y un lector de libros electrónicos actual?","El lector actual usa pantalla digital; el de Ángela usaba mecanismos y bobinas","Ambos funcionan exactamente con la misma tecnología","El lector actual pesa mucho más que la Enciclopedia Mecánica","e")],
 [mc("Un alumno lleva veinte libros en la mochila. ¿Qué solución actual sigue la idea de Ángela?","Un lector de libros electrónicos","Una mochila con ruedas","Fotocopias de todos los libros","a"),
- mc("¿Qué evolución permite además ver vídeos y hacer ejercicios interactivos?","La tablet","El libro impreso","La Enciclopedia Mecánica","e")],
+ mc("¿Qué evolución permite además ver vídeos y hacer ejercicios interactivos?","La tablet","El libro impreso","La Enciclopedia Mecánica","e"),
+ mc("Una escuela rural de los años 40 quiere que sus alumnos lleven menos peso diario de libros. ¿Qué inventaría una maestra como Ángela?","Un aparato que reúna varias lecciones en uno solo","Más mochilas de refuerzo","Libros de texto mucho más gruesos","a"),
+ mc("Quieres leer por la noche sin encender la luz de toda la habitación. ¿Qué característica de la Enciclopedia Mecánica te sería útil hoy?","Una luz incorporada al propio dispositivo de lectura","Un libro de papel sin ninguna luz","Una vela colocada junto a la cama","a"),
+ mc("Un colegio quiere que sus alumnos estudien varios idiomas con un solo dispositivo. ¿Qué aparato, heredero de la idea de Ángela, usaría?","Una tablet con distintos contenidos","Un único libro de texto en español","Una pizarra de tiza tradicional","e"),
+ mc("Una maestra de hoy quiere reconocer y homenajear a inventoras poco conocidas como Ángela. ¿Qué podría hacer en clase?","Investigar y presentar su historia a los alumnos","Ignorar su aportación porque ya está superada","Solo mencionar inventores hombres de la misma época","o"),
+ mc("Quieres diseñar un dispositivo educativo ligero para zonas sin electricidad, como pensaría Ángela en su época. ¿Qué buscarías priorizar?","Un mecanismo sencillo que no dependa de baterías digitales","Una pantalla táctil de última generación obligatoriamente","Un aparato muy pesado pero resistente","b"),
+ mc("Un bibliotecario quiere digitalizar cientos de libros para que ocupen menos espacio físico. ¿Qué solución moderna sigue el espíritu de Ángela?","Convertirlos en libros electrónicos","Imprimir copias adicionales en papel","Guardar solo los libros más cortos","a"),
+ mc("Quieres facilitar el estudio a un alumno con dificultades de visión en condiciones de poca luz. ¿Qué característica del invento de Ángela ayudaría?","Un sistema de iluminación incorporado al propio soporte de lectura","Un libro impreso en letra diminuta","Ningún tipo de ayuda adicional","a"),
+ mc("Una editorial quiere lanzar un dispositivo con varias asignaturas en un solo aparato ligero, como soñaba Ángela. ¿Qué producto actual encaja?","Una tablet educativa","Un libro de texto en papel de mil páginas","Una pizarra mural fija","e")],
 [mc("En 1949 no existían las pantallas digitales. ¿Qué se deduce de cómo funcionaba?","Con mecanismos, bobinas y luz","Con un pequeño ordenador y una pantalla de tinta","Con ondas de radio","e"),
- mc("Su invento tardó en reconocerse. ¿Qué se deduce?","Que hay ideas que no se valoran a tiempo","Que fue un invento sin utilidad real","Que nunca llegó a patentarse oficialmente","o")]
+ mc("Su invento tardó en reconocerse. ¿Qué se deduce?","Que hay ideas que no se valoran a tiempo","Que fue un invento sin utilidad real","Que nunca llegó a patentarse oficialmente","o"),
+ mc("Si Ángela diseñó su invento pensando en sus propios alumnos, ¿qué se deduce sobre el origen de muchas buenas ideas técnicas?","Que a menudo nacen de observar un problema cotidiano real","Que siempre surgen en grandes laboratorios de investigación","Que nunca tienen relación con la experiencia personal del inventor","b"),
+ mc("La Enciclopedia Mecánica reunía varias lecciones en un aparato más ligero que muchos libros juntos. ¿Qué se deduce sobre su objetivo principal?","Que buscaba facilitar y aliviar el estudio diario de los alumnos","Que buscaba sustituir por completo a los maestros","Que buscaba encarecer el material escolar","a"),
+ mc("Si la idea de reunir contenidos en un solo aparato se adelantó varias décadas a la tecnología digital, ¿qué se deduce sobre el momento en que apareció?","Que la tecnología de su época no permitía desarrollarla con toda su potencia","Que ya existían entonces pantallas digitales similares a las actuales","Que no tuvo ninguna relación con los libros electrónicos posteriores","e"),
+ mc("Ángela patentó su invento en 1962, pero no llegó a fabricarse en serie. ¿Qué se deduce sobre la distancia entre inventar y comercializar algo?","Que tener una patente no garantiza que el invento llegue al público","Que toda patente se convierte automáticamente en un producto vendido","Que su invento nunca llegó a patentarse de verdad","o"),
+ mc("Si hoy las tablets reúnen libros, vídeos y ejercicios como soñaba Ángela, ¿qué se deduce sobre la validez de su idea original?","Que su visión educativa resultó acertada, aunque se hiciera realidad mucho después","Que su idea resultó equivocada porque nunca llegó a cumplirse","Que las tablets no tienen relación alguna con su invento","e"),
+ mc("El reconocimiento de Ángela como pionera llegó mucho después de su muerte. ¿Qué se deduce sobre el papel de las mujeres inventoras de su generación?","Que a menudo su trabajo tardaba más en visibilizarse que el de otros inventores","Que todas las inventoras de su época fueron reconocidas de inmediato","Que las mujeres no podían inventar nada en esa época","o"),
+ mc("Si Ángela trabajaba a diario con las dificultades reales de sus alumnos, ¿qué se deduce sobre la relación entre la docencia y la innovación educativa?","Que la experiencia docente puede impulsar ideas útiles para mejorar el aprendizaje","Que enseñar y crear nuevas herramientas educativas son actividades sin relación","Que solo los ingenieros pueden mejorar los materiales escolares","b"),
+ mc("La Enciclopedia Mecánica usaba mecanismos en vez de electrónica porque esta aún no existía de forma práctica. ¿Qué se deduce sobre la relación entre las ideas y la tecnología disponible?","Que una buena idea a veces debe esperar a que la tecnología necesaria se desarrolle","Que las ideas solo pueden surgir después de que exista toda la tecnología necesaria","Que la tecnología siempre llega antes que las ideas que la aprovechan","e")]
 ];
-
+QR.mechbook=[
+rs("Busca en internet: ¿cómo se llama el lector de libros electrónicos con tinta electrónica que lanzó Amazon en 2007?",["kindle"],"Busca «lector de libros electrónicos Amazon 2007»."),
+rs("Busca en internet: ¿en qué comunidad autónoma está la ciudad de Ferrol?",["galicia"],"Busca «Ferrol comunidad autónoma»."),
+rs("Busca en internet: ¿en qué año falleció Ángela Ruiz Robles?",["1975"],"Busca «Ángela Ruiz Robles año de fallecimiento»."),
+rs("Busca en internet: ¿qué nombre lleva el instituto de educación secundaria de Ferrol dedicado a la memoria de Ángela Ruiz Robles?",["angela ruiz robles"],"Busca «instituto Ángela Ruiz Robles Ferrol»."),
+rs("Busca en internet: ¿qué buscador de internet dedicó en 2018 uno de sus doodles a Ángela Ruiz Robles por su aniversario?",["google"],"Busca «doodle de Google dedicado a Ángela Ruiz Robles»."),
+rs("Busca en internet: ¿qué otra inventora española, pionera en la aeronáutica, se llama Mariano Barberán? (si no cuadra, busca «mujeres inventoras españolas destacadas» y cita una)",["maria telkes","mujeres inventoras españolas"],"Busca «mujeres inventoras españolas destacadas»."),
+rs("Busca en internet: ¿qué formato de archivo es el más habitual para los libros electrónicos actuales, de tres letras?",["epub"],"Busca «formato de archivo de los libros electrónicos»."),
+rs("Busca en internet: ¿qué tecnología de pantalla, muy usada en los lectores de libros electrónicos, imita la apariencia del papel impreso?",["tinta electronica","e-ink"],"Busca «tecnología de pantalla que imita al papel impreso»."),
+rs("Busca en internet: ¿en qué provincia española se encuentra Villamanín, pueblo natal de Ángela Ruiz Robles?",["leon"],"Busca «provincia de Villamanín pueblo natal»."),
+rs("Busca en internet: ¿qué día del año se celebra el Día Internacional de la Mujer y la Niña en la Ciencia, creado por la ONU?",["11 de febrero"],"Busca «Día Internacional de la Mujer y la Niña en la Ciencia fecha».")
+];
+</script>
+<!-- Autoría: Victor Manuel Montano Simón · ID de obra VMMS-2026-8FA9 · © 2026. Todos los derechos reservados. -->
+<script>
 QN.shield=[
 [mc("¿Qué aspecto tenía el líquido del que salió el Kevlar?","Turbio","Transparente","Rojizo","s"),
- mc("¿Cuánto más resistente es el Kevlar que el acero a igual peso?","Unas cinco veces","Unas dos veces","Unas diez veces","s")],
-[mc("¿Por qué fue tan importante que Kwolek probara el líquido?","Otros querían tirarlo y resultó ser una fibra resistente","Buscaba expresamente una fibra antibalas para la policía","Su jefe le ordenó fabricarlo para un contrato militar","s"),
- mc("¿Qué dos cualidades combina el Kevlar?","Ligereza y resistencia","Flexibilidad y transparencia","Dureza y peso elevado","a")],
+ mc("¿Cuánto más resistente es el Kevlar que el acero a igual peso?","Unas cinco veces","Unas dos veces","Unas diez veces","s"),
+ mc("¿En qué año se desarrolló el Kevlar, según la ficha?","En 1965","En 1865","En 1995","h"),
+ mc("¿En qué empresa trabajaba Stephanie Kwolek cuando descubrió el Kevlar?","En DuPont","En Motorola","En Intel","b"),
+ mc("¿De qué nacionalidad era Stephanie Kwolek?","Estadounidense","Alemana","Francesa","b"),
+ mc("¿Qué querían hacer otros compañeros con el líquido turbio antes de que Kwolek lo probara?","Tirarlo","Venderlo","Guardarlo en secreto","s"),
+ mc("¿Cuál es el último paso de la evolución del invento, según el diario?","Materiales nuevos, ligeros y resistentes","Armadura de metal","Chalecos con Kevlar","e"),
+ mc("¿Qué recomienda el apartado «Ojo» sobre fabricar materiales nuevos como el Kevlar?","Pensar cómo reciclarlos, porque consumen recursos","Fabricarlos solo para uso militar","Prohibir su fabricación por completo","o"),
+ mc("¿En qué tipo de objetos se usa el Kevlar, según la ficha?","Chalecos antibalas, cascos, neumáticos y cuerdas","Solo en joyas y relojes","Solo en instrumentos musicales","a"),
+ mc("¿Qué profesión tenía Stephanie Kwolek?","Química","Física nuclear","Bióloga marina","b")],
+[mc("¿Cuál es la gran ventaja del Kevlar?","Es ligero y muy resistente","Es pesado y frágil","Es transparente","a"),
+ mc("¿Por qué fue importante que Kwolek probara el líquido turbio?","Porque otros lo iban a tirar y resultó ser una fibra excelente","Porque estaba muy caliente","Porque era un secreto militar","s"),
+ mc("¿Por qué el Kevlar resulta tan útil en chalecos antibalas a pesar de ser ligero?","Porque combina baja densidad con una resistencia mecánica muy alta","Porque es un metal muy pesado que detiene cualquier impacto","Porque se vuelve más pesado cuanto más fino se fabrica","a"),
+ mc("¿Qué relación hay entre el Kevlar y las armaduras de metal antiguas?","El Kevlar cumple una función similar de protección, pero mucho más ligera","El Kevlar pesa mucho más que cualquier armadura de metal","No existe ninguna relación entre ambos materiales","e"),
+ mc("¿Por qué Kwolek decidió investigar un líquido que parecía un error de laboratorio?","Porque, aunque no era lo esperado, decidió comprobar sus propiedades antes de descartarlo","Porque sabía desde el principio que sería un éxito comercial","Porque se lo ordenó directamente su jefe sin ninguna duda","s"),
+ mc("¿Qué significa que fabricar materiales nuevos «consume recursos», según el apartado «Ojo»?","Que su producción necesita energía y materias primas que conviene aprovechar bien","Que los materiales nuevos no necesitan ningún recurso para fabricarse","Que solo los materiales antiguos consumen recursos naturales","o"),
+ mc("¿Por qué el Kevlar se usa también en neumáticos y cuerdas, no solo en chalecos?","Porque su resistencia y ligereza son útiles en muchos objetos distintos, no solo en protección personal","Porque solo puede fabricarse y usarse en forma de chaleco antibalas","Porque los neumáticos necesitan ser muy pesados y el Kevlar lo consigue","a"),
+ mc("¿Qué quiere decir que el Kevlar sea «cinco veces más resistente que el acero a igual peso»?","Que con mucho menos material se logra una resistencia parecida o mayor que la del acero","Que el Kevlar pesa cinco veces más que el acero con la misma resistencia","Que el acero es siempre más resistente que el Kevlar en cualquier situación","s"),
+ mc("¿Por qué el descubrimiento de Kwolek se considera fruto tanto de la casualidad como de su criterio científico?","Porque supo reconocer el valor de un resultado inesperado en vez de descartarlo","Porque lo planificó todo desde el principio sin ningún imprevisto","Porque otro científico le indicó exactamente qué hacer con el líquido","s"),
+ mc("¿Qué relación hay entre el Kevlar y salvar vidas, según la ficha?","Su uso en chalecos y cascos ha protegido a muchas personas de impactos graves","No tiene ninguna relación con la protección de las personas","Solo se ha usado para fines decorativos","a")],
 [mc("Un equipo de rescate quiere una cuerda muy resistente pero ligera. ¿Qué material elige?","Fibra de Kevlar","Acero macizo","Cuero trenzado","a"),
- mc("Un policía necesita protección ligera que le permita moverse. ¿Qué elige?","Un chaleco con Kevlar","Una armadura de metal","Un chaleco de lana gruesa","e")],
+ mc("Un policía necesita protección ligera que le permita moverse. ¿Qué elige?","Un chaleco con Kevlar","Una armadura de metal","Un chaleco de lana gruesa","e"),
+ mc("Un bombero necesita un guante resistente al corte sin que le pese demasiado la mano. ¿Qué material elegiría?","Un tejido con fibra de Kevlar","Una plancha de acero rígida","Un guante de tela de algodón","a"),
+ mc("Un fabricante de neumáticos quiere reforzarlos sin que pesen demasiado. ¿Qué material añadiría, según la ficha?","Fibra de Kevlar","Láminas de plomo","Placas de cerámica gruesa","a"),
+ mc("Un deportista de escalada necesita una cuerda segura que no le añada peso innecesario a la mochila. ¿Qué buscaría?","Una cuerda con fibras muy resistentes y ligeras, como el Kevlar","Una cadena de hierro larga","Una cuerda de algodón grueso","a"),
+ mc("Una empresa fabrica cascos de protección para motoristas. ¿Qué material prioriza, siguiendo la idea del Kevlar?","Uno ligero y muy resistente a los impactos","Uno pesado aunque poco resistente","Uno frágil pero barato","a"),
+ mc("Un laboratorio obtiene un material de aspecto extraño que no esperaba. ¿Qué actitud científica, como la de Kwolek, sería más útil?","Investigar sus propiedades antes de descartarlo","Tirarlo inmediatamente sin comprobar nada","Ignorarlo porque no se ajusta al plan inicial","s"),
+ mc("Una fábrica de materiales avanzados quiere reducir su impacto ambiental. ¿Qué medida sigue el apartado «Ojo»?","Buscar cómo reciclar los materiales que fabrica","Fabricar la mayor cantidad posible sin pensar en el reciclaje","Dejar de informar sobre el impacto de sus productos","o"),
+ mc("Un equipo deportivo quiere chalecos protectores ligeros para un deporte de contacto. ¿Qué material, inspirado en el Kevlar, elegirían?","Materiales compuestos ligeros y resistentes","Planchas de metal muy pesadas","Telas finas sin ninguna protección","a"),
+ mc("Un ingeniero diseña cables para un puente que deben resistir mucho peso sin ser demasiado gruesos. ¿Qué tipo de material consideraría, según la lógica del Kevlar?","Fibras de alta resistencia y poco peso","Cuerdas de fibra vegetal tradicional","Cadenas de hierro muy gruesas y pesadas","a")],
 [mc("Es cinco veces más resistente que el acero a igual peso. ¿Qué se deduce?","Que se necesita menos material para igual resistencia","Que es más barato y fácil de fabricar en serie que el acero","Que es más denso y pesado que el acero","s"),
- mc("Fabricar materiales nuevos consume recursos. ¿Qué medida es más lógica?","Diseñarlos pensando en cómo reciclarlos","Fabricar más cantidad para abaratarlos","Evitar usarlos en chalecos","o")]
+ mc("Fabricar materiales nuevos consume recursos. ¿Qué medida es más lógica?","Diseñarlos pensando en cómo reciclarlos","Fabricar más cantidad para abaratarlos","Evitar usarlos en chalecos","o"),
+ mc("Si otros compañeros de Kwolek querían tirar el líquido turbio, ¿qué se deduce sobre el valor de observar con atención los resultados inesperados?","Que prestar atención a algo fuera de lo normal puede llevar a un descubrimiento importante","Que los resultados inesperados siempre deben descartarse de inmediato","Que solo los resultados esperados tienen algún valor científico","s"),
+ mc("El Kevlar se usa hoy en chalecos, cascos, neumáticos y cuerdas. ¿Qué se deduce sobre la versatilidad de un buen material?","Que un mismo material puede resolver problemas muy distintos","Que un material solo puede usarse para el fin con el que se creó","Que el Kevlar solo sirve para fabricar chalecos antibalas","a"),
+ mc("Si el Kevlar sustituyó en muchos usos a las armaduras de metal, ¿qué se deduce sobre la evolución de los materiales de protección?","Que se buscan materiales cada vez más ligeros sin perder resistencia","Que los materiales de protección se han vuelto cada vez más pesados","Que la protección personal ha dejado de evolucionar con el tiempo","e"),
+ mc("Kwolek no buscaba originalmente una fibra ultrarresistente cuando obtuvo el líquido turbio. ¿Qué se deduce sobre algunos grandes descubrimientos científicos?","Que a veces ocurren de forma inesperada durante otra investigación","Que todos los descubrimientos se planifican exactamente desde el inicio","Que un descubrimiento accidental nunca tiene ninguna utilidad real","s"),
+ mc("Si fabricar nuevos materiales consume recursos naturales, ¿qué se deduce sobre producir cada vez más cantidad sin control?","Que podría aumentar la presión sobre esos recursos si no se gestiona bien","Que no tiene ningún efecto sobre los recursos naturales","Que cuanto más se fabrique, menos recursos se consumen","o"),
+ mc("El Kevlar ha salvado vidas en chalecos antibalas y cascos de protección. ¿Qué se deduce sobre la importancia de la investigación en materiales?","Que puede tener un impacto directo y muy positivo en la seguridad de las personas","Que la investigación en materiales no afecta nunca a la vida real de la gente","Que solo tiene aplicaciones decorativas o estéticas","a"),
+ mc("Si un material puede ser a la vez ligero y muy resistente, ¿qué se deduce sobre la relación entre peso y resistencia en los materiales tradicionales?","Que no siempre un material debe ser pesado para ser resistente","Que todo material resistente tiene que ser necesariamente pesado","Que el peso y la resistencia son siempre exactamente proporcionales","s"),
+ mc("Kwolek trabajaba en una empresa dedicada a la investigación de nuevos materiales. ¿Qué se deduce sobre el papel de la investigación científica aplicada en la industria?","Que invertir en investigación puede dar lugar a avances inesperados y muy útiles","Que la investigación en empresas nunca produce avances relevantes","Que los descubrimientos importantes solo ocurren en universidades, nunca en empresas","b")]
 ];
-
+QR.shield=[
+rs("Busca en internet: ¿qué otra fibra sintética, el nailon, inventó Wallace Carothers en DuPont en los años 30?",["nailon","nylon","nilon"],"Busca «Wallace Carothers DuPont fibra 1935»."),
+rs("Busca en internet: ¿en qué estado de EE. UU. está Wilmington, sede histórica de DuPont?",["delaware"],"Busca «Wilmington DuPont estado»."),
+rs("Busca en internet: ¿en qué año fue incluida Stephanie Kwolek en el Salón Nacional de la Fama de los Inventores de Estados Unidos?",["1995"],"Busca «Stephanie Kwolek Salón de la Fama de los Inventores»."),
+rs("Busca en internet: ¿qué material cerámico, muy usado junto al Kevlar en chalecos antibalas de alta protección, es extremadamente duro?",["ceramica","carburo de boro","alumina"],"Busca «material cerámico usado en chalecos antibalas»."),
+rs("Busca en internet: ¿qué deporte de motor usa cascos y monos con fibras de Kevlar para proteger a los pilotos?",["formula 1","motociclismo","motogp"],"Busca «deporte de motor que usa Kevlar en la protección»."),
+rs("Busca en internet: ¿qué científica estadounidense, Margaret Hutchinson Rousseau, destacó también en la industria química de esa misma época?",["margaret hutchinson rousseau"],"Busca «científicas destacadas de la industria química en EE. UU.»."),
+rs("Busca en internet: ¿qué nombre comercial recibe la fibra de aramida que compite con el Kevlar, fabricada por otra empresa?",["twaron"],"Busca «fibra de aramida competidora del Kevlar»."),
+rs("Busca en internet: ¿qué deporte acuático usa tablas reforzadas a veces con fibra de Kevlar para hacerlas más ligeras y resistentes?",["surf","vela"],"Busca «tablas deportivas reforzadas con Kevlar»."),
+rs("Busca en internet: ¿qué cuerpo de seguridad suele llevar de forma habitual chalecos antibalas con Kevlar en su trabajo diario?",["policia"],"Busca «cuerpo de seguridad que usa chalecos de Kevlar»."),
+rs("Busca en internet: ¿en qué año nació Stephanie Kwolek?",["1923"],"Busca «año de nacimiento de Stephanie Kwolek».")
+];
 QN.chip=[
 [mc("¿Cómo se llamó el primer microprocesador comercial y cuántos transistores tenía?","Intel 4004, unos 2.300","Intel 4004, unos 23.000","ENIAC, unos 2.300","b"),
- mc("¿Quiénes colaboraron con Faggin en el diseño?","Ted Hoff, Stan Mazor y Masatoshi Shima","Gordon Moore y Robert Noyce","Charles Babbage y Ada Lovelace","b")],
-[mc("¿Qué función tiene un microprocesador?","Ejecutar instrucciones y hacer los cálculos del ordenador","Guardar los programas y los datos de forma permanente en un disco","Mostrar las imágenes y el texto en la pantalla","s"),
- mc("¿Qué cambio trajo frente a los ordenadores del tamaño de una sala?","Ordenadores pequeños y baratos, que podían ser personales","Ordenadores más rápidos pero solo para empresas","Ordenadores más potentes pero igual de grandes","a")],
-[mc("Una empresa quiere fabricar calculadoras de bolsillo baratas. ¿Qué componente aprovecha?","Un microprocesador","Una válvula de vacío","Un motor eléctrico pequeño","a"),
- mc("Tu móvil viejo ya no funciona. ¿Qué haces para respetar el apartado «Ojo»?","Llevarlo a un punto limpio de reciclaje","Guardarlo en un cajón por si acaso","Tirarlo con la basura orgánica","o")],
-[mc("Un chip del tamaño de una uña sustituía a una sala. ¿Qué consecuencia lógica tuvo?","Los ordenadores pudieron llegar a los hogares","Los ordenadores desaparecieron de las empresas","Los ordenadores se hicieron más grandes","s"),
- mc("Hoy hay microprocesadores en coches y frigoríficos. ¿Qué se deduce?","Que casi cualquier aparato puede volverse inteligente","Que solo se usan en aparatos grandes","Que los ordenadores personales están desapareciendo","a")]
+ mc("¿Quiénes colaboraron con Faggin en el diseño?","Ted Hoff, Stan Mazor y Masatoshi Shima","Gordon Moore y Robert Noyce","Charles Babbage y Ada Lovelace","b"),
+ mc("¿En qué año se lanzó el primer microprocesador comercial?","En 1971","En 1871","En 1991","h"),
+ mc("¿En qué empresa se diseñó el Intel 4004?","En Intel","En Motorola","En IBM","h"),
+ mc("¿De qué nacionalidad era Federico Faggin?","Italiano","Alemán","Japonés","b"),
+ mc("¿En qué ciudad italiana nació Federico Faggin, según la ficha?","En Vicenza","En Roma","En Milán","b"),
+ mc("¿Cuál es el último paso de la evolución del invento, según el diario?","Smartphone y dispositivos inteligentes","Ordenadores del tamaño de una sala","Ordenador personal","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre los chips?","Que generan residuos electrónicos y hay que reciclar los aparatos","Que nunca se estropean ni necesitan mantenimiento","Que solo sirven para fabricar calculadoras de bolsillo","o"),
+ mc("Según el relato, ¿qué tamaño tenían los ordenadores que conocía Valdemar antes del chip?","El de una sala entera","El de una caja de zapatos","El de un sello de correos","s"),
+ mc("¿Qué comparación hace Valdemar sobre su nevera en el relato?","Que piensa más rápido que él","Que es más fuerte que un vampiro","Que vuela como un murciélago","s")],
+[mc("¿Qué es un microprocesador?","Un chip que calcula y ejecuta instrucciones: el cerebro del ordenador","Un cable que conecta los componentes del ordenador entre sí","Una pantalla que muestra las imágenes del ordenador","s"),
+ mc("¿Qué cambio supuso frente a los ordenadores del tamaño de una sala?","Ordenadores pequeños, baratos y personales","Ordenadores más grandes","Ordenadores sin electricidad","a"),
+ mc("¿Por qué meter la unidad de cálculo en un solo chip pequeño abarató los ordenadores?","Porque simplificó y redujo mucho la fabricación respecto a usar miles de piezas sueltas","Porque eliminó por completo la necesidad de cualquier pieza electrónica","Porque hizo que los ordenadores dejaran de necesitar electricidad","a"),
+ mc("¿Qué relación hay entre el microprocesador y la existencia de los ordenadores personales en los hogares?","El chip pequeño y barato hizo posible tener un ordenador propio en casa","Los ordenadores personales existían antes de que se inventara el microprocesador","El microprocesador solo se usa en grandes empresas, nunca en casa","a"),
+ mc("¿Por qué hoy hay microprocesadores en coches y frigoríficos, no solo en ordenadores?","Porque su pequeño tamaño y bajo coste permiten incorporarlos a muchos aparatos distintos","Porque los frigoríficos necesitan un microprocesador del tamaño de una sala","Porque los coches funcionaban igual antes de que existieran los chips","a"),
+ mc("¿Qué significa que un chip del tamaño de una uña sustituyera a un ordenador que ocupaba una sala?","Que la miniaturización permitió hacer lo mismo o más en mucho menos espacio","Que los ordenadores de antes eran más pequeños que los chips actuales","Que los chips actuales necesitan más espacio que los ordenadores antiguos","s"),
+ mc("¿Por qué reciclar los móviles viejos tiene relación con el apartado «Ojo» sobre los chips?","Porque evita que sus materiales se conviertan en residuos sin control","Porque los móviles viejos ya no contienen ningún tipo de chip en su interior","Porque reciclar siempre aumenta la cantidad de residuos electrónicos generados","o"),
+ mc("¿Qué relación hay entre Faggin, Hoff, Mazor y Shima en el diseño del Intel 4004?","Trabajaron en equipo para diseñar y fabricar el microprocesador","Cada uno diseñó un microprocesador completamente distinto por separado","Solo uno de ellos participó realmente en el proyecto","b"),
+ mc("¿Por qué se dice que el microprocesador «democratizó» la informática?","Porque bajó tanto el coste que permitió que mucha más gente tuviera acceso a un ordenador","Porque solo las grandes empresas pudieron permitirse comprarlo","Porque eliminó la necesidad de programar los ordenadores","a"),
+ mc("¿Qué diferencia hay entre un ordenador con miles de piezas sueltas y uno con un microprocesador integrado?","El microprocesador integra muchas funciones en un solo chip pequeño","El ordenador con piezas sueltas es siempre más pequeño que uno con chip","Ambos ocupan exactamente el mismo espacio físico","a")],
+[mc("Quieres fabricar una calculadora de bolsillo barata. ¿Qué componente aprovecha?","Un microprocesador","Una válvula de vacío","Un motor eléctrico pequeño","a"),
+ mc("Tu móvil viejo ya no funciona. ¿Qué haces para respetar el apartado «Ojo»?","Llevarlo a un punto limpio de reciclaje","Guardarlo en un cajón por si acaso","Tirarlo con la basura orgánica","o"),
+ mc("Un fabricante de electrodomésticos quiere que una lavadora ajuste sola sus programas de lavado. ¿Qué componente incorpora?","Un microprocesador","Una válvula de vacío","Una rueda de engranajes mecánicos","a"),
+ mc("Quieres diseñar un reloj inteligente muy pequeño con muchas funciones. ¿Qué componente necesitas, siguiendo la idea del chip?","Un microprocesador compacto","Un ordenador del tamaño de una sala","Un motor de combustión interna","a"),
+ mc("Una empresa de coches quiere que el vehículo controle solo el consumo de combustible. ¿Qué componente incorpora, siguiendo la evolución del chip?","Un microprocesador","Un volante más grande","Una rueda con más radios","a"),
+ mc("Un centro educativo recoge ordenadores viejos en desuso. ¿Qué debería hacer con ellos, según el apartado «Ojo»?","Llevarlos a reciclar en un punto adecuado","Guardarlos todos sin usarlos ni reciclarlos","Quemarlos para deshacerse de ellos","o"),
+ mc("Quieres que un juguete electrónico tome pequeñas decisiones, como encender luces según el movimiento. ¿Qué componente necesita?","Un microprocesador sencillo","Un simple cable de cobre","Una polea mecánica","a"),
+ mc("Una fábrica de electrónica quiere reducir el tamaño de sus productos sin perder funciones. ¿Qué invento histórico le ayudaría, como pasó con el Intel 4004?","Un microprocesador integrado","Una válvula de vacío grande","Varias piezas sueltas de gran tamaño","a"),
+ mc("Quieres programar un sistema de riego automático para un jardín. ¿Qué componente, heredero del chip, usarías?","Un microcontrolador con microprocesador","Un reloj de arena","Una polea de cuerda","a"),
+ mc("Un hospital quiere equipos médicos portátiles en lugar de máquinas enormes. ¿Qué avance tecnológico lo permite, como el del chip?","La miniaturización gracias a los microprocesadores","El uso de válvulas de vacío más grandes","El uso exclusivo de piezas mecánicas","a")],
+[mc("El chip del tamaño de una uña sustituía a una sala. ¿Qué consecuencia lógica tuvo?","Los ordenadores pudieron llegar a los hogares","Los ordenadores desaparecieron de las empresas","Los ordenadores se hicieron más grandes","s"),
+ mc("Hoy hay microprocesadores en coches y frigoríficos. ¿Qué se deduce?","Que casi cualquier aparato puede volverse inteligente","Que solo se usan en aparatos grandes","Que los ordenadores personales están desapareciendo","a"),
+ mc("Si el Intel 4004 tenía unos 2.300 transistores y los chips actuales tienen miles de millones, ¿qué se deduce sobre la evolución de la tecnología?","Que la capacidad de los chips ha aumentado enormemente con el tiempo","Que los chips actuales son mucho más simples que los primeros","Que el número de transistores nunca ha cambiado desde 1971","e"),
+ mc("El microprocesador abarató mucho el precio de los ordenadores. ¿Qué se deduce sobre el acceso de la gente a la informática?","Que mucha más gente pudo permitirse tener un ordenador propio","Que solo las grandes empresas pudieron seguir comprando ordenadores","Que el precio de los ordenadores subió tras su invención","a"),
+ mc("Si cada vez más aparatos domésticos llevan un microprocesador, ¿qué se deduce sobre la cantidad de residuos electrónicos generados con el tiempo?","Que probablemente también aumenta si no se gestiona bien su reciclaje","Que los residuos electrónicos han desaparecido gracias a los chips","Que un chip nunca se convierte en residuo al final de su vida útil","o"),
+ mc("Faggin trabajó junto a otros ingenieros para diseñar el Intel 4004. ¿Qué se deduce sobre los grandes avances tecnológicos modernos?","Que suelen ser el resultado de un trabajo en equipo, no de una sola persona","Que siempre son obra de un único inventor que trabaja en solitario","Que el diseño de un chip no requiere ningún tipo de colaboración","b"),
+ mc("Si un microprocesador puede caber en una uña y hacer cálculos complejos, ¿qué se deduce sobre la relación entre tamaño y capacidad en la electrónica?","Que un componente pequeño puede tener una capacidad de cálculo enorme","Que un componente debe ser grande para tener mucha capacidad","Que el tamaño de un chip determina siempre su potencia de cálculo","s"),
+ mc("El microprocesador evolucionó del ordenador personal al smartphone actual. ¿Qué se deduce sobre la dirección de esa evolución?","Que los dispositivos se han hecho más pequeños, potentes y portátiles con el tiempo","Que los dispositivos se han hecho cada vez más grandes y menos portátiles","Que el smartphone es anterior históricamente al ordenador personal","e"),
+ mc("Si reciclar aparatos electrónicos reduce el impacto de los residuos, ¿qué se deduce sobre no reciclar un móvil viejo lleno de chips?","Que contribuye a acumular más residuos electrónicos de los necesarios","Que no tiene ningún efecto sobre la cantidad de residuos generados","Que reduce automáticamente la contaminación electrónica","o"),
+ mc("El chip permitió que la informática pasara de las grandes empresas a los hogares comunes. ¿Qué se deduce sobre el impacto social de un invento barato y accesible?","Que puede transformar profundamente la vida cotidiana de mucha gente","Que un invento barato nunca tiene gran impacto en la sociedad","Que solo las grandes empresas se beneficiaron de su invención","a")]
 ];
-
+QR.chip=[
+rs("Busca en internet: ¿qué ley de Gordon Moore predice que el número de transistores de un chip se duplica cada cierto tiempo?",["moore","ley de moore"],"Busca «Gordon Moore ley transistores»."),
+rs("Busca en internet: ¿cómo se llama la zona de California donde se concentran las grandes empresas tecnológicas?",["silicon valley","valle del silicio","silicon"],"Busca «Silicon Valley significado»."),
+rs("Busca en internet: ¿qué material semiconductor, muy abundante en la arena, se usa para fabricar la mayoría de los chips?",["silicio"],"Busca «material semiconductor de los chips»."),
+rs("Busca en internet: ¿qué empresa taiwanesa es actualmente uno de los mayores fabricantes de chips del mundo, conocida por sus siglas TSMC?",["tsmc","taiwan semiconductor manufacturing company"],"Busca «mayor fabricante de chips de Taiwán»."),
+rs("Busca en internet: ¿qué científico cofundó Intel junto a Gordon Moore en 1968?",["robert noyce"],"Busca «cofundador de Intel junto a Gordon Moore»."),
+rs("Busca en internet: ¿qué nombre recibe la unidad que mide la velocidad de un microprocesador, expresada en hercios?",["frecuencia de reloj","hercios","ghz"],"Busca «unidad que mide la velocidad de un microprocesador»."),
+rs("Busca en internet: ¿qué otro inventor, Jack Kilby, es reconocido junto a Robert Noyce como creador del circuito integrado en 1958?",["jack kilby","kilby"],"Busca «inventor del circuito integrado 1958»."),
+rs("Busca en internet: ¿qué premio internacional, considerado el Nobel de la tecnología, recibió Federico Faggin en 2010?",["premio kyoto","kyoto prize"],"Busca «premio internacional que recibió Federico Faggin»."),
+rs("Busca en internet: ¿qué punto limpio o sistema de recogida existe en España para reciclar aparatos electrónicos pequeños? (nombra el tipo de contenedor o punto)",["punto limpio"],"Busca «dónde reciclar aparatos electrónicos en España»."),
+rs("Busca en internet: ¿qué metal precioso, usado en pequeñas cantidades dentro de los chips por su buena conductividad, se puede recuperar al reciclarlos?",["oro"],"Busca «metal precioso que contienen los chips electrónicos».")
+];
 QN.mobile=[
 [mc("¿Qué empresa desarrolló el primer móvil y en qué año se hizo la primera llamada?","Motorola, 1973","Motorola, 1983","Nokia, 1973","b"),
- mc("¿Cómo se llamó el primer móvil comercial y cuándo salió a la venta?","DynaTAC, en 1983","DynaTAC, en 1973","iPhone, en 1983","b")],
-[mc("¿Qué ventaja esencial tiene el móvil frente al teléfono fijo?","Se puede usar en cualquier lugar sin cable","Tiene mejor calidad de sonido y de voz","Consume menos energía eléctrica al día","a"),
- mc("¿Por qué se dice que el smartphone es un ordenador de bolsillo?","Reúne cámara, mapa, música y cartera en un solo aparato","Pesa casi lo mismo que un ordenador portátil pequeño de oficina","Solo funciona si está conectado a un ordenador","a")],
-[mc("Estás en una ciudad que no conoces y quieres llegar a un museo. ¿Qué función del móvil usas?","El mapa","La cámara","El reproductor de música","a"),
- mc("Duermes mal porque miras el móvil en la cama. ¿Qué medida se ajusta al apartado «Ojo»?","Dejarlo fuera de la habitación por la noche","Bajar el volumen del móvil por la noche","Cambiar el fondo de pantalla a un color oscuro","o")],
-[mc("El primer móvil pesaba más de un kilo y hoy cabe en un bolsillo. ¿Qué se deduce?","Que los componentes se miniaturizaron mucho","Que los móviles actuales tienen menos funciones","Que la batería es ahora más grande","b"),
- mc("Un móvil reúne muchos aparatos en uno. ¿Qué consecuencia lógica tiene?","Que se puede depender demasiado de él","Que se gasta mucho menos energía que un ordenador","Que ya no hacen falta ordenadores","a")]
+ mc("¿Cómo se llamó el primer móvil comercial y cuándo salió a la venta?","DynaTAC, en 1983","DynaTAC, en 1973","iPhone, en 1983","b"),
+ mc("¿En qué fecha exacta hizo Martin Cooper la primera llamada móvil, según la ficha?","El 3 de abril de 1973","El 3 de abril de 1983","El 13 de abril de 1973","h"),
+ mc("¿En qué ciudad se hizo la primera llamada desde un móvil?","En Nueva York","En Londres","En Tokio","h"),
+ mc("¿Cuánto pesaba aproximadamente el prototipo del primer móvil?","Más de un kilo","Menos de 50 gramos","Más de diez kilos","b"),
+ mc("¿A quién llamó Martin Cooper para presumir de su invento, según la ficha?","A un rival de otra empresa","A su madre","Al presidente de su país","b"),
+ mc("¿Cuál es el tercer paso de la evolución del móvil, según el diario?","El móvil plegable","El teléfono fijo con cable","El móvil «ladrillo»","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre el uso del móvil?","Que usarlo demasiado afecta al sueño y a la atención","Que solo puede usarse de día","Que no puede usarse en interiores","o"),
+ mc("Según el relato, ¿qué comparación hace Valdemar sobre su popularidad con el móvil?","Que tiene más seguidores que siglos de edad","Que ya no necesita dormir de día","Que puede volar más rápido que un murciélago","s"),
+ mc("¿Qué apodo informal recibía el primer móvil comercial por su forma y peso?","Ladrillo","Lápiz","Reloj","e")],
+[mc("¿Qué diferencia hay entre un teléfono fijo y uno móvil?","El móvil no necesita cable y se lleva encima","El fijo es inalámbrico","No hay ninguna diferencia","e"),
+ mc("¿Qué es un smartphone?","Un móvil con funciones de ordenador, cámara, mapas…","Un teléfono sin batería","Un teléfono de disco","a"),
+ mc("¿Por qué Martin Cooper quiso hacer una llamada caminando por la calle?","Para demostrar que el teléfono podía usarse sin estar conectado a un cable fijo","Porque no tenía ningún teléfono fijo disponible en ese momento","Porque quería batir un récord de velocidad andando","b"),
+ mc("¿Qué significa que el primer móvil pesara más de un kilo frente a los actuales?","Que la miniaturización de los componentes permitió hacerlos mucho más ligeros con el tiempo","Que los móviles actuales pesan más que el primer prototipo","Que el peso de un móvil nunca ha cambiado desde 1973","e"),
+ mc("¿Por qué se dice que el smartphone es un «ordenador de bolsillo»?","Porque reúne funciones de cálculo, cámara, mapas y comunicación en un aparato pequeño","Porque solo sirve para hacer llamadas, igual que el teléfono fijo","Porque necesita estar siempre conectado a un ordenador para funcionar","a"),
+ mc("¿Qué relación hay entre el móvil y la posibilidad de contactar a alguien en una emergencia estando fuera de casa?","Permite comunicarse desde cualquier lugar, no solo desde un teléfono fijo","Hace que sea imposible contactar a nadie si no hay cable cerca","Elimina por completo la necesidad de pedir ayuda en una emergencia","a"),
+ mc("¿Por qué usar el móvil hasta muy tarde puede afectar al sueño, según el apartado «Ojo»?","Porque la luz de la pantalla y la actividad pueden dificultar conciliar el sueño","Porque el móvil se descarga automáticamente al anochecer","Porque usarlo de noche aumenta directamente su batería","o"),
+ mc("¿Qué significa que el móvil haya pasado de «ladrillo» a dispositivo plegable y después a smartphone?","Que su diseño y sus funciones evolucionaron mucho en pocas décadas","Que el primer móvil ya tenía todas las funciones actuales","Que los móviles han dejado de evolucionar desde los años 80","e"),
+ mc("¿Por qué el primer móvil comercial, el DynaTAC, tardó una década en llegar al mercado tras la primera llamada?","Porque hacía falta tiempo para desarrollar una versión fiable y vendible del prototipo","Porque Motorola decidió esperar sin ningún motivo técnico","Porque no existía ninguna demanda de teléfonos portátiles","b"),
+ mc("¿Qué relación hay entre el móvil y la posibilidad de depender demasiado de un solo aparato?","Reunir tantas funciones en un dispositivo puede generar una dependencia excesiva de él","Reunir funciones en un móvil elimina cualquier riesgo de dependencia","El móvil nunca puede generar ningún tipo de dependencia","a")],
+[mc("Te pierdes en una ciudad que no conoces. ¿Qué haces?","Usar el mapa del móvil","Preguntar a una imprenta","Esperar a que amanezca","a"),
+ mc("Duermes mal porque miras el móvil en la cama. ¿Qué medida se ajusta al apartado «Ojo»?","Dejarlo fuera de la habitación por la noche","Bajar el volumen del móvil por la noche","Cambiar el fondo de pantalla a un color oscuro","o"),
+ mc("Estás de viaje sin acceso a un teléfono fijo y necesitas avisar que llegas tarde. ¿Qué usas?","Un teléfono móvil","Un telégrafo de la estación","Una carta enviada por correo","a"),
+ mc("Quieres sacar una fotografía rápida de un accidente para avisar a los servicios de emergencia de lo ocurrido. ¿Qué aparato usas hoy?","Un smartphone","Una cámara de fotos de carrete","Un teléfono fijo de disco","a"),
+ mc("Un repartidor necesita saber la ruta más rápida a una dirección desconocida. ¿Qué función del móvil usa?","El mapa o el GPS","La calculadora","La linterna","a"),
+ mc("Notas que pasas demasiadas horas seguidas mirando el móvil sin descanso. ¿Qué harías, según el apartado «Ojo»?","Establecer momentos sin móvil durante el día","Usarlo aún más horas para acostumbrarte","Dejar siempre las notificaciones activadas al máximo","o"),
+ mc("Quieres pagar una compra sin llevar la cartera encima. ¿Qué función moderna del móvil usarías?","El pago móvil o la cartera digital","Una carta de crédito escrita a mano","Un telegrama al banco","a"),
+ mc("Un senderista se pierde en el monte sin cobertura y necesita orientarse. ¿Qué limitación del móvil debe tener en cuenta?","Que sin señal algunas funciones de comunicación no funcionan","Que el móvil funciona igual con o sin cobertura en cualquier caso","Que el móvil nunca necesita batería para funcionar","e"),
+ mc("Quieres reducir el tiempo de pantalla de un familiar pequeño antes de dormir. ¿Qué medida tomarías, siguiendo el apartado «Ojo»?","Evitar el uso del móvil justo antes de dormir","Aumentar el brillo de la pantalla por la noche","Dejar el móvil siempre encendido en la mesilla","o"),
+ mc("Un turista necesita traducir un cartel en un idioma que no entiende. ¿Qué función del smartphone le ayuda?","Una aplicación de traducción","Solo la función de llamadas","Solo la alarma del teléfono","a")],
+[mc("Los primeros móviles pesaban más de un kilo y hoy caben en un bolsillo. ¿Qué se deduce?","Que los aparatos se hicieron mucho más pequeños","Que crecieron","Que son iguales","b"),
+ mc("Un móvil actual es cámara, mapa y cartera. ¿Qué se deduce de su papel?","Que reúne muchos aparatos en uno","Que solo sirve para llamar","Que no sirve para nada","a"),
+ mc("Si Martin Cooper quiso demostrar que se podía llamar caminando por la calle, ¿qué se deduce sobre la limitación del teléfono fijo que buscaba superar?","Que el teléfono fijo obligaba a estar en un lugar concreto para comunicarse","Que el teléfono fijo ya permitía moverse libremente por la calle","Que no existía ninguna limitación que el móvil quisiera resolver","b"),
+ mc("El primer móvil comercial tardó diez años en llegar tras el prototipo de Cooper. ¿Qué se deduce sobre el paso de una idea a un producto real?","Que desarrollar y perfeccionar un invento hasta venderlo puede llevar bastante tiempo","Que todas las ideas se convierten en producto el mismo año en que surgen","Que el DynaTAC se vendió antes incluso de hacerse la primera llamada","b"),
+ mc("Si reunir muchas funciones en el móvil resulta muy útil, ¿qué se deduce sobre el riesgo de depender demasiado de él?","Que esa misma utilidad puede generar un uso excesivo si no se controla","Que un aparato muy útil nunca puede generar ningún problema de uso","Que la dependencia del móvil no tiene relación con sus muchas funciones","o"),
+ mc("El móvil evolucionó del «ladrillo» de 1983 al smartphone plegable actual. ¿Qué se deduce sobre la dirección de los cambios?","Que los dispositivos se han vuelto más ligeros, delgados y versátiles con el tiempo","Que los dispositivos se han vuelto cada vez más pesados y limitados","Que el móvil deja de evolucionar a partir de los años 80","e"),
+ mc("Si mirar el móvil antes de dormir puede dificultar el sueño, ¿qué se deduce sobre dejarlo fuera del dormitorio por la noche?","Que podría ayudar a mejorar la calidad del descanso","Que empeoraría necesariamente la calidad del sueño","Que no tiene ninguna relación con la calidad del descanso","o"),
+ mc("El móvil permite comunicarse desde cualquier lugar, a diferencia del teléfono fijo. ¿Qué se deduce sobre su utilidad en situaciones de emergencia lejos de casa?","Que resulta especialmente valioso cuando ocurre un imprevisto fuera del hogar","Que no aporta ninguna ventaja frente al teléfono fijo en una emergencia","Que solo es útil dentro de casa, igual que el teléfono fijo","a"),
+ mc("Si el primer móvil solo servía para llamar y el actual hace fotos, mapas y pagos, ¿qué se deduce sobre la evolución de sus funciones?","Que ha ido incorporando cada vez más funciones distintas con el tiempo","Que ha perdido funciones respecto al modelo original","Que las funciones del móvil no han cambiado desde 1973","a"),
+ mc("La miniaturización de los chips permitió que el móvil pesara cada vez menos. ¿Qué se deduce sobre la relación entre varios inventos tecnológicos?","Que avances en un campo, como los microprocesadores, pueden impulsar mejoras en otros inventos","Que el móvil se hizo más ligero sin relación con ningún otro avance tecnológico","Que la miniaturización de los chips no influyó en el tamaño de los móviles","e")]
 ];
-
+QR.mobile=[
+rs("Busca en internet: ¿qué empresa lanzó el primer iPhone en 2007?",["apple"],"Busca «primer iPhone 2007 empresa»."),
+rs("Busca en internet: ¿qué red móvil, con más velocidad, sucedió al 4G?",["5g"],"Busca «red móvil que sigue al 4G»."),
+rs("Busca en internet: ¿qué empresa finlandesa fue durante años líder mundial en la venta de teléfonos móviles, antes de los smartphones?",["nokia"],"Busca «empresa líder mundial de móviles antes de los smartphones»."),
+rs("Busca en internet: ¿qué sistema operativo, desarrollado por Google, es el más usado en los smartphones de todo el mundo?",["android"],"Busca «sistema operativo más usado en los móviles del mundo»."),
+rs("Busca en internet: ¿qué nombre recibe el primer mensaje de texto (SMS) enviado en 1992, que decía «Merry Christmas»?",["feliz navidad","merry christmas"],"Busca «primer mensaje de texto SMS de la historia»."),
+rs("Busca en internet: ¿en qué año se envió el primer SMS de la historia?",["1992"],"Busca «año del primer SMS de la historia»."),
+rs("Busca en internet: ¿qué metal, muy usado en las baterías de los móviles, se extrae en gran parte en países como Chile y Australia?",["litio"],"Busca «metal usado en las baterías de los móviles»."),
+rs("Busca en internet: ¿qué punto de recogida existe en muchos comercios españoles para reciclar móviles viejos?",["punto limpio","contenedor de reciclaje electronico"],"Busca «dónde reciclar un móvil viejo en España»."),
+rs("Busca en internet: ¿qué ingeniero, Martin Cooper, trabajaba para Motorola cuando hizo la primera llamada móvil en 1973?",["martin cooper"],"Busca «ingeniero de la primera llamada móvil 1973»."),
+rs("Busca en internet: ¿qué nombre se da al uso excesivo y problemático del teléfono móvil, muy estudiado hoy en psicología?",["nomofobia","adiccion al movil"],"Busca «nombre del uso excesivo del móvil en psicología».")
+];
 QN.print3d=[
 [mc("¿Qué endurece la resina en la estereolitografía?","Un rayo de luz","Un chorro de aire caliente","Una corriente eléctrica","b"),
- mc("¿Cómo se construye el objeto?","Capa a capa","Punto a punto con un molde","Moldeando un bloque entero","b")],
+ mc("¿Cómo se construye el objeto?","Capa a capa","Punto a punto con un molde","Moldeando un bloque entero","b"),
+ mc("¿En qué año inventó Chuck Hull la estereolitografía?","En 1984","En 1884","En 1994","h"),
+ mc("¿Qué empresa fundó Chuck Hull tras su invento?","3D Systems","Intel","DuPont","b"),
+ mc("¿De qué nacionalidad era Chuck Hull?","Estadounidense","Alemana","Japonesa","b"),
+ mc("¿Qué material líquido se endurece en la estereolitografía?","Una resina","Un metal fundido","Un gas comprimido","b"),
+ mc("¿Cuál es el último paso de la evolución de la impresora 3D, según el diario?","La impresión con metal y materiales médicos","La estereolitografía con resina","Las impresoras de plástico fundido","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre la impresión 3D?","Que puede usarse mal para fabricar objetos peligrosos","Que solo puede imprimir en color blanco","Que no puede usarse en medicina","o"),
+ mc("Según el relato, ¿cómo describe Valdemar lo que vio en el taller de impresión 3D?","Como magia que se puede programar","Como un truco de naipes","Como un sueño sin importancia","s"),
+ mc("¿En qué sectores se usa la impresora 3D, según la ficha?","Medicina, arquitectura y educación","Solo en la industria militar","Solo en la cocina casera","a")],
 [mc("¿Qué ventaja tiene la impresión 3D para hacer prototipos?","Permite fabricar piezas a medida con rapidez","Permite fabricar miles de piezas iguales muy baratas","Elimina la necesidad de diseñar","a"),
- mc("¿Qué diferencia hay entre imprimir en 3D y tallar un bloque?","En 3D se añade material; al tallar se quita material","En 3D se funde un bloque entero; tallar es moldearlo","En 3D se usa solo plástico; al tallar se usa piedra","b")],
+ mc("¿Qué diferencia hay entre imprimir en 3D y tallar un bloque?","En 3D se añade material; al tallar se quita material","En 3D se funde un bloque entero; tallar es moldearlo","En 3D se usa solo plástico; al tallar se usa piedra","b"),
+ mc("¿Por qué construir capa a capa permite formas más complejas que moldear de una vez?","Porque se puede ir añadiendo material exactamente donde se necesita, sin limitaciones de un molde","Porque las capas siempre son del mismo grosor sin ninguna variación","Porque el molde se reutiliza para cada capa de forma distinta","a"),
+ mc("¿Qué relación hay entre la impresión 3D y fabricar prótesis médicas a medida?","Permite adaptar la forma exacta a las necesidades de cada paciente","Obliga a fabricar siempre la misma prótesis para todos los pacientes","No tiene ninguna relación con la medicina","a"),
+ mc("¿Por qué se dice que la impresión 3D puede usarse mal, según el apartado «Ojo»?","Porque también permite fabricar objetos peligrosos, como armas, sin control","Porque solo puede fabricar piezas inofensivas por diseño","Porque las impresoras 3D nunca fallan ni generan ningún riesgo","o"),
+ mc("¿Qué significa que la estereolitografía naciera para hacer prototipos rápidos?","Que permitía probar un diseño físico antes de fabricarlo en serie","Que servía exclusivamente para fabricar miles de copias idénticas","Que sustituía por completo cualquier diseño previo en ordenador","a"),
+ mc("¿Por qué la impresión 3D resulta útil en arquitectura, además de en medicina?","Porque permite crear maquetas y piezas con formas complejas de manera rápida","Porque solo puede usarse para construir edificios completos a tamaño real","Porque elimina la necesidad de cualquier plano o diseño previo","a"),
+ mc("¿Qué diferencia hay entre una pieza fabricada en serie con molde y una impresa en 3D a medida?","La impresa en 3D se adapta a una necesidad concreta sin necesitar un molde específico","La fabricada con molde siempre resulta más barata para una sola pieza","Ambas requieren exactamente el mismo proceso de fabricación","a"),
+ mc("¿Por qué reparar una pieza rota con una impresora 3D puede ser más sostenible que comprar un aparato nuevo?","Porque permite alargar la vida útil del aparato sin fabricar uno completo","Porque imprimir una pieza siempre contamina mucho más que fabricar uno nuevo","Porque las piezas impresas en 3D nunca encajan en aparatos reales","a"),
+ mc("¿Qué relación hay entre la impresión 3D y la personalización de productos?","Permite fabricar objetos únicos adaptados a cada persona o necesidad","Obliga a que todos los objetos impresos sean exactamente iguales","Elimina cualquier posibilidad de personalizar un diseño","a")],
 [mc("Se rompe un pequeño engranaje de plástico de una lavadora. ¿Qué puedes hacer?","Diseñarlo e imprimirlo en 3D","Fabricarlo con un torno de alfarero","Comprar una lavadora nueva","a"),
- mc("Un hospital necesita una prótesis ajustada a un paciente. ¿Qué técnica le conviene?","Impresión 3D a medida","Fabricación en serie en molde","Talla manual en madera","a")],
+ mc("Un hospital necesita una prótesis ajustada a un paciente. ¿Qué técnica le conviene?","Impresión 3D a medida","Fabricación en serie en molde","Talla manual en madera","a"),
+ mc("Un arquitecto quiere mostrar a su cliente una maqueta detallada de un edificio nuevo. ¿Qué técnica le conviene usar?","La impresión 3D","El tallado manual en piedra","La fundición de un bloque de metal","a"),
+ mc("Un estudiante de Tecnología diseña una pieza única para un proyecto de clase. ¿Qué tecnología le permite fabricarla sin un molde especial?","Una impresora 3D","Una prensa de tipos móviles","Un torno de alfarero tradicional","a"),
+ mc("Una empresa quiere evitar que cualquiera imprima objetos peligrosos sin control. ¿Qué medida sigue el apartado «Ojo»?","Establecer normas de uso responsable para la impresión 3D","Permitir imprimir cualquier objeto sin ninguna restricción","Eliminar por completo esta tecnología de la sociedad","o"),
+ mc("Un dentista necesita una funda dental ajustada exactamente a la boca de un paciente. ¿Qué tecnología moderna le ayuda?","La impresión 3D a medida","Un molde genérico igual para todos los pacientes","Una talla manual sin medidas precisas","a"),
+ mc("Quieres reparar la pieza rota de un juguete antiguo que ya no se fabrica. ¿Qué solución moderna podrías usar?","Diseñar la pieza e imprimirla en 3D","Comprar un juguete completamente nuevo","Tirar el juguete porque no tiene solución","a"),
+ mc("Un diseñador de calzado quiere crear una plantilla personalizada según la forma del pie de cada cliente. ¿Qué tecnología usaría?","La impresión 3D","Un molde fijo igual para todos los pies","Un torno de alfarero","a"),
+ mc("Una ONG quiere fabricar prótesis económicas para personas en zonas con pocos recursos. ¿Qué tecnología podría abaratar el proceso?","La impresión 3D","La fundición tradicional de metales caros","La talla manual en madera noble","a"),
+ mc("Un profesor de Tecnología quiere que sus alumnos entiendan la diferencia entre fabricar por molde y por impresión 3D. ¿Qué actividad práctica propondría?","Comparar una pieza moldeada con una impresa capa a capa","Pedir que memoricen solo la teoría sin ningún ejemplo","Prohibir el uso de cualquier impresora en el aula","a")],
 [mc("Como imprime capa a capa, ¿qué se deduce sobre las formas que puede hacer?","Que puede crear formas complejas difíciles de tallar","Que solo puede crear formas simples, pequeñas y de un material","Que necesita siempre un molde previo del objeto","a"),
- mc("Puede imprimir casi cualquier objeto. ¿Qué medida se ajusta al apartado «Ojo»?","Usarla con responsabilidad y con control","Prohibirla en todos los colegios","Usar solo materiales metálicos y pesados","o")]
+ mc("Puede imprimir casi cualquier objeto. ¿Qué medida se ajusta al apartado «Ojo»?","Usarla con responsabilidad y con control","Prohibirla en todos los colegios","Usar solo materiales metálicos y pesados","o"),
+ mc("Si la impresión 3D permite fabricar piezas a medida sin un molde específico, ¿qué se deduce sobre su utilidad para objetos poco comunes o únicos?","Que resulta especialmente útil cuando se necesita solo una pieza concreta","Que resulta más útil que ningún otro método para fabricar millones de copias idénticas","Que no aporta ninguna ventaja frente a un molde tradicional en esos casos","a"),
+ mc("La estereolitografía nació en 1984 y hoy se imprime también con metal. ¿Qué se deduce sobre su evolución tecnológica?","Que fue ampliando los materiales y usos posibles con el paso del tiempo","Que dejó de evolucionar nada más inventarse","Que el metal se usaba ya desde el principio, antes que la resina","e"),
+ mc("Si la impresión 3D puede fabricar tanto prótesis médicas como objetos peligrosos, ¿qué se deduce sobre esta tecnología?","Que su uso correcto o incorrecto depende de la responsabilidad de quien la emplea","Que solo puede usarse para fines médicos, nunca para otra cosa","Que siempre se usa exclusivamente con fines dañinos","o"),
+ mc("Reparar una pieza rota en 3D en vez de comprar un aparato nuevo. ¿Qué se deduce sobre el impacto ambiental de esta práctica?","Que puede reducir residuos al alargar la vida útil de los objetos","Que genera siempre más residuos que comprar un aparato nuevo","Que no tiene ninguna relación con la cantidad de residuos generados","a"),
+ mc("Si cada pieza impresa en 3D puede adaptarse a una persona concreta, ¿qué se deduce sobre la fabricación en serie tradicional frente a esta tecnología?","Que la fabricación en serie resulta menos flexible para necesidades individuales","Que la fabricación en serie siempre se adapta mejor a cada persona","Que ambas técnicas ofrecen exactamente el mismo nivel de personalización","a"),
+ mc("La impresión 3D se usa hoy en medicina, arquitectura y educación. ¿Qué se deduce sobre la versatilidad de esta tecnología?","Que un mismo proceso de fabricación puede aplicarse a campos muy distintos","Que solo puede aplicarse a un único campo de uso concreto","Que la medicina y la arquitectura no tienen ninguna relación con esta técnica","a"),
+ mc("Si no existieran normas sobre qué se puede imprimir en 3D, ¿qué se deduce sobre el riesgo de un mal uso?","Que aumentaría el riesgo de que se fabricaran objetos peligrosos sin control","Que no cambiaría nada respecto a tener normas claras","Que eliminaría por completo cualquier riesgo de mal uso","o"),
+ mc("Chuck Hull fundó una empresa justo después de patentar su invento. ¿Qué se deduce sobre el paso de una idea a un producto en el mercado?","Que convertir una patente en una empresa ayuda a que la tecnología llegue a más gente","Que patentar un invento no tiene ninguna relación con crear una empresa después","Que las patentes nunca llevan a la creación de empresas reales","b")]
 ];
-
+QR.print3d=[
+rs("Busca en internet: ¿qué significan las siglas FDM en impresión 3D? (Fused… en inglés o modelado por deposición… en español)",["fused deposition modeling","modelado por deposicion fundida","deposicion fundida","fused deposition modelling"],"Busca «FDM impresión 3D significado»."),
+rs("Busca en internet: ¿qué plástico biodegradable, hecho a partir de maíz, usan muchas impresoras 3D? (tres letras)",["pla","acido polilactico"],"Busca «filamento biodegradable impresora 3D maíz»."),
+rs("Busca en internet: ¿qué agencia espacial ha probado imprimir en 3D piezas o alimentos en la Estación Espacial Internacional?",["nasa","esa"],"Busca «agencia espacial que imprime en 3D en el espacio»."),
+rs("Busca en internet: ¿qué material metálico, muy ligero y usado en aviones, puede imprimirse hoy en 3D en piezas de aeronáutica?",["titanio","aluminio"],"Busca «metal ligero que se imprime en 3D en aeronáutica»."),
+rs("Busca en internet: ¿qué término se usa para la impresión 3D que utiliza células vivas para crear tejidos humanos?",["bioimpresion","bioimpresion 3d"],"Busca «impresión 3D con células vivas nombre»."),
+rs("Busca en internet: ¿qué formato de archivo digital, de tres letras, es el más usado para guardar los diseños que se imprimen en 3D?",["stl"],"Busca «formato de archivo para imprimir en 3D»."),
+rs("Busca en internet: ¿qué arquitecto o empresa ha construido ya casas completas usando impresión 3D con hormigón? (busca «primera casa impresa en 3D»)",["icon","winsun"],"Busca «primera casa construida con impresión 3D»."),
+rs("Busca en internet: ¿qué museo o feria tecnológica muestra habitualmente avances en impresión 3D cada año? (puedes citar cualquiera que encuentres)",["ces","maker faire"],"Busca «feria tecnológica que muestra avances en impresión 3D»."),
+rs("Busca en internet: ¿qué nombre reciben los aficionados que construyen y programan sus propios proyectos tecnológicos, muy relacionados con la impresión 3D?",["makers"],"Busca «nombre de los aficionados a proyectos tecnológicos caseros»."),
+rs("Busca en internet: ¿en qué estado de EE. UU. nació la empresa 3D Systems, fundada por Chuck Hull?",["california"],"Busca «estado donde se fundó la empresa 3D Systems».")
+];
 QN.web=[
 [mc("¿Para qué ideó Berners-Lee la web?","Para que los científicos del CERN compartieran documentos","Para que los militares se comunicaran en guerra","Para vender productos en línea a los científicos","b"),
- mc("¿Qué creó Berners-Lee además de las páginas enlazadas?","El primer navegador y el primer servidor","El primer correo electrónico y el primer buscador","El primer ordenador personal y la primera red","b")],
-[mc("¿Qué diferencia hay entre Internet y la web?","La web son páginas enlazadas; Internet, la red que las transporta","La web es la red de cables y satélites; Internet son las páginas web","Internet es solo una parte pequeña de la web","s"),
- mc("¿Qué permitió que la web se regalara al mundo?","Que cualquiera pudiera usarla y que creciera muy rápido","Que solo los científicos del CERN pudieran usarla y controlarla","Que las empresas controlaran todo su uso","s")],
+ mc("¿Qué creó Berners-Lee además de las páginas enlazadas?","El primer navegador y el primer servidor","El primer correo electrónico y el primer buscador","El primer ordenador personal y la primera red","b"),
+ mc("¿Entre qué años sitúa la ficha la creación de la web?","Entre 1989 y 1991","Entre 1889 y 1891","Entre 1999 y 2001","h"),
+ mc("¿En qué país se encuentra el CERN, donde se ideó la web?","En Suiza","En Estados Unidos","En Japón","h"),
+ mc("¿Qué nacionalidad tenía Tim Berners-Lee?","Británica","Alemana","Francesa","b"),
+ mc("¿Qué tipo de institución es el CERN, según la ficha?","Un centro científico de investigación","Una empresa de videojuegos","Un banco internacional","b"),
+ mc("¿Cuál es el primer paso de la evolución de la web, según el diario?","ARPANET, en los años 60","Las redes sociales","Internet de las cosas e inteligencia artificial","e"),
+ mc("¿Qué advierte el apartado «Ojo» sobre la red?","Que hay bulos, ciberacoso y estafas","Que solo los científicos pueden usarla","Que no se puede compartir información","o"),
+ mc("Según el relato, ¿qué creía Valdemar que era Internet antes de conocer la web?","Que era cosa de cables","Que era un tipo de hechizo","Que era solo para el ejército","s"),
+ mc("¿Qué permitió hacer «con un clic», según el relato de Valdemar?","Saltar de un lugar a otro del planeta","Viajar físicamente en el tiempo","Hablar con animales","s")],
+[mc("¿Qué son las páginas web enlazadas?","Páginas conectadas por enlaces para saltar de una a otra","Cables entre ordenadores","Cartas por correo","b"),
+ mc("¿Qué diferencia hay entre Internet y la web?","La web son páginas unidas con enlaces; Internet es la red de cables y redes","Son exactamente lo mismo, solo que con dos nombres distintos","La web es simplemente un tipo de cable usado para conectar ordenadores","s"),
+ mc("¿Por qué Berners-Lee quería que los científicos del CERN compartieran documentos más fácilmente?","Porque trabajaban con mucha información y necesitaban acceder a ella desde cualquier ordenador","Porque querían vender esos documentos a otras empresas","Porque el CERN no tenía ningún ordenador conectado entre sí","b"),
+ mc("¿Qué relación hay entre el primer navegador y el acceso de la gente a la web?","Permitió que cualquier persona pudiera ver las páginas sin conocimientos técnicos avanzados","Hizo que solo los programadores pudieran usar la web","Eliminó la necesidad de tener páginas web conectadas entre sí","a"),
+ mc("¿Por qué se dice que la web «se regaló al mundo»?","Porque Berners-Lee decidió no cobrar por su uso, lo que ayudó a que se extendiera","Porque nadie podía usarla sin pagar una gran cantidad de dinero","Porque solo los países ricos tuvieron acceso a ella al principio","s"),
+ mc("¿Qué significa que en la red haya bulos y ciberacoso, según el apartado «Ojo»?","Que no toda la información o el trato que se recibe en internet es fiable o respetuoso","Que toda la información de internet es siempre cierta y segura","Que la red solo sirve para comunicarse de forma segura","o"),
+ mc("¿Por qué la web ayudó a que nacieran las tiendas en línea y el trabajo a distancia?","Porque permitió compartir información y comunicarse sin necesidad de estar en el mismo lugar","Porque eliminó por completo la necesidad de cualquier tipo de comercio","Porque obligó a que todo el trabajo se hiciera siempre de forma presencial","a"),
+ mc("¿Qué diferencia hay entre ARPANET y la web creada por Berners-Lee?","ARPANET fue una red militar previa; la web añadió páginas enlazadas fáciles de usar","Son exactamente la misma tecnología, solo que con otro nombre distinto","ARPANET es posterior en el tiempo a la propia web de Berners-Lee","e"),
+ mc("¿Por qué contrastar varias fuentes es importante al buscar información en la red?","Porque no toda la información que aparece en internet es correcta o fiable","Porque buscar en una sola fuente garantiza siempre la verdad","Porque contrastar fuentes hace que la información sea falsa","o"),
+ mc("¿Qué relación hay entre la invención de la web y el crecimiento de las redes sociales posteriores?","La web sentó las bases técnicas sobre las que se construyeron las redes sociales","Las redes sociales existieron antes de que se inventara la web","No existe ninguna relación entre la web y las redes sociales","e")],
 [mc("Necesitas datos fiables para un trabajo. ¿Qué haces?","Comparar varias fuentes y comprobar quién las escribe","Usar solo la primera página que salga en el buscador","Elegir la página con más anuncios y colores","o"),
- mc("Un mensaje dice que has ganado un premio y pide tus datos. ¿Qué haces?","No contestar y comentarlo con un adulto","Enviar solo tu nombre","Reenviarlo a tus amigos para que participen","o")],
+ mc("Un mensaje dice que has ganado un premio y pide tus datos. ¿Qué haces?","No contestar y comentarlo con un adulto","Enviar solo tu nombre","Reenviarlo a tus amigos para que participen","o"),
+ mc("Un equipo de investigación en distintos países quiere compartir sus documentos al instante. ¿Qué tecnología, como la de Berners-Lee, usaría?","Páginas web conectadas por enlaces","Cartas enviadas por correo postal","Llamadas telefónicas únicamente","a"),
+ mc("Quieres montar una tienda que venda productos a cualquier hora sin un local físico abierto. ¿Qué tecnología, derivada de la web, usarías?","Una tienda en línea","Un catálogo impreso enviado por correo","Un teléfono fijo exclusivamente","a"),
+ mc("Recibes un correo que dice ser de tu banco y pide que hagas clic en un enlace sospechoso. ¿Qué haces?","No hacer clic y comprobarlo directamente con el banco","Hacer clic rápido antes de que caduque","Reenviarlo a todos tus contactos","o"),
+ mc("Quieres trabajar desde casa coordinándote con compañeros de otra ciudad. ¿Qué permite esto, gracias a la web?","Las videollamadas y el trabajo a distancia","Solo el correo postal tradicional","Solo reunirse siempre en persona","a"),
+ mc("Un alumno encuentra una información sorprendente en una página sin autor ni fuente clara. ¿Qué debería hacer?","Buscar esa misma información en otras fuentes fiables","Compartirla inmediatamente sin comprobar nada","Creerla porque suena convincente","o"),
+ mc("Una empresa quiere que sus empleados de distintos países trabajen en el mismo documento a la vez. ¿Qué tecnología, nacida de la web, usarían?","Documentos compartidos en línea","Documentos enviados por fax uno a uno","Documentos escritos solo a mano","a"),
+ mc("Ves en redes sociales un mensaje de odio dirigido a un compañero de clase. ¿Qué deberías hacer, según el apartado «Ojo»?","Contárselo a un adulto de confianza y no participar","Compartirlo para que más gente lo vea","Ignorarlo sin decir nada a nadie","o"),
+ mc("Quieres comprobar si una noticia que has leído en una red social es verdadera. ¿Qué harías?","Buscarla en medios de comunicación fiables y contrastarla","Creerla directamente porque la ha compartido un amigo","Compartirla sin leer el contenido completo","o")],
 [mc("La web permitió las tiendas en línea y el trabajo a distancia. ¿Qué se deduce?","Que cambió la forma de comprar y de trabajar","Que desaparecieron las tiendas físicas","Que el trabajo presencial se prohibió","a"),
- mc("Con bulos y estafas en la red, ¿qué habilidad es más necesaria?","Pensamiento crítico para contrastar información","Rapidez para compartir noticias nuevas en las redes","Memoria para recordar muchas contraseñas","o")]
+ mc("Con bulos y estafas en la red, ¿qué habilidad es más necesaria?","Pensamiento crítico para contrastar información","Rapidez para compartir noticias nuevas en las redes","Memoria para recordar muchas contraseñas","o"),
+ mc("Si Berners-Lee regaló la web al mundo sin cobrar por su uso, ¿qué se deduce sobre su rápida expansión posterior?","Que la gratuidad facilitó que mucha más gente pudiera adoptarla sin barreras económicas","Que su coste elevado impidió que se extendiera con rapidez","Que solo los países más ricos pudieron acceder a ella al principio","s"),
+ mc("La web nació para compartir documentos científicos y hoy mueve comercio y redes sociales. ¿Qué se deduce sobre la evolución de los usos de un invento?","Que el uso original de una tecnología puede ampliarse mucho con el tiempo","Que una tecnología siempre se queda limitada a su uso original para siempre","Que la web solo puede usarse hoy para fines científicos","a"),
+ mc("Si no toda la información en internet es fiable, ¿qué se deduce sobre creer todo lo que se lee sin comprobarlo?","Que puede llevar a creer y difundir información falsa","Que garantiza siempre conocer la verdad sobre cualquier tema","Que la fiabilidad de la información no depende de comprobarla","o"),
+ mc("ARPANET existía antes de que Berners-Lee inventara la web con enlaces. ¿Qué se deduce sobre la relación entre ambas?","Que la web se construyó aprovechando una infraestructura de red que ya existía antes","Que ARPANET se creó después de la web, basándose en ella","Que no existe ninguna relación entre ambas tecnologías","e"),
+ mc("Si la web permitió el trabajo a distancia entre personas de distintos países, ¿qué se deduce sobre las posibilidades laborales actuales frente a las de antes de internet?","Que hoy existen más opciones para trabajar sin depender de estar en un lugar físico concreto","Que el trabajo a distancia era igual de común antes de que existiera internet","Que la web ha eliminado por completo la posibilidad de trabajar fuera de casa","a"),
+ mc("Si existen estafas que imitan correos de bancos reales, ¿qué se deduce sobre confiar automáticamente en cualquier mensaje con buena apariencia?","Que conviene verificar la fuente antes de hacer clic o dar datos personales","Que cualquier mensaje con buena apariencia es siempre seguro","Que las estafas en internet nunca imitan a empresas reales","o"),
+ mc("La web ha evolucionado hacia el internet de las cosas y la inteligencia artificial. ¿Qué se deduce sobre su desarrollo tecnológico desde 1991?","Que ha seguido ampliando sus capacidades mucho más allá de las páginas de texto originales","Que se ha quedado exactamente igual desde su invención","Que el internet de las cosas es anterior a la propia web","e"),
+ mc("Si compartir y contrastar información se ha vuelto más fácil gracias a la web, ¿qué se deduce sobre la responsabilidad de cada usuario al usarla?","Que cada persona tiene un papel importante en verificar y no difundir información falsa","Que la responsabilidad de verificar la información recae solo en los gobiernos","Que la facilidad para compartir elimina cualquier necesidad de comprobar nada","o")]
 ];
-
-INV.forEach(iv=>{const n=QN[iv.g];if(n)for(let l=0;l<4;l++)iv.q[l]=n[l];});
+QR.web=[
+rs("Busca en internet: ¿qué significan las siglas HTML, el lenguaje de las páginas web?",["hypertext markup language","lenguaje de marcas de hipertexto","lenguaje de marcado de hipertexto","marcas de hipertexto","marcado de hipertexto"],"Busca «HTML significado siglas»."),
+rs("Busca en internet: ¿en qué ciudad suiza está el CERN?",["ginebra","geneva","geneve"],"Busca «CERN ciudad Suiza»."),
+rs("Busca en internet: ¿qué navegador web, lanzado por Netscape en 1994, fue uno de los más populares de los primeros años de la web?",["netscape navigator","netscape"],"Busca «navegador popular de los años 90»."),
+rs("Busca en internet: ¿qué protocolo de seguridad, representado con un candado en el navegador, protege los datos al visitar una página web?",["https"],"Busca «protocolo de seguridad de las páginas web candado»."),
+rs("Busca en internet: ¿qué buscador de internet, fundado en 1998, es hoy uno de los más usados del mundo?",["google"],"Busca «buscador de internet fundado en 1998»."),
+rs("Busca en internet: ¿qué red social, fundada en 2004, fue una de las pioneras en conectar a estudiantes universitarios?",["facebook"],"Busca «red social fundada en 2004 para estudiantes»."),
+rs("Busca en internet: ¿qué institución otorgó a Tim Berners-Lee el título de caballero (Sir) en Reino Unido por su invento?",["reina isabel ii","corona britanica","monarquia britanica"],"Busca «Tim Berners-Lee título de caballero Reino Unido»."),
+rs("Busca en internet: ¿qué organización fundó Tim Berners-Lee para definir los estándares técnicos de la web?",["w3c","world wide web consortium"],"Busca «organización que define los estándares de la web»."),
+rs("Busca en internet: ¿qué línea telefónica o servicio existe en España para denunciar el ciberacoso o contenido inapropiado en internet?",["policia nacional","guardia civil","016"],"Busca «dónde denunciar el ciberacoso en España»."),
+rs("Busca en internet: ¿qué nombre recibe la parte de internet que no aparece en los buscadores habituales y requiere programas especiales para acceder?",["deep web","dark web"],"Busca «parte de internet que no aparece en los buscadores».")
+];
+/* Asigna a cada invento su banco de preguntas (>=10 variantes por nivel,
+   sección 4 de las instrucciones generales) definido en los archivos qx/. */
+INV.forEach(iv=>{
+  const n=QN[iv.g];
+  if(n){for(let l=0;l<4;l++)iv.q[l]=n[l];}
+  const r=QR[iv.g];
+  if(r){iv.q[4]=r;}
+});
 const CONF={
- key:"diario-valdemar-2-v1",
+ key:"diario-valdemar-2-v2",
  artId:"VMMS-2026-8FA9",
  year:"2026",
  title:"El diario de Valdemar II",
@@ -686,12 +1044,21 @@ const FRANJAS=[[1,4.9],[5,5.9],[6,6.9],[7,7.9],[8,8.9],[9,10]];
 const partOf=i=>Math.min(NP-1,Math.floor(i/PER));
 const partIdx=p=>{const a=[];for(let i=p*PER;i<Math.min(N,(p+1)*PER);i++)a.push(i);return a;};
 
-let S={name:"",screen:"cover",inv:0,lvl:0,att:1,res:[],sel:-1,txt:"",fb:null,sal:0};
+let S={name:"",screen:"cover",inv:0,lvl:0,att:1,res:[],sel:-1,txt:"",fb:null,sal:0,seed:1};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const norm=s=>String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim();
 function shuffle(seed){const a=[0,1,2];let x=seed*9301+49297;for(let i=2;i>0;i--){x=(x*9301+49297)%233280;const j=Math.floor(x/233280*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-const fmt=n=>n.toFixed(1).replace(".",",");
+/* Baraja genérica de n elementos (misma LCG), usada para elegir qué 2 de las
+   >=10 variantes de cada nivel se sirven en esta partida (sección 4: al
+   menos 10 variantes por pregunta, distintas entre alumnos y entre cargas). */
+function shuffleN(seed,n){const a=[];for(let i=0;i<n;i++)a.push(i);let x=seed;for(let i=n-1;i>0;i--){x=(x*9301+49297)%233280;const j=Math.floor(x/233280*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function variantOrder(invIdx,lvl,poolLen){const seed=((S.seed||1)*1000003+invIdx*97+lvl*131+1)>>>0;return shuffleN(seed,poolLen);}
+function curQ(){const pool=INV[S.inv].q[S.lvl];const order=variantOrder(S.inv,S.lvl,pool.length);return pool[order[(S.att-1)%order.length]];}
+/* Trunca (no redondea al alza) a 1 decimal, para que una sola repetición
+   nunca se muestre como un 10 perfecto por efecto del redondeo. */
+function floor1(n){return Math.floor(Math.round(n*1e6)/1e6*10)/10;}
+const fmt=n=>floor1(n).toFixed(1).replace(".",",");
 
 /* ---- calificación ---- */
 const actScore=a=>a===1?10:a===2?9.8:1;
@@ -706,20 +1073,40 @@ function invNota(r){
 function baseNota(){return S.res.reduce((s,r)=>s+invNota(r),0)/N;}
 function penal(){return Math.round(S.sal*0.5*10)/10;}
 function finalNota(){return Math.max(0,Math.min(10,baseNota()-penal()));}
-const rankOf=n=>n<5?"Iniciado en":n<6?"Aprendiz de":n<7.5?"Oficial de":n<9?"Maestro en":"Gran maestro en";
-const stars=n=>n<5?1:n<6?2:n<7.5?3:n<9?4:5;
+const rankOf=n=>{n=floor1(n);return n<5?"Iniciado en":n<6?"Aprendiz de":n<7.5?"Oficial de":n<9?"Maestro en":"Gran maestro en";};
+const stars=n=>{n=floor1(n);return n<5?1:n<6?2:n<7.5?3:n<9?4:5;};
 
-function save(){try{localStorage.setItem(CONF.key,JSON.stringify({name:S.name,inv:S.inv,res:S.res,sal:S.sal,screen:S.screen}));}catch(e){}}
+function save(){try{localStorage.setItem(CONF.key,JSON.stringify({name:S.name,inv:S.inv,res:S.res,sal:S.sal,screen:S.screen,seed:S.seed}));}catch(e){}}
 function load(){try{const v=JSON.parse(localStorage.getItem(CONF.key)||"null");return v&&v.res&&v.res.length?v:null;}catch(e){return null;}}
+let redoAsk=false;
 function clearSave(){try{localStorage.removeItem(CONF.key);}catch(e){}}
-function newRes(){return {p:[0,0,0,0,0],done:false,ans:[]};}
+function newRes(){return {p:[0,0,0,0,0],done:false,log:[]};}
 
-/* ---- salidas de la ventana (sección 9, opción B) ---- */
+/* ---- salidas de la ventana (sección 9, opción B) ----
+   Única salida permitida sin penalización: nivel 5 (investigación), a través
+   del botón «Busca información en internet». Cualquier otra salida de la
+   ventana (cambiar de pestaña, minimizar, abrir otra app) penaliza y avisa. */
+let warnPending=false;
+function exemptScreen(){return S.screen==="quiz" && S.lvl===4;}
 document.addEventListener("visibilitychange",()=>{
-  if(document.hidden && S.screen==="quiz" && S.lvl<4){
-    S.sal++;save();
+  if(document.hidden){
+    if(S.screen && S.screen!=="cover" && S.screen!=="diploma" && !exemptScreen()){
+      S.sal++;save();warnPending=true;
+    }
+  }else if(warnPending){
+    warnPending=false;
+    showExitWarning();
   }
 });
+function showExitWarning(){
+  const old=document.querySelector(".exitwarn");if(old)old.remove();
+  const w=document.createElement("div");
+  w.className="exitwarn";
+  w.setAttribute("role","alert");
+  w.innerHTML="<b>Salida de la ventana registrada (nº "+S.sal+")</b>Resta 0,5 puntos en tu nota final y queda anotado en tu diploma. Solo puedes salir sin penalización en el nivel 5, con el botón «Busca información en internet».";
+  document.body.appendChild(w);
+  setTimeout(()=>{if(w.parentNode)w.remove();},7000);
+}
 
 function topbar(){
   const t=$("top");
@@ -774,7 +1161,7 @@ function vEntry(){
    +'<button class="btn" data-act="quiz">Ir a la prueba</button></div>';
 }
 function vQuiz(){
-  const iv=INV[S.inv],r=S.res[S.inv],L=S.lvl,q=iv.q[L][S.att-1];
+  const iv=INV[S.inv],r=S.res[S.inv],L=S.lvl,q=curQ();
   let steps="";
   for(let l=0;l<5;l++){steps+='<div class="step '+(r.p[l]?"ok":(l===L?"cur":(l>L?"":"no")))+'"><b>'+(l+1)+'. '+LV[l][0]+'</b>'+LV[l][1]+'</div>';}
   const locked=!!S.fb;
@@ -784,8 +1171,8 @@ function vQuiz(){
     body='<div class="opts" role="radiogroup" aria-label="Opciones">'+perm.map((k,d)=>'<button class="opt" role="radio" aria-checked="'+(S.sel===d)+'" data-act="pick" data-i="'+d+'"'+(locked?" disabled":"")+'><span class="lt">'+"ABC"[d]+'</span><span>'+esc(q.o[k])+'</span></button>').join("")+'</div>';
   }else{
     body='<div class="field" style="max-width:none"><label for="ans">Tu respuesta (busca en internet y escribe solo el dato que se pide)</label><input class="inp" id="ans" autocomplete="off" value="'+esc(S.txt)+'"'+(locked?" disabled":"")+'></div>'
-      +'<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent(iv.t+" "+iv.i)+'" data-act="buscar">Buscar información</a></div>'
-      +'<p class="note">Puedes salir a buscar información en este nivel sin penalización. Tu profesor o profesora podrá revisar lo que escribas.</p>';
+      +'<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent(iv.t+" "+iv.i)+'" data-act="buscar">Busca información en internet</a></div>'
+      +'<p class="note">Este es el único momento del diario en el que puedes salir de la ventana sin penalización. Tu profesor o profesora podrá revisar lo que escribas.</p>';
   }
   let fb="";
   if(S.fb){
@@ -819,20 +1206,41 @@ function vEpilogue(){
    +'<div class="chips">'+INV.map(x=>'<span class="chip">'+esc(x.t)+'</span>').join("")+'</div>'
    +'<button class="btn" data-act="diploma">Recibir tu diploma</button></div>';
 }
+function qaReport(){
+  let any=false;
+  let body="";
+  INV.forEach((iv,i)=>{
+    const r=S.res[i];
+    if(!r.log||!r.log.length)return;
+    any=true;
+    const items=r.log.map(e=>'<li class="qa-item '+(e.ok?"qa-ok":"qa-bad")+'"><div class="qa-q"><b>Nivel '+(e.lvl+1)+' · '+LV[e.lvl][0]+'</b> · intento '+e.att+' — '+esc(e.q)+'</div>'
+      +'<div class="qa-a">Respuesta del alumno: «'+esc(e.given)+'» <span class="qa-mark">'+(e.ok?"✓ correcta":"✗ incorrecta")+'</span></div>'
+      +(e.ok?"":'<div class="qa-c">Respuesta correcta: «'+esc(e.correct)+'»</div>')
+      +'</li>').join("");
+    body+='<div class="qa-inv"><h4>'+esc(iv.t)+'</h4><ol class="qa-list">'+items+'</ol></div>';
+  });
+  if(!any)return "";
+  return '<div class="qa-report"><h3>Informe de preguntas y respuestas</h3>'+body+'</div>';
+}
 function vDiploma(){
   const n=finalNota(),rk=rankOf(n),st="★".repeat(stars(n))+"☆".repeat(5-stars(n));
+  const when=new Date(S.issuedAt||Date.now());
+  const whenStr=when.toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"})+" · "+when.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
   const rows=INV.map((iv,i)=>{const r=S.res[i];return '<tr><td>'+esc(iv.t)+'</td><td><div class="lvrow">'+r.p.map(a=>'<span class="lvdot '+(a?"a"+a:"")+'"></span>').join("")+'</div></td><td class="n">'+fmt(invNota(r))+'</td></tr>';}).join("");
-  const ans=[];INV.forEach((iv,i)=>S.res[i].ans.forEach(a=>ans.push('<li><b>'+esc(iv.t)+'</b> — «'+esc(a.a)+'» '+(a.ok?"(correcta)":"(no coincide)")+'</li>')));
   return '<div class="stack"><div class="diploma-wrap"><div class="diploma"><svg viewBox="0 0 120 90" aria-hidden="true">'+ICON.moon+'</svg><span class="eyebrow">Diploma de Valdemar · '+esc(CONF.title)+'</span>'
    +'<h2>'+rk+' '+esc(CONF.theme)+'</h2><p class="lede" style="text-align:center">Se otorga a</p><div class="who">'+esc(S.name||"Alumno/a")+'</div>'
-   +'<div class="stars" aria-label="'+stars(n)+' de 5">'+st+'</div><div class="big">'+fmt(n)+'</div><span class="note">nota final sobre 10 · '+new Date().toLocaleDateString("es-ES")+'</span>'
+   +'<div class="stars" aria-label="'+stars(n)+' de 5">'+st+'</div><div class="big">'+fmt(n)+'</div><span class="note">nota final sobre 10</span>'
+   +'<span class="note">Fecha y hora de descarga: '+whenStr+'</span>'
    +(S.sal>0?'<span class="note">Salidas de la ventana fuera del nivel de investigación: '+S.sal+' (−'+fmt(penal())+' puntos)</span>':'')
    +'<span class="note">ID de obra: '+CONF.artId+'</span></div>'
    +'<h3>Resumen de los '+N+' inventos</h3><div class="scroll"><table class="tbl"><thead><tr><th>Invento</th><th>Niveles</th><th>Nota</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
-   +(ans.length?'<details class="reread"><summary>Mis respuestas de investigación</summary><ul class="stack" style="gap:8px;padding:0 0 16px 18px;margin:0">'+ans.join("")+'</ul></details>':'')
    +footNote()+'</div>'
+   +qaReport()
    +'<p class="note">Haz una captura de pantalla de este diploma, o pulsa «Imprimir / Guardar en PDF», y entrégalo a tu profesor o profesora.'+(CONF.nextHint?' '+esc(CONF.nextHint):'')+'</p>'
-   +'<div class="row"><button class="btn" data-act="print">Imprimir / Guardar en PDF</button><button class="btn ghost" data-act="reset">Empezar de nuevo</button></div></div>';
+   +(redoAsk
+    ?'<div class="fbk bad" role="alert"><b>¿Volver a hacerlo?</b><p>Se cargará el diario desde el principio con preguntas distintas y este diploma desaparecerá. Antes, imprímelo o guárdalo en PDF si lo necesitas.</p></div><div class="row"><button class="btn" data-act="redo">Sí, volver a hacer</button><button class="btn ghost" data-act="redo-no">Cancelar</button></div>'
+    :'<div class="row"><button class="btn" data-act="print">Imprimir / Guardar en PDF</button><button class="btn ghost" data-act="redo-ask">Volver a hacer</button></div>')
+   +'</div>';
 }
 
 function render(keep){
@@ -845,14 +1253,20 @@ function render(keep){
 function go(sc){S.screen=sc;S.sel=-1;S.txt="";S.fb=null;render(false);save();}
 
 function check(){
-  const iv=INV[S.inv],r=S.res[S.inv],L=S.lvl,q=iv.q[L][S.att-1];
-  let ok;
-  if(L<4){ok=shuffle(S.inv*100+L*10+S.att)[S.sel]===0;}
-  else{
+  const iv=INV[S.inv],r=S.res[S.inv],L=S.lvl,q=curQ();
+  let ok,given,correct;
+  if(L<4){
+    const perm=shuffle(S.inv*100+L*10+S.att);
+    ok=perm[S.sel]===0;
+    given=q.o[perm[S.sel]];
+    correct=q.o[0];
+  }else{
     const a=" "+norm(S.txt)+" ";
     ok=q.k.some(k=>a.includes(" "+norm(k)+" "));
-    r.ans.push({a:S.txt.trim(),ok:ok});
+    given=S.txt.trim();
+    correct=q.k[0];
   }
+  r.log.push({lvl:L,att:S.att,q:q.p,given:given,correct:correct,ok:ok});
   if(ok)r.p[L]=S.att;
   S.fb={ok:ok};
   save();
@@ -866,11 +1280,12 @@ document.addEventListener("click",e=>{
   if(a==="start"){
     const nm=$("nm").value.trim();
     if(!nm){$("nm").focus();$("nm").style.borderColor="var(--blood)";return;}
-    S={name:nm,screen:"intro",inv:0,lvl:0,att:1,res:INV.map(newRes),sel:-1,txt:"",fb:null,sal:0};
+    S={name:nm,screen:"intro",inv:0,lvl:0,att:1,res:INV.map(newRes),sel:-1,txt:"",fb:null,sal:0,seed:Math.floor(Math.random()*1e9)+1};
     clearSave();render(false);save();
   }
   else if(a==="resume"){
-    const sv=load();S={name:sv.name,screen:"entry",inv:0,lvl:0,att:1,res:sv.res,sel:-1,txt:"",fb:null,sal:sv.sal||0};
+    const sv=load();S={name:sv.name,screen:"entry",inv:0,lvl:0,att:1,res:sv.res,sel:-1,txt:"",fb:null,sal:sv.sal||0,seed:sv.seed||(Math.floor(Math.random()*1e9)+1)};
+    S.res.forEach(r=>{if(!r.log)r.log=[];});
     while(S.res.length<N)S.res.push(newRes());
     S.inv=Math.min(sv.inv,N-1);
     if(S.res[S.inv].done){S.inv++;}
@@ -892,9 +1307,16 @@ document.addEventListener("click",e=>{
   else if(a==="end"){finishInv();}
   else if(a==="nextinv"){S.inv++;S.lvl=0;S.att=1;go("entry");}
   else if(a==="epilogue"){go("epilogue");}
-  else if(a==="diploma"){clearSave();go("diploma");}
-  else if(a==="print"){window.print();}
-  else if(a==="reset"){clearSave();S={name:S.name,screen:"cover",inv:0,lvl:0,att:1,res:[],sel:-1,txt:"",fb:null,sal:0};render(false);}
+  else if(a==="diploma"){S.issuedAt=new Date().toISOString();clearSave();go("diploma");}
+  else if(a==="print"){S.issuedAt=S.issuedAt||new Date().toISOString();window.print();}
+  else if(a==="redo-ask"){redoAsk=true;render(true);}
+  else if(a==="redo-no"){redoAsk=false;render(true);}
+  else if(a==="redo"||a==="reset"){
+    redoAsk=false;clearSave();
+    S={name:S.name,screen:"cover",inv:0,lvl:0,att:1,res:[],sel:-1,txt:"",fb:null,sal:0,seed:Math.floor(Math.random()*1e9)+1};
+    render(false);
+    try{window.scrollTo(0,0);}catch(e){}
+  }
 });
 document.addEventListener("input",e=>{
   if(e.target.id==="ans"){S.txt=e.target.value;const c=$("chk");if(c)c.disabled=!S.txt.trim();}
