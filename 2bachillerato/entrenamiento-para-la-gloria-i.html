@@ -995,7 +995,7 @@ function renderCert(){
  const nota=Math.round((a.nota+b.nota)/2*100)/100, r=rolFase(nota), exits=(a.exits||0)+(b.exits||0);
  const row=(m,c)=>`<tr><td>${NOMBRE[m]}</td><td>${fmt(c.nota)}</td><td>${c.nota>=7.5?'🏅 '+TITULO[m]:'Sin título'}</td></tr>`;
  $('#certBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button>
-  ${nota<7.5?'<button class="btn warn" type="button" id="btnRepetir">Repetir el entrenamiento</button>':''}<button class="btn" type="button" id="btnCertMap">🗺 Volver al mapa</button></div>
+  <button class="btn warn" type="button" id="btnRehacer">🔄 Volver a hacer</button><button class="btn" type="button" id="btnCertMap">🗺 Volver al mapa</button></div>
   <article class="cert" id="cert"><div class="top">${sealSVG()}<div class="agency">NASA · CENTRO DE ENTRENAMIENTO<br>OPERACIÓN LUCIÉRNAGA BINARIA · AMENAZA TÁNTALO</div><span class="clas">ALTO SECRETO</span></div>
   <h2>Certificado de entrenamiento</h2><p class="op">Entrenamiento para la gloria I · Mintérminos y maxtérminos</p>
   <p class="name">${esc(p.nombre)} ${esc(p.apellidos)}</p><p class="grp">${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
@@ -1009,7 +1009,7 @@ function renderCert(){
   <button class="small-link noprint" type="button" id="btnNuevo">Empezar de nuevo con otro alumno</button>`;
  $('#btnPrint').onclick=()=>window.print();
  $('#btnCertMap').onclick=()=>{ buildMapa(); show('mapa'); };
- const rp=$('#btnRepetir'); if(rp) rp.onclick=()=>modal({title:'¿Repetir el entrenamiento?',html:'<p>Se borrarán las dos pruebas y podrá hacerlas de nuevo con ejercicios distintos. Guarde antes el certificado si lo necesita.</p>',buttons:[{t:'Cancelar',cls:'ghost'},{t:'Repetir',cls:'warn',fn:()=>{ S.del('ct_min'); S.del('ct_max'); buildMapa(); show('mapa'); toast('Pruebas reiniciadas. Suerte, agente.'); }}]});
+ const rh=$('#btnRehacer'); if(rh) rh.onclick=()=>modal({title:'¿Volver a hacer el artefacto?',html:'<p>Se borrarán los resultados de esta fase. Se cargará de nuevo con <b>preguntas distintas</b>. Se conservan su nombre y su grupo.</p><p>Si necesita este certificado, imprímalo o guárdelo en PDF antes de continuar.</p>',buttons:[{t:'Cancelar',cls:'ghost'},{t:'Volver a hacer',cls:'warn',fn:()=>{ ['ct_min', 'ct_max', 'vista', 'sec', 'evalMode', 'ultimaSalida'].forEach(k=>S.del(k)); location.reload(); }}]});
  $('#btnNuevo').onclick=askReset;
 }
 function askReset(){ modal({title:'¿Empezar con otro alumno?',html:'<p>Se borrarán de este ordenador los datos del alumno actual y sus resultados de esta fase. Guarde antes el certificado si lo necesita.</p>',buttons:[{t:'Cancelar',cls:'ghost'},{t:'Borrar y empezar',cls:'stop',fn:()=>{ ['perfil','ct_min','ct_max','vista','sec','evalMode','ultimaSalida','inicio','historiaVista'].forEach(k=>S.del(k)); location.reload(); }}]}); }

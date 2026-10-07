@@ -1550,11 +1550,12 @@ function renderResultado(){
     <div class="expl">${q.e}</div></article>`;
   }).join('')+'</section>';
  }
- $('#resBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button>
+ $('#resBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button><button class="btn warn" type="button" id="btnRehacer">🔄 Volver a hacer</button>
    ${S.get('decision','')==='acepta'?'<button class="btn" type="button" id="btnResHome">⌂ Volver a la consola</button>':''}</div>
    ${cert}${corr}
    <button class="newx noprint" type="button" id="btnNuevo">Empezar un examen nuevo (otro alumno)</button>`;
  $('#btnPrint').onclick=()=>window.print();
+ const rh=$('#btnRehacer'); if(rh) rh.onclick=()=>modal({title:'¿Volver a hacer el artefacto?',html:'<p>Se borrará el resultado actual. Se cargará de nuevo con <b>preguntas distintas</b>. Se conservan su nombre y su grupo.</p><p>Si necesita este certificado, imprímalo o guárdelo en PDF antes de continuar.</p>',buttons:[{t:'Cancelar',cls:'ghost'},{t:'Volver a hacer',cls:'warn',fn:()=>{ ['examen', 'decision', 'visitados', 'vista', 'seccion', 'rechazoFecha', 'ultimaSalida'].forEach(k=>S.del(k)); location.reload(); }}]});
  const h=$('#btnResHome'); if(h) h.onclick=()=>{ buildConsola(); show('consola'); };
  $('#btnNuevo').onclick=()=>modal({title:'¿Empezar con otro alumno?',html:'<p>Se borrarán de este ordenador los datos del alumno actual, su examen y su certificado. Asegúrese de haberlo impreso o guardado en PDF antes de continuar.</p>',
    buttons:[{t:'Cancelar',cls:'ghost'},{t:'Borrar y empezar de nuevo',cls:'stop',fn:resetAll}]});
