@@ -113,6 +113,7 @@ ID de obra: VMMS-2026-4LS9
   .step > i{display:block; height:100%; width:6%; border-radius:3px; background:#3a3d43;}
   .step.current > i{width:55%; background:linear-gradient(90deg,var(--led-red),var(--led-blue)); box-shadow:0 0 8px 1px var(--led-red-glow);}
   .step.done.sup > i{width:100%; background:var(--ok); box-shadow:0 0 8px 1px var(--ok-glow);}
+  .step.done.sob > i{width:100%; background:var(--amber); box-shadow:0 0 8px 1px var(--amber-glow);}
   .step.done.med > i{width:100%; background:var(--warn); box-shadow:0 0 8px 1px var(--warn-glow);}
   .step.done.rep > i{width:100%; background:var(--bad); box-shadow:0 0 8px 1px var(--bad-glow);}
   .step-labels{display:flex; justify-content:space-between; margin:7px 2px 20px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.6px;}
@@ -241,11 +242,12 @@ ID de obra: VMMS-2026-4LS9
   .breakdown-row:last-child{border-bottom:none;}
   .result-tag{display:inline-flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:4px 10px; border-radius:100px;}
   .result-tag.sup{background:#052e21; color:var(--ok); border:1px solid #0f5c3f;}
+  .result-tag.sob{background:#332405; color:var(--amber); border:1px solid var(--amber);}
   .result-tag.med{background:#332405; color:var(--warn); border:1px solid #6b4c0a;}
   .result-tag.no_superado{background:#340c0c; color:var(--bad); border:1px solid #6b1414;}
   /* ---------- fin certificado ---------- */
 
-  .eval-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px;}
+  .eval-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-top:14px;}
   @media (max-width:640px){.eval-grid{grid-template-columns:1fr;}}
   .eval-card{border-radius:12px; padding:14px 14px; border:1px solid #1c1108; background:var(--panel-3);}
   .eval-card .eico{font-size:20px;}
@@ -253,6 +255,7 @@ ID de obra: VMMS-2026-4LS9
   .eval-card span{font-size:13px; color:var(--text-dim);}
   .eval-card.rep{border-left:4px solid var(--bad);}
   .eval-card.med{border-left:4px solid var(--warn);}
+  .eval-card.sob{border-left:4px solid var(--amber);}
   .eval-card.sup{border-left:4px solid var(--ok);}
 
   .conexion-cta{display:flex; align-items:center; gap:14px; margin-top:18px; padding:16px 18px; border-radius:14px; border:1px solid #1c1108; background:linear-gradient(135deg,#123540,#0d1e24); cursor:pointer;}
@@ -687,7 +690,8 @@ function renderPortada(){
         <h3>📋 Así te vamos a evaluar</h3>
         <p style="color:var(--text-dim);">En cada nivel, le mostrarás tu resultado a tu profesor/a, que valorará tu trabajo con una de estas tres opciones:</p>
         <div class="eval-grid">
-          <div class="eval-card sup"><div class="eico">✅</div><b>CONSEGUIDO</b><span>Funciona a la primera. Calificación máxima de ese nivel.</span></div>
+          <div class="eval-card sob"><div class="eico">🏅</div><b>SOBRESALIENTE</b><span>Funciona y, además, has hecho el reto extra. Es la máxima calificación de ese nivel.</span></div>
+          <div class="eval-card sup"><div class="eico">✅</div><b>CONSEGUIDO</b><span>Funciona. Calificación alta de ese nivel.</span></div>
           <div class="eval-card med"><div class="eico">➗</div><b>RESOLUCIÓN MEDIA</b><span>Funciona, pero con ayuda. Calificación media de ese nivel.</span></div>
           <div class="eval-card rep"><div class="eico">🔁</div><b>VOLVER A HACER</b><span>Aún no funciona. Te damos una pista sobre el código y vuelves a intentarlo (hasta 3 veces).</span></div>
         </div>
@@ -725,7 +729,7 @@ function renderNivel(idx){
     codeHtml = `<div class="box"><h3>🧩 Programación por bloques</h3><figure><img src="${n.imgCode}" alt="Bloques de ArduinoBlocks para este nivel"><figcaption>${n.codeCaption||''}</figcaption></figure></div>`;
   }
   let pistaHtml = mostrarPistaEn[idx] ? `<div class="pista"><b>Pista</b>${n.pista}</div>` : '';
-  let extraHtml = n.extra ? `<div class="extra"><b>Reto extra (opcional)</b>${n.extra}</div>` : '';
+  let extraHtml = n.extra ? `<div class="extra"><b>Reto extra · máxima puntuación</b>${n.extra}<br><i>Hacer este reto extra es lo que te permite conseguir la máxima puntuación del nivel.</i></div>` : '';
 
   document.getElementById('app').innerHTML = `
     <div class="plate">${hudCorners()}
@@ -759,11 +763,14 @@ function validarNivel(idx){
   const campo = document.getElementById('profInput');
   const val = campo.value.trim().toLowerCase();
   document.getElementById('errProf').style.display = 'none';
-  if(!['rep','med','sup'].includes(val)){
+  if(!['rep','med','sup','sob'].includes(val)){
     document.getElementById('errProf').style.display = 'block';
     return;
   }
-  if(val==='sup'){
+  if(val==='sob'){
+    resultados[idx]='sob';
+    avanzar(idx);
+  } else if(val==='sup'){
     resultados[idx]='sup';
     avanzar(idx);
   } else if(val==='med'){
@@ -790,7 +797,7 @@ function avanzar(idx){
 
 function puntosNivel(resultado, idx){
   if(resultado==='no_superado') return 1;
-  const base = resultado==='sup' ? 10 : 7;
+  const base = resultado==='sob' ? 10 : (resultado==='sup' ? 9 : 7);
   return base - repCounts[idx]; // cada "rep" previo resta 1 punto (máx. 2 antes de forzar no_superado)
 }
 
@@ -810,7 +817,7 @@ function renderCertificado(){
   const tituloDiploma = `${diploma.nombre} ${diploma.prep}`;
   const fecha = new Date().toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' });
 
-  const nombresResultado = {sup:'Conseguido', med:'Resolución media', no_superado:'Volver a hacer'};
+  const nombresResultado = {sob:'Sobresaliente', sup:'Conseguido', med:'Resolución media', no_superado:'Volver a hacer'};
   const breakdown = NIVELES.map((n,i)=>{
     const r = resultados[i];
     const pts = puntosNivel(r, i);
@@ -944,7 +951,7 @@ function descargarPDF(){
   y-=14;
   T('RESULTADO POR NIVEL',80,y,10,'F2',grey,'l'); y-=8;
   ops.push('0.7 0.7 0.7 RG 0.6 w 80 '+y+' m 515 '+y+' l S'); y-=16;
-  const nombresRes={sup:'Conseguido',med:'Resolución media',no_superado:'Volver a hacer'};
+  const nombresRes={sob:'Sobresaliente',sup:'Conseguido',med:'Resolución media',no_superado:'Volver a hacer'};
   NIVELES.forEach(function(n,i){
     const r=resultados[i], reps=repCounts[i];
     const repsTxt=reps>0?' ('+reps+' '+(reps>1?'repeticiones':'repetición')+')':'';
