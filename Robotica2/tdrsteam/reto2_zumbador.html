@@ -306,6 +306,27 @@ ID de obra: VMMS-2026-DLXZ
 
   footer.foot{text-align:center; margin-top:28px; font-size:11.5px; color:var(--text-dim); font-family:'IBM Plex Mono',monospace; letter-spacing:.4px; flex-shrink:0;}
   .copyright{text-align:center; font-size:9.5px; color:var(--text-dim); opacity:.55; font-family:'IBM Plex Mono',monospace; letter-spacing:.2px; margin-top:6px; flex-shrink:0;}
+
+  @page{size:A4; margin:12mm;}
+  @media print{
+    :root{--text:#111; --text-dim:#444; --panel:#fff; --panel-2:#f3f3f3; --edge-light:transparent;}
+    html,body{background:#fff !important; height:auto !important;}
+    body{color:#111; display:block;}
+    *{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    header.top, #stepper-holder, .hazard, .bolt, footer.foot, .no-print, .modal-bg{display:none !important;}
+    .chassis{border:none !important; background:none !important; min-height:0 !important; max-width:none !important;}
+    .content{padding:0 !important; min-height:0 !important;}
+    #app{display:block !important;}
+    .cert{background:#fff !important; border:3px solid #b8860b !important; color:#111; box-shadow:none !important; padding:22px 26px !important; break-inside:avoid; page-break-inside:avoid;}
+    .cert .medal{font-size:40px;}
+    .cert .diploma-title, .cert .nota, .cert .nombre-alumno{color:#111 !important;}
+    .cert .reto-name{color:#8a6100 !important;}
+    .cert .felicitacion{color:#111; margin-top:14px;}
+    .cert .breakdown{background:#f3f3f3 !important; border:1px solid #bbb !important; margin-top:16px;}
+    .cert .breakdown-row{border-bottom:1px solid #ccc !important; color:#111;}
+    .cert .result-tag{background:#fff !important; border:1px solid #888 !important; color:#111 !important;}
+    .copyright{display:block !important; opacity:1 !important; color:#333 !important; margin-top:10px; font-size:9px;}
+  }
 </style>
 </head>
 <body data-autor="VMMS-2026-DLXZ">
@@ -339,10 +360,10 @@ ID de obra: VMMS-2026-DLXZ
     <h2>¿Cómo entregar la actividad?</h2>
     <div class="sub">Sigue estos pasos después de conseguir tu certificado final.</div>
     <ol class="steps">
-      <li><span class="num">1</span><span class="txt"><b>Haz una captura de pantalla</b><span>Pulsa <b>Windows + Mayús + S</b> (o busca "Recortes" en el menú inicio) para abrir la Herramienta Recorte. Selecciona la zona del certificado y se copiará automáticamente.</span></span></li>
-      <li><span class="num">2</span><span class="txt"><b>Guarda la imagen</b><span>Pega la captura (Ctrl+V) en Paint o en un documento, y guárdala como imagen (.png o .jpg) en tu carpeta de Tecnología.</span></span></li>
-      <li><span class="num">3</span><span class="txt"><b>Si tienes varias capturas, únelas</b><span>Ve a <b>ilovepdf.com → Imagen a PDF</b> y sube tus capturas para unirlas en un único PDF. También puedes pegarlas todas dentro de un documento de <b>Google Docs</b>, una debajo de otra.</span></span></li>
-      <li><span class="num">4</span><span class="txt"><b>Súbelo a Google Classroom</b><span>Entra en la tarea correspondiente en Classroom, pulsa <b>Añadir o crear → Archivo</b>, selecciona tu imagen o PDF y pulsa <b>Entregar</b>.</span></span></li>
+      <li><span class="num">1</span><span class="txt"><b>Pulsa «Descargar PDF»</b><span>En la pantalla de tu certificado, pulsa el botón <b>⬇️ Descargar PDF</b>. Se descargará un archivo PDF con tu certificado.</span></span></li>
+      <li><span class="num">2</span><span class="txt"><b>Localiza el PDF y guárdalo bien</b><span>El navegador lo guarda en tu carpeta de <b>Descargas</b> (o te pregunta dónde guardarlo). Ponle un nombre que reconozcas y colócalo en tu carpeta de Tecnología.</span></span></li>
+      <li><span class="num">3</span><span class="txt"><b>Si tienes varios certificados, únelos</b><span>Ve a <b>ilovepdf.com → Unir PDF</b>, sube tus archivos PDF y descarga el PDF único que se genera.</span></span></li>
+      <li><span class="num">4</span><span class="txt"><b>Súbelo a Google Classroom</b><span>Entra en la tarea correspondiente en Classroom, pulsa <b>Añadir o crear → Archivo</b>, selecciona tu PDF y pulsa <b>Entregar</b>.</span></span></li>
     </ol>
   </div>
 </div>
@@ -510,9 +531,9 @@ const MEDALLAS = { 'Gran Maestro':'🏆', 'Maestro':'🥇', 'Oficial':'🥈', 'A
 /* ==================== ESTADO ==================== */
 let alumno = { nombre:'', apellidos:'' };
 let paso = 'portada';
-let repCounts = [0,0,0,0];
-let resultados = [null,null,null,null];
-let mostrarPistaEn = [false,false,false,false];
+let repCounts = NIVELES.map(function(){ return 0; });
+let resultados = NIVELES.map(function(){ return null; });
+let mostrarPistaEn = NIVELES.map(function(){ return false; });
 
 /* ==================== HELPERS DE MARCADO ==================== */
 function hudCorners(){
@@ -696,7 +717,7 @@ function renderCertificado(){
     const r = resultados[i];
     const pts = puntosNivel(r, i);
     const reps = repCounts[i];
-    const repsTxt = reps>0 ? ` (${reps} repetición${reps>1?'es':''})` : '';
+    const repsTxt = reps>0 ? ` (${reps} ${reps>1?'repeticiones':'repetición'})` : '';
     return `<div class="breakdown-row"><span>${n.label}</span><span class="result-tag ${r}">${nombresResultado[r]}${repsTxt} · ${pts}/10</span></div>`;
   }).join('');
 
@@ -711,11 +732,9 @@ function renderCertificado(){
       <p class="felicitacion">${FELICITACIONES[diploma.nombre]}</p>
       <div class="breakdown"><h3>Resultado por nivel</h3>${breakdown}</div>
     </div>
-    <div class="plate" style="text-align:center;">${hudCorners()}
+    <div class="plate no-print" style="text-align:center;">${hudCorners()}
       <h3 style="margin-bottom:10px;">Ya puedes entregar tu actividad</h3>
-      <p class="lede" style="margin:0 auto;">Haz una captura de este certificado y súbela a Google
-      Classroom siguiendo los pasos de ayuda.</p>
-      <button class="btn primary" onclick="abrirAyuda()" style="margin-top:18px;">¿Cómo entregar la actividad? →</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:18px;"><button class="btn" onclick="descargarPDF()">⬇️ Descargar PDF</button><button class="btn primary" onclick="abrirAyuda()">¿Cómo entregar la actividad? →</button></div>
     </div>`;
 }
 
@@ -760,6 +779,105 @@ function abrirCategoria(i){
   document.getElementById('catIntro').innerHTML = c.intro;
   document.getElementById('catLista').innerHTML = c.items.map(function(it){ return '<li><b>'+it[0]+'</b><span>'+it[1]+'</span></li>'; }).join('');
   abrirModal('modalCategoria');
+}
+
+const HELV_W=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+function pdfAnsi(s){
+  const map={'—':0x97,'–':0x96,'…':0x85,'“':0x93,'”':0x94,'‘':0x91,'’':0x92,'•':0x95,'€':0x80,'≥':0x3E,'≤':0x3C};
+  let o='';
+  for(const ch of String(s)){
+    const c=ch.codePointAt(0);
+    if(c>=32 && c<127) o+=ch;
+    else if(c>=161 && c<=255) o+=ch;
+    else if(map[ch]!==undefined) o+=String.fromCharCode(map[ch]);
+    else if(c===0xA0) o+=' ';
+  }
+  return o;
+}
+function pdfW(s,size,bold){
+  let w=0;
+  for(let i=0;i<s.length;i++){
+    const c=s.charCodeAt(i);
+    if(c>=32 && c<127) w+=HELV_W[c-32];
+    else { const b=s.charAt(i).normalize('NFD').charCodeAt(0); w+=(b>=32 && b<127)?HELV_W[b-32]:556; }
+  }
+  return w*size/1000*(bold?1.07:1);
+}
+function pdfEsc(s){ return s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+function pdfWrap(txt,size,maxW,bold){
+  const words=pdfAnsi(txt).split(/\s+/).filter(Boolean); const lines=[]; let cur='';
+  words.forEach(function(w){
+    const t=cur?cur+' '+w:w;
+    if(pdfW(t,size,bold)>maxW && cur){ lines.push(cur); cur=w; } else cur=t;
+  });
+  if(cur) lines.push(cur);
+  return lines;
+}
+function descargarPDF(){
+  const nota=calcularNota(), dip=obtenerDiploma(nota);
+  const ops=[];
+  function T(txt,x,y,size,font,rgb,align){
+    txt=pdfAnsi(txt);
+    const w=pdfW(txt,size,font==='F2');
+    let xx=x; if(align==='c') xx=x-w/2; else if(align==='r') xx=x-w;
+    ops.push(rgb[0]+' '+rgb[1]+' '+rgb[2]+' rg BT /'+font+' '+size+' Tf '+xx.toFixed(2)+' '+y.toFixed(2)+' Td ('+pdfEsc(txt)+') Tj ET');
+  }
+  function circle(cx,cy,r,op){
+    const k=0.5523*r;
+    ops.push((cx+r)+' '+cy+' m '+(cx+r)+' '+(cy+k)+' '+(cx+k)+' '+(cy+r)+' '+cx+' '+(cy+r)+' c '+(cx-k)+' '+(cy+r)+' '+(cx-r)+' '+(cy+k)+' '+(cx-r)+' '+cy+' c '+(cx-r)+' '+(cy-k)+' '+(cx-k)+' '+(cy-r)+' '+cx+' '+(cy-r)+' c '+(cx+k)+' '+(cy-r)+' '+(cx+r)+' '+(cy-k)+' '+(cx+r)+' '+cy+' c '+op);
+  }
+  const gold=[0.72,0.53,0.04], ink=[0.07,0.07,0.07], grey=[0.33,0.33,0.33];
+  ops.push('0.72 0.53 0.04 RG 3 w 30 30 535 782 re S');
+  ops.push('0.72 0.53 0.04 RG 0.8 w 38 38 519 766 re S');
+  ops.push('0.72 0.53 0.04 rg'); circle(297.5,758,28,'f');
+  ops.push('1 1 1 RG 1.6 w'); circle(297.5,758,20,'S');
+  let size=26; const titulo=dip.nombre+' '+dip.prep;
+  while(pdfW(pdfAnsi(titulo),size,true)>470 && size>14) size-=1;
+  T(titulo,297.5,688,size,'F2',ink,'c');
+  const reto=(document.querySelector('.cert .reto-name')||{textContent:RETO_NOMBRE}).textContent;
+  T(reto,297.5,662,11,'F1',gold,'c');
+  T(alumno.nombre+' '+alumno.apellidos,297.5,622,20,'F2',ink,'c');
+  const n1=nota.toFixed(1), n2=' / 10';
+  const w1=pdfW(n1,54,true), w2=pdfW(n2,18,false), x0=297.5-(w1+w2)/2;
+  T(n1,x0,555,54,'F2',ink,'l'); T(n2,x0+w1,555,18,'F1',grey,'l');
+  T(new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'}),297.5,530,11,'F1',grey,'c');
+  let y=496;
+  pdfWrap(FELICITACIONES[dip.nombre],12,440,false).forEach(function(l){ T(l,297.5,y,12,'F1',ink,'c'); y-=17; });
+  y-=14;
+  T('RESULTADO POR NIVEL',80,y,10,'F2',grey,'l'); y-=8;
+  ops.push('0.7 0.7 0.7 RG 0.6 w 80 '+y+' m 515 '+y+' l S'); y-=16;
+  const nombresRes={sup:'Conseguido',med:'Resolución media',no_superado:'Volver a hacer'};
+  NIVELES.forEach(function(n,i){
+    const r=resultados[i], reps=repCounts[i];
+    const repsTxt=reps>0?' ('+reps+' '+(reps>1?'repeticiones':'repetición')+')':'';
+    T(n.label,80,y,11,'F1',ink,'l');
+    T(nombresRes[r]+repsTxt+' · '+puntosNivel(r,i)+'/10',515,y,11,'F1',ink,'r');
+    ops.push('0.85 0.85 0.85 RG 0.5 w 80 '+(y-5)+' m 515 '+(y-5)+' l S');
+    y-=18;
+  });
+  const cp=(document.querySelector('.copyright')||{textContent:''}).textContent;
+  let fy=64; pdfWrap(cp,7.5,480,false).forEach(function(l){ T(l,297.5,fy,7.5,'F1',grey,'c'); fy-=10; });
+  const content=ops.join('\n');
+  const objs=[
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>',
+    '<< /Length '+content.length+' >>\nstream\n'+content+'\nendstream',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'
+  ];
+  let pdf='%PDF-1.4\n'; const offs=[];
+  objs.forEach(function(o,i){ offs.push(pdf.length); pdf+=(i+1)+' 0 obj\n'+o+'\nendobj\n'; });
+  const xref=pdf.length;
+  pdf+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n'+offs.map(function(o){ return String(o).padStart(10,'0')+' 00000 n \n'; }).join('')+'trailer\n<< /Size '+(objs.length+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+  const bytes=new Uint8Array(pdf.length);
+  for(let i=0;i<pdf.length;i++) bytes[i]=pdf.charCodeAt(i)&255;
+  const nombre=('Certificado-'+RETO_NOMBRE+'-'+alumno.nombre+'-'+alumno.apellidos).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9_-]+/g,'_')+'.pdf';
+  const blob=new Blob([bytes],{type:'application/pdf'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=nombre;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
 }
 
 render();
