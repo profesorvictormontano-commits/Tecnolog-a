@@ -312,11 +312,17 @@ body.alarm3::before{content:"";position:fixed;inset:0;pointer-events:none;z-inde
   .reswrap{padding:0;max-width:none}
   .cert{box-shadow:none;margin:0 auto;max-width:none;width:100%;border-width:8px;padding:16px 22px 12px;break-inside:avoid}
   .cert .data{grid-template-columns:1fr 1.5fr!important}
+  .corrsec{display:block;break-before:page;page-break-before:always;background:#081222;filter:invert(1) hue-rotate(180deg);padding:4px 10px}
+  .corrsec .qcard{break-inside:auto;page-break-inside:auto}
+  .corrsec .part{break-inside:avoid;page-break-inside:avoid}
+  .corrsec .ce-bar,.corrsec .ce-pal{display:none!important}
 }
 
 /* ---- Artefacto 5: luces de emergencia (resplandor rojo pulsante, sin ver las luces) ---- */
-body.emer::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;box-shadow:inset 0 0 160px rgba(255,30,20,.55);animation:em1 1.7s ease-in-out infinite}
-body.emer::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:59;background:radial-gradient(ellipse at 15% -10%,rgba(255,40,30,.32),transparent 55%),radial-gradient(ellipse at 90% 110%,rgba(255,40,30,.28),transparent 55%);animation:em2 1.7s ease-in-out infinite}
+body.emer::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;box-shadow:inset 0 0 110px rgba(255,30,20,.38)}
+body.emer.emerPulse::before{box-shadow:inset 0 0 160px rgba(255,30,20,.55);animation:em1 1.7s ease-in-out infinite}
+body.emer::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:59;background:radial-gradient(ellipse at 15% -10%,rgba(255,40,30,.32),transparent 55%),radial-gradient(ellipse at 90% 110%,rgba(255,40,30,.28),transparent 55%);opacity:.55}
+body.emer.emerPulse::after{opacity:1;animation:em2 1.7s ease-in-out infinite}
 @keyframes em1{0%,100%{box-shadow:inset 0 0 160px rgba(255,30,20,.55)}50%{box-shadow:inset 0 0 40px rgba(255,30,20,.10)}}
 @keyframes em2{0%,100%{opacity:1}50%{opacity:.15}}
 @media print{ body.emer::before,body.emer::after{display:none} }
@@ -370,7 +376,7 @@ body.emer::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:5
   <span class="who" id="hudWho">AGENTE</span>
   <span class="cd" id="hudCd">☄ TÁNTALO · IMPACTO EN T−71 h</span>
   <button class="hbtn" id="hudPc" type="button">🖥 Ordenador</button>
-  <a class="hbtn search" id="hudBuscar" href="https://www.google.com/search?q=mapa+de+Karnaugh+simplificaci%C3%B3n+circuito" target="_blank" rel="noopener">🔎 Buscar información</a>
+  <a class="hbtn search" id="hudBuscar" href="https://www.google.com/search?q=mapa+de+Karnaugh+simplificaci%C3%B3n+circuito" target="_blank" rel="noopener">🔎 Busca información en internet</a>
   <button class="hbtn" id="hudFs" type="button">⛶ Pantalla completa</button>
 </header>
 <main>
@@ -935,6 +941,72 @@ const PX=[
  {s:'Detector de primos: S = 1 cuando el dígito BCD es 2, 3, 5 o 7.',ones:[2,3,5,7]},
  {s:'Aviso de cuenta atrás crítica: S = 1 cuando el dígito BCD es 0, 1 o 2.',ones:[0,1,2]}
 ];
+/* Variantes añadidas: hasta 30 por módulo */
+P1.push(
+ {s:'El sensor de temperatura del depósito activa la bomba (S = 1) si A = 1 y C = 0, sea cual sea B.',f:(a,b,c)=>a&&!c},
+ {s:'La luz de cortesía se enciende (S = 1) si B = 0 y C = 1, o si A = 1 y B = 1.',f:(a,b,c)=>(!b&&c)||(a&&b)},
+ {s:'El ventilador auxiliar funciona (S = 1) cuando, de los tres sensores, al menos dos marcan 0.',f:(a,b,c)=>a+b+c<=1},
+ {s:'La compuerta del túnel se abre (S = 1) si A y C valen 1, o si B y C valen 0.',f:(a,b,c)=>(a&&c)||(!b&&!c)},
+ {s:'El piloto de avería se enciende (S = 1) cuando B vale 1 y A y C no valen 1 a la vez.',f:(a,b,c)=>b&&!(a&&c)},
+ {s:'La alarma de humo suena (S = 1) si A = 1, o si B = 1 y C = 0.',f:(a,b,c)=>a||(b&&!c)},
+ {s:'El motor de la cinta funciona (S = 1) cuando A es distinto de B y, además, C vale 1.',f:(a,b,c)=>(a!==b)&&c},
+ {s:'La lámpara del pasillo se enciende (S = 1) cuando los tres sensores valen 0 o cuando A y B valen 1.',f:(a,b,c)=>(!a&&!b&&!c)||(a&&b)},
+ {s:'El regulador de presión actúa (S = 1) si C = 1, salvo que A y B valgan 0 a la vez.',f:(a,b,c)=>c&&(a||b)},
+ {s:'La sirena de mantenimiento suena (S = 1) cuando A vale 1 y, además, B y C son iguales.',f:(a,b,c)=>a&&(b===c)},
+ {s:'La bomba de lodos funciona (S = 1) si A = 0 y B = 1, o si A = 1 y C = 1.',f:(a,b,c)=>(!a&&b)||(a&&c)},
+ {s:'El extractor del laboratorio se enciende (S = 1) cuando A vale 0 y, además, B o C valen 1.',f:(a,b,c)=>!a&&(b||c)},
+ {s:'La válvula de seguridad se abre (S = 1) si B = 1 y C = 1, o si A = 1 y B = 0.',f:(a,b,c)=>(b&&c)||(a&&!b)},
+ {s:'El freno del montacargas actúa (S = 1) cuando A o B valen 1, pero no si C vale 1.',f:(a,b,c)=>(a||b)&&!c},
+ {s:'La puerta del refugio se abre (S = 1) si los sensores A y C dan valores distintos.',f:(a,b,c)=>a!==c},
+ {s:'El aviso de nivel bajo se enciende (S = 1) si C = 0, o si A y B valen 0 a la vez.',f:(a,b,c)=>!c||(!a&&!b)},
+ {s:'El calentador se conecta (S = 1) cuando B vale 0 y, además, A o C valen 1.',f:(a,b,c)=>!b&&(a||c)},
+ {s:'La alarma del perímetro suena (S = 1) cuando A y B valen 0, o cuando B y C valen 1.',f:(a,b,c)=>(!a&&!b)||(b&&c)},
+ {s:'El radar secundario se activa (S = 1) cuando C vale 1, o cuando A vale 1 y B vale 0.',f:(a,b,c)=>c||(a&&!b)},
+ {s:'El brazo de carga se mueve (S = 1) cuando el número binario ABC es mayor que 2 y menor que 7.',f:(a,b,c)=>{ const v=4*a+2*b+c; return v>2&&v<7; }});
+P2.push("AB + A'B + AC","A'BC + AB'C + ABC","(A + B)(A' + B)","AB'C' + AB'C + ABC","A + A'B + A'B'C","~(A + B)C + AC","ABC + A'BC + AB'C + A'B'C","(A + B + C)(A + B + C')","A'B'C' + A'B'C + A'BC'","AB + AB'C + A'C","~(AB)·~(A'B)","A(B + C) + A'(B + C)","ABC' + AB'C' + A'BC'","(A + B')(A + C)","A'B + AB + A'B'","AC + A'B + BC","~(A + B') + AB","AB'C + AB'C' + A'B'C","(A + C)(A' + C)","A'B'C + A'BC + ABC + AB'C + ABC'");
+P4.push(
+ {s:'El sistema de puntería da S = 1 cuando el número binario ABCD es mayor que 11.',f:(a,b,c,d)=>8*a+4*b+2*c+d>11},
+ {s:'S = 1 cuando el número binario ABCD es múltiplo de 4 (incluido el 0).',f:(a,b,c,d)=>(8*a+4*b+2*c+d)%4===0},
+ {s:'S = 1 cuando el número binario ABCD está entre 4 y 7, ambos incluidos.',f:(a,b,c,d)=>{ const v=8*a+4*b+2*c+d; return v>=4&&v<=7; }},
+ {s:'El corrector de altura actúa (S = 1) cuando A = 1 y D = 0, o cuando B = 0 y C = 1.',f:(a,b,c,d)=>(a&&!d)||(!b&&c)},
+ {s:'S = 1 cuando el número binario ABCD es impar y mayor que 8.',f:(a,b,c,d)=>d&&(8*a+4*b+2*c+d)>8},
+ {s:'El modulador de señal da S = 1 cuando A vale 0 y, además, C y D son distintos.',f:(a,b,c,d)=>!a&&(c!==d)},
+ {s:'S = 1 cuando el número binario ABCD es 0, 2, 8 o 10 (las cuatro esquinas del mapa).',f:(a,b,c,d)=>[0,2,8,10].includes(8*a+4*b+2*c+d)},
+ {s:'El enlace secundario se activa (S = 1) cuando B vale 1, salvo que C y D valgan 1 a la vez.',f:(a,b,c,d)=>b&&!(c&&d)},
+ {s:'S = 1 cuando el número binario ABCD es menor que 3 o está entre 8 y 10, ambos incluidos.',f:(a,b,c,d)=>{ const v=8*a+4*b+2*c+d; return v<3||(v>=8&&v<=10); }},
+ {s:'El motor de giro se activa (S = 1) si A y B valen 0, o si C y D valen 1.',f:(a,b,c,d)=>(!a&&!b)||(c&&d)},
+ {s:'S = 1 cuando el número binario ABCD es 5, 7, 13 o 15.',f:(a,b,c,d)=>[5,7,13,15].includes(8*a+4*b+2*c+d)},
+ {s:'El sensor de fase da S = 1 si A vale 1 y, además, B o C valen 0.',f:(a,b,c,d)=>a&&(!b||!c)},
+ {s:'El selector de canal da S = 1 cuando D vale 0 y, además, A o B valen 1.',f:(a,b,c,d)=>!d&&(a||b)},
+ {s:'S = 1 cuando el número binario ABCD es 1, 3, 9 u 11.',f:(a,b,c,d)=>[1,3,9,11].includes(8*a+4*b+2*c+d)},
+ {s:'El compensador de inercia da S = 1 cuando A y C valen 1, o cuando B y D valen 0.',f:(a,b,c,d)=>(a&&c)||(!b&&!d)},
+ {s:'S = 1 cuando el número binario ABCD es par y menor que 8, o cuando vale 15.',f:(a,b,c,d)=>{ const v=8*a+4*b+2*c+d; return (v%2===0&&v<8)||v===15; }},
+ {s:'El verificador de bits da S = 1 cuando B y C son iguales y, además, D vale 1.',f:(a,b,c,d)=>(b===c)&&d},
+ {s:'El detector de nivel da S = 1 cuando C vale 1 y, además, A vale 0 o D vale 0.',f:(a,b,c,d)=>c&&(!a||!d)},
+ {s:'S = 1 cuando el número binario ABCD es par y mayor que 9.',f:(a,b,c,d)=>{ const v=8*a+4*b+2*c+d; return v>9&&v%2===0; }},
+ {s:'El seguidor de estrellas da S = 1 cuando A vale 0 y D vale 1, o cuando B vale 1 y C vale 0.',f:(a,b,c,d)=>(!a&&d)||(b&&!c)});
+P5.push(
+ {s:'El orientador del láser actúa (S = 1) cuando A y B valen 1, o cuando C y D valen 1, pero nunca si las cuatro entradas valen 1.',f:(a,b,c,d)=>((a&&b)||(c&&d))&&!(a&&b&&c&&d)},
+ {s:'La bobina de carga se energiza (S = 1) si A = 1 y C = 0, si B y D valen 1, o si A = 0, B = 0 y C = 1.',f:(a,b,c,d)=>(a&&!c)||(b&&d)||(!a&&!b&&c)},
+ {s:'El estabilizador del núcleo da S = 1 cuando A y C son distintos y, además, B o D valen 1.',f:(a,b,c,d)=>(a!==c)&&(b||d)},
+ {s:'El inyector de plasma funciona (S = 1) cuando el número binario ABCD es primo o vale 1.',f:(a,b,c,d)=>[1,2,3,5,7,11,13].includes(8*a+4*b+2*c+d)},
+ {s:'El refrigerante circula (S = 1) cuando al menos tres de las cuatro entradas valen 0.',f:(a,b,c,d)=>a+b+c+d<=1},
+ {s:'El alineador da S = 1 cuando B = 1 y A es distinto de D, o cuando A, C y D valen 0.',f:(a,b,c,d)=>(b&&a!==d)||(!a&&!c&&!d)},
+ {s:'El filtro de partículas actúa (S = 1) si A o C valen 1, pero no si B y D valen 1 a la vez.',f:(a,b,c,d)=>(a||c)&&!(b&&d)},
+ {s:'El detector de deriva da S = 1 cuando C = 1 y D = 0, o cuando A = 1 y B es distinto de D.',f:(a,b,c,d)=>(c&&!d)||(a&&b!==d)},
+ {s:'El acelerador final funciona (S = 1) cuando el número binario ABCD es impar y está entre 3 y 12.',f:(a,b,c,d)=>{ const v=8*a+4*b+2*c+d; return d&&v>=3&&v<=12; }},
+ {s:'La lente de enfoque se mueve (S = 1) si A = 0 y D = 1, si B = 1 y C = 0, o si A = 1, C = 1 y D = 0.',f:(a,b,c,d)=>(!a&&d)||(b&&!c)||(a&&c&&!d)},
+ {s:'El compresor del núcleo arranca (S = 1) cuando B y C valen 1, o cuando A vale 1 y D vale 0, salvo si las cuatro entradas valen 1.',f:(a,b,c,d)=>((b&&c)||(a&&!d))&&!(a&&b&&c&&d)},
+ {s:'El seguidor de órbita se activa (S = 1) cuando D vale 1 y, además, A o B valen 1, o cuando A, B y C valen 0.',f:(a,b,c,d)=>(d&&(a||b))||(!a&&!b&&!c)},
+ {s:'La protección térmica actúa (S = 1) cuando A y C valen 1, o cuando B vale 0 y D vale 1, salvo si A y B valen 0 a la vez.',f:(a,b,c,d)=>((a&&c)||(!b&&d))&&!(!a&&!b)},
+ {s:'El disparador auxiliar da S = 1 cuando el número de 2 bits AB es menor que el número CD y, además, D vale 1.',f:(a,b,c,d)=>(2*a+b<2*c+d)&&d},
+ {s:'El sensor de rumbo da S = 1 cuando hay más sensores activos en la pareja C-D que en la pareja A-B.',f:(a,b,c,d)=>c+d>a+b},
+ {s:'La compuerta del hangar orbital se abre (S = 1) si A = 1, B = 0 y C o D valen 1, o si A = 0, B = 1 y D = 0.',f:(a,b,c,d)=>(a&&!b&&(c||d))||(!a&&b&&!d)},
+ {s:'El sistema de guiado enciende el propulsor (S = 1) si A y D valen 1, si B = 1 y C = 0, o si A, B y D valen 0.',f:(a,b,c,d)=>(a&&d)||(b&&!c)||(!a&&!b&&!d)},
+ {s:'El amplificador de señal funciona (S = 1) cuando C vale 0 y, además, A es distinto de B o D vale 1.',f:(a,b,c,d)=>!c&&((a!==b)||d)},
+ {s:'El cerrojo magnético se libera (S = 1) si A = 1 y B y D valen 0, si A = 0 y C = 1, o si B, C y D valen 1.',f:(a,b,c,d)=>(a&&!b&&!d)||(!a&&c)||(b&&c&&d)},
+ {s:'El receptor principal da S = 1 cuando A vale 0 y C es distinto de D, o cuando A vale 1 y B es igual a D.',f:(a,b,c,d)=>(!a&&c!==d)||(a&&b===d)});
+
 const MODS=[
  {n:'Sensor de fragmentos',pts:1.5,ic:'📡'},
  {n:'Filtro de señales',pts:1.5,ic:'🧮'},
@@ -1018,6 +1090,7 @@ function agente(){ const p=S.get('perfil',null); return p?(p.apellidos.trim().sp
 const valsFrom=(ones,n)=>{ const v=Array(1<<n).fill(0); ones.forEach(i=>v[i]=1); return v; };
 
 function show(v){
+ document.body.classList.toggle('emerPulse',v==='portada');
  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
  $('#hud').hidden=(v==='portada');
  $('#hudWho').textContent=S.get('perfil',null)?`AGENTE ${agente().toUpperCase()}`:'AGENTE';
@@ -1160,7 +1233,7 @@ function buildPc(){
  $('#pcBody').innerHTML=`${fl.map(([t,x,y],i)=>`<div class="floaty" style="left:${x};top:${y};animation-delay:${i*.8}s">${gateSVG(t)}</div>`).join('')}
   <div class="floaty" style="left:47%;top:-6px;font-family:var(--f-mono);color:#58f0a0;font-size:22px">S = Σm(…)</div>
   <div class="monitor"><div class="pcscreen">
-   <div class="pcbar"><span>ENSAMBLADOR DE ARTEFACTOS · NASA v5.0</span><span>OPERADOR: ${esc(agente().toUpperCase())}</span><span class="blink" style="color:#ff8a80">ENERGÍA: GENERADOR 7</span></div>
+   <div class="pcbar"><span>ENSAMBLADOR DE ARTEFACTOS · NIASA v5.0</span><span>OPERADOR: ${esc(agente().toUpperCase())}</span><span class="blink" style="color:#ff8a80">ENERGÍA: GENERADOR 7</span></div>
    <div class="pcgrid">
     <div class="pcpanel"><h3>1 · SIMULACIONES RESUELTAS</h3>
      ${RES.slice(0,6).map((r,i)=>`<button type="button" class="pcbtn" data-r="${i}"><b>[${i+1}]</b> ${r.t}</button>`).join('')}
@@ -1170,7 +1243,7 @@ function buildPc(){
     <div class="pcpanel"><h3>2 · MONTAR EL ARTEFACTO</h3>${artifactSVG(ok)}
      ${done?`<p style="margin:8px 0 0">Resultado: <b style="color:${ex.saved?'#44ff8e':'#ff5a4f'}">${ex.saved?'TIERRA SALVADA':'TIERRA DESTRUIDA'}</b> · nota ${fmt(ex.nota)}</p><button type="button" class="pcgo" id="pcCert" style="animation:none;background:linear-gradient(#2fbf73,#177a45);border-color:#bfffd9">VER CERTIFICADO</button>`
       :`<button type="button" class="pcgo" id="pcGo">▶ PROGRAMAR LOS 5 MÓDULOS (EXAMEN)</button>`}</div>
-   </div></div><span class="brand">NASA · DEEP SPACE ASSEMBLY UNIT</span><span class="led"></span></div>
+   </div></div><span class="brand">NIASA · DEEP SPACE ASSEMBLY UNIT</span><span class="led"></span></div>
   <div class="keyboard">${'<i></i>'.repeat(36)}</div>`;
  $('#pcBody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>openRes(+b.dataset.r));
  const g=$('#pcGo'); if(g) g.onclick=()=>{ const e=S.get('exam',null); if(e&&e.status==='running'){ show('exam'); renderExam(); } else warnStart(); };
@@ -1304,7 +1377,7 @@ function gradePart(k,a,def,e,i){
 }
 
 /* ---------- Examen: creación ---------- */
-function pickV(slot){ const used=S.get('usados',{}); let u=used[slot]||[]; let free=[...Array(10).keys()].filter(x=>!u.includes(x)); if(!free.length){ u=[]; free=[...Array(10).keys()]; }
+function pickV(slot){ const used=S.get('usados',{}); let u=used[slot]||[]; const N={p1:P1,p2:P2,p4:P4,p5:P5,px:PX}[slot].length; let free=[...Array(N).keys()].filter(x=>!u.includes(x)); if(!free.length){ u=[]; free=[...Array(N).keys()]; }
  const v=free[Math.floor(Math.random()*free.length)]; u.push(v); used[slot]=u; S.set('usados',used); return v; }
 function distractors(terms,n,target,count){
  const out=new Set(), corr=terms.map(termStr).join(' + ');
@@ -1317,9 +1390,9 @@ function distractors(terms,n,target,count){
  return [...out];
 }
 function newExam(){
- const probs=[{v:pickV('p1')},{v:pickV('p2')},{spec:genCircuit()},{v:pickV('p4')},{v:pickV('p5')},{v:pickV('px')}];
+ const probs=[{v:pickV('p1')},{v:pickV('p2')},{spec:genCircuit()},{v:pickV('p4')},{v:pickV('p5')}];
  probs[2].combos=shuffle([...Array(8).keys()]).slice(0,3).sort((a,b)=>a-b);
- const e={status:'running',probs,ans:[{},{},{},{},{},{}],opts:[{},{},{},{},{},{}],page:0,exits:0,start:Date.now()};
+ const e={status:'running',probs,ans:[{},{},{},{},{}],opts:[{},{},{},{},{}],page:0,exits:0,start:Date.now()};
  e.opts[2]={X1:gateOptions(probs[2].spec,'X1'),X2:gateOptions(probs[2].spec,'X2')};
  const d5=probDef(e,4), flip=distractors(d5.sol.terms,4,d5.target,1)[0];
  e.opts[4]={};
@@ -1331,10 +1404,9 @@ function warnStart(){
   <p><b>${esc(p.nombre)} ${esc(p.apellidos)}</b> · ${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
   <ul><li>Cinco módulos (problemas) de dificultad creciente: 1,5 + 1,5 + 2 + 2 + 3 = 10 puntos. Cada apartado correcto suma su parte; los errores no restan.</li>
   <li>Puede moverse entre módulos y cambiar sus respuestas hasta que entregue. No hay corrección hasta el final.</li>
-  <li>Hay un <b>módulo de ampliación</b>, opcional, con salidas indiferentes (X): no hacerlo no resta, y hacerlo bien suma hasta 1 punto extra, aunque la nota pase de 10.</li>
   <li><b>El módulo 5, el núcleo del láser, decide el destino de la Tierra:</b> si consigue al menos el 75 % de sus puntos, Tántalo será desviado.</li>
   <li><b>No salga de esta ventana.</b> Las dos primeras salidas no penalizan, pero constarán en el certificado. <b>A la tercera, el examen se bloquea</b> y se califica con lo respondido. Recargar la página cuenta como salida; sus respuestas se guardan.</li>
-  <li>Durante el examen no está disponible el botón «Buscar información».</li></ul>
+  <li>Durante el examen no está disponible el botón «Busca información en internet».</li></ul>
   <label class="chk"><input type="checkbox" id="chkNormas"> <span>He leído las normas y las acepto.</span></label>`,
   buttons:[{t:'Volver al ordenador',cls:'ghost'},{t:'Empezar a programar',cls:'warn',id:'btnGo',keep:true,fn:()=>{ if(!$('#chkNormas').checked) return; closeModal(); graceUntil=Date.now()+2500; toggleFs(true); S.set('exam',newExam()); show('exam'); renderExam(); }}],
   after:b=>{ const g=b.querySelector('#btnGo'); g.disabled=true; b.querySelector('#chkNormas').onchange=e=>g.disabled=!e.target.checked; }});
@@ -1409,7 +1481,7 @@ document.addEventListener('visibilitychange',()=>document.hidden?onLeave():onBac
 window.addEventListener('blur',onLeave); window.addEventListener('focus',onBack);
 
 /* ---------- Certificado y examen corregido ---------- */
-function sealSVG(){ return `<svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#25364a" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#25364a" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="40" cy="58" r="13" fill="#25364a"/><path d="M48 50 L72 26" stroke="#b3261e" stroke-width="4"/><circle cx="74" cy="24" r="6" fill="#6b5a4a"/><text x="50" y="92" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">NASA</text></svg>`; }
+function sealSVG(){ return `<svg class="seal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#25364a" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#25364a" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="40" cy="58" r="13" fill="#25364a"/><path d="M48 50 L72 26" stroke="#b3261e" stroke-width="4"/><circle cx="74" cy="24" r="6" fill="#6b5a4a"/><text x="50" y="92" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="8" fill="#25364a">NIASA</text></svg>`; }
 function tokH(t){ return (t||[]).map(x=>x.k==='v'?(x.neg?OV(x.v):x.v):(x.k==='c'?x.v:x.k)).join(' '); }
 function corrPart(k,a,def,e,i,ok){
  a=a||{}; const n=def.n, t=def.target;
@@ -1432,7 +1504,7 @@ function renderCert(){
   return `<article class="qcard card"><h3>${MODS[i].ic} ${MODS[i].extra?'Ampliación (opcional)':'Módulo '+(i+1)}: ${MODS[i].n} <small>· ${fmt(e.scores[i])} de ${fmt(def.pts)} puntos</small></h3>${def.head}
    ${def.parts.map((k,j)=>`<div class="part ${e.partsOk[i][j]?'ok':'bad'}"><h4>${String.fromCharCode(97+j)}) ${NAMES[k]} · ${e.partsOk[i][j]?'✔ '+fmt(def.pts/def.parts.length)+' p':'✘ 0 p'}</h4>${corrPart(k,e.ans[i],def,e,i,e.partsOk[i][j])}</div>`).join('')}</article>`; }).join('');
  $('#certBody').innerHTML=`<div class="resbar noprint"><button class="btn go" type="button" id="btnPrint">🖨 Imprimir / Guardar en PDF</button><button class="btn warn" type="button" id="btnRehacer">🔄 Volver a hacer</button><button class="btn" type="button" id="btnPc">🖥 Volver al ordenador</button></div>
-  <article class="cert" id="cert"><div class="top">${sealSVG()}<div class="agency">NASA · DEFENSA PLANETARIA<br>OPERACIÓN LUCIÉRNAGA BINARIA · AMENAZA TÁNTALO</div><span class="clas">ALTO SECRETO</span></div>
+  <article class="cert" id="cert"><div class="top">${sealSVG()}<div class="agency">NIASA · DEFENSA PLANETARIA<br>OPERACIÓN LUCIÉRNAGA BINARIA · AMENAZA TÁNTALO</div><span class="clas">ALTO SECRETO</span></div>
   <h2>Certificado final</h2><p class="op">El gran desafío · Circuitos y sistemas lógicos</p>
   <p class="name">${esc(p.nombre)} ${esc(p.apellidos)}</p><p class="grp">${esc(p.curso)} · grupo ${esc(p.grupo)}</p>
   <div class="role ${role.cls}">${role.t}</div><p class="msg">${role.m}</p>
@@ -1442,7 +1514,7 @@ function renderCert(){
   <div class="foot2"><div><b>Fecha y hora:</b> ${fecha(e.end)}<br><b>ID de obra:</b> ${OBRA_ID}</div>
    <div class="sig"><div class="sgn">B. Oyarzun</div>Dra. Brígida Oyarzun<br>Directora de Reclutamiento</div></div>
   <div class="legal">© 2026 Victor Manuel Montano Simón. Todos los derechos reservados. Prohibida su reproducción, modificación o uso con IA sin autorización del autor.</div></article>
-  <section class="noprint" style="margin-top:22px"><h3>Examen corregido</h3>${corr}</section>
+  <section class="corrsec" style="margin-top:22px"><h3>Informe de preguntas y respuestas · examen corregido</h3><p>${esc(p.nombre)} ${esc(p.apellidos)} · ${esc(p.curso)} · grupo ${esc(p.grupo)}</p>${corr}</section>
   <button class="small-link noprint" type="button" id="btnNuevo">Empezar un examen nuevo (otro alumno)</button>`;
  document.querySelectorAll('.ce-ro').forEach(el=>{ const i=+el.dataset.i, c=e.ans[i]&&e.ans[i].circ; if(c&&typeof c==='object') CircuitEditor(el,{n:probDef(e,i).n,init:c,locked:true}); else el.innerHTML='<p>—</p>'; });
  $('#btnPrint').onclick=()=>window.print();
