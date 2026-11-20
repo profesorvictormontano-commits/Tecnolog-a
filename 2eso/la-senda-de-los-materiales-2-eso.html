@@ -35,9 +35,9 @@ h1,h2,h3,h4{font-family:'Cinzel',Georgia,serif;line-height:1.2}
 .btn{font-family:'Cinzel',Georgia,serif;font-weight:700;font-size:.95rem;color:#fbefd0;background:linear-gradient(#6e5a3a,#4b3c25);border:2px solid var(--gold);border-radius:6px;padding:.6em 1.1em;cursor:pointer;box-shadow:0 3px 0 #2a2116;line-height:1.2}
 .btn:hover:not(:disabled){filter:brightness(1.1)}
 .btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #2a2116}
-.btn.primary{background:linear-gradient(#c4912f,#8f6420);color:#fffbe8;border-color:#f3d27a}
+.btn.primary{background:linear-gradient(#b5852a,#83601c);color:#fffbe8;border-color:#f3d27a;text-shadow:0 1px 1px rgba(0,0,0,.45)}
 .btn.big{font-size:1.12rem;padding:.75em 1.4em}
-.btn.ghost{background:transparent;color:inherit;border-color:currentColor;box-shadow:none}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor;box-shadow:none}#btn-fs{color:#f1e3c0;border-color:var(--gold)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .stonecard{background:linear-gradient(var(--stone-hi),var(--stone));color:#f1e3c0;border:3px solid var(--gold-lo);border-radius:10px;box-shadow:inset 0 0 0 2px var(--stone-lo),0 8px 0 var(--stone-lo),0 18px 40px rgba(0,0,0,.35);position:relative}
 .stonecard::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 12px 12px,#e2b34a 0 4px,transparent 5px),radial-gradient(circle at calc(100% - 12px) 12px,#e2b34a 0 4px,transparent 5px),radial-gradient(circle at 12px calc(100% - 12px),#e2b34a 0 4px,transparent 5px),radial-gradient(circle at calc(100% - 12px) calc(100% - 12px),#e2b34a 0 4px,transparent 5px)}
@@ -105,7 +105,7 @@ input[type=checkbox],input[type=radio]{width:1.2em;height:1.2em;accent-color:#8f
 /* ventanas */
 .modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px 16px 46px;background:rgba(12,9,5,.62)}
 .modal[hidden]{display:none}
-.m-card{width:min(760px,100%);max-height:calc(100vh - 76px);overflow:auto;border-radius:10px;padding:20px 24px;position:relative}
+.m-card{width:min(760px,100%);max-height:calc(100vh - 76px);overflow:auto;border-radius:10px;padding:20px 24px;position:relative;background:var(--parch);color:var(--pink);border:3px solid #b08a4a}
 .modal.parch .m-card,.modal.sheet .m-card{background:var(--parch);color:var(--pink);border:3px solid #b08a4a;box-shadow:inset 0 0 50px rgba(140,100,40,.28),0 14px 40px rgba(0,0,0,.45)}
 .modal.dark .m-card{background:linear-gradient(#3b2622,#221614);color:#f4e2c2;border:3px solid #8e2a22;box-shadow:0 14px 40px rgba(0,0,0,.5)}
 .modal.narrow .m-card{width:min(540px,100%)}
@@ -139,7 +139,7 @@ input[type=checkbox],input[type=radio]{width:1.2em;height:1.2em;accent-color:#8f
 .match{display:grid;gap:6px}
 .mrow{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;align-items:center;padding:6px 8px;border-radius:6px;border:2px solid transparent}
 .mrow select{font:inherit;padding:6px}
-.mrow.ok{border-color:var(--okc);background:#e6f4df}.mrow.bad{border-color:var(--koc);background:#f8e0da}
+.mrow.ok{border-color:var(--okc);background:#e6f4df;color:#3a2a16}.mrow.bad{border-color:var(--koc);background:#f8e0da;color:#3a2a16}
 .msol{grid-column:1/-1;font-size:.9rem;color:var(--okc);font-weight:700}.msol:empty{display:none}
 .reward{display:grid;place-items:center}
 .gem-big{width:110px;height:110px;animation:pop .7s ease-out}.place-big{width:170px;height:190px}
@@ -187,10 +187,10 @@ input[type=checkbox],input[type=radio]{width:1.2em;height:1.2em;accent-color:#8f
 .gsearch{margin:.3em 0 .6em}.gsearch label{display:block;font-weight:700;margin-bottom:4px}#gq{width:100%;box-sizing:border-box;font:inherit;font-size:1.05rem;padding:8px 12px;border:2px solid #8a6420;border-radius:8px;background:#fffaf0;color:#3a2a16}
 .gitem{border-bottom:1px dashed #c9a96a;padding:6px 2px}.gitem p{margin:.15em 0}.gterm{font-weight:700;color:#5a3b1e}.gletter{margin:.8em 0 .2em;border-bottom:2px solid #b08a4a;color:#6b4a1e}.gtop{color:#6b5a40}
 .linkbtn{background:none;border:0;padding:0;color:#2f5f9c;text-decoration:underline;cursor:pointer;font:inherit}mark{background:#ffe27a;color:inherit;padding:0 1px;border-radius:2px}
-.ord{padding-left:1.6em;margin:.4em 0}.orow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff8e6;border:2px solid #c9a96a;border-radius:6px;padding:6px 8px;margin:6px 0}.orow.ok{border-color:var(--okc);background:#e9f5e6}.orow.bad{border-color:var(--koc);background:#fbe9e6}.obtns{display:flex;gap:4px;flex:none}.obtn{font-size:.95rem;width:38px;height:34px;border-radius:6px;border:2px solid #8a6420;background:#f3e5bf;color:#3a2a16;cursor:pointer}.obtn:disabled{opacity:.35;cursor:default}
+.ord{padding-left:1.6em;margin:.4em 0}.orow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff8e6;color:#3a2a16;border:2px solid #c9a96a;border-radius:6px;padding:6px 8px;margin:6px 0}.orow.ok{border-color:var(--okc);background:#e9f5e6}.orow.bad{border-color:var(--koc);background:#fbe9e6}.obtns{display:flex;gap:4px;flex:none}.obtn{font-size:.95rem;width:38px;height:34px;border-radius:6px;border:2px solid #8a6420;background:#f3e5bf;color:#3a2a16;cursor:pointer}.obtn:disabled{opacity:.35;cursor:default}
 .fill{line-height:2.3;font-size:1.05rem}.fsel{font:inherit;font-size:.95rem;padding:2px 4px;border:2px solid #8a6420;border-radius:6px;background:#fffaf0;color:#3a2a16;max-width:100%}.fsel.ok{border-color:var(--okc);background:#e9f5e6}.fsel.bad{border-color:var(--koc);background:#fbe9e6}
 .wlist{columns:2;column-gap:18px;font-size:.95rem}.wlist li{break-inside:avoid}@media (max-width:640px){.wlist{columns:1}}
-.gate-gems{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:.4em 0}.gate-gems .gg svg{width:34px;height:34px;display:block}.gate-gems .gg{opacity:.22;filter:grayscale(1)}.gate-gems .gg.on{opacity:1;filter:none}
+.gate-gems{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:.4em 0}.gate-gems .gg svg{width:34px;height:34px;display:block}.gate-gems .gg{opacity:.22;filter:grayscale(1)}.gate-gems .gg.on{opacity:1;filter:none}.gbox-row{display:flex;gap:5px;flex-wrap:wrap}.gbox{width:38px;height:38px;border:2px dashed rgba(243,210,122,.55);border-radius:8px;display:grid;place-items:center;position:relative;background:rgba(0,0,0,.25)}.gbox.on{border-style:solid;border-color:var(--gold);background:rgba(0,0,0,.38)}.gbox svg{width:30px;height:30px;display:block}.gb{position:absolute;right:-5px;bottom:-6px;font-size:.66rem;font-weight:700;background:#2a1d10;color:#f3d27a;border:1px solid var(--gold);border-radius:6px;padding:0 3px;line-height:1.35;font-style:normal}.keyrow{display:flex;gap:4px;flex-wrap:wrap}.pkey{width:34px;height:20px}.dblnote{margin:5px 0 0;font-size:.76rem;color:#9fe39a;font-weight:700}.qcount{margin:2px 0 0;font-size:.8rem}.modal.parch .gbox{border-color:#b08a4a;background:rgba(138,100,32,.12)}.modal.parch .gbox.on{border-style:solid;border-color:#8a6420;background:#fff8e6}.shop-top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;justify-content:space-between;margin:.2em 0 .5em}.lbl2{font-family:'Cinzel',Georgia,serif;font-weight:700;font-size:.85rem;margin:0 0 5px}.shop-inv{display:flex;align-items:center;gap:6px;margin:0;font-size:1.05rem}.shop-inv .gem-s{width:30px;height:30px}.shop-note{color:#8a2f2a;font-weight:700;margin:.3em 0}.shopm h3{margin:.8em 0 .4em;font-size:1rem}.slist{display:flex;flex-direction:column;gap:8px}.srow{display:flex;align-items:center;gap:8px 12px;background:#fff8e6;border:2px solid #b08a4a;border-radius:8px;padding:6px 8px;flex-wrap:wrap}.shead{display:flex;align-items:center;gap:8px;flex:1 1 180px;min-width:0}.sico{width:40px;height:40px;flex:none}.sname{font-weight:700;margin:0}.sbtns{display:flex;gap:6px;flex-wrap:wrap}.sbuy{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.35em .5em;min-width:92px;font-size:.78rem;line-height:1.15}.sbuy svg{width:30px;height:30px}.slab{white-space:nowrap}.scost{display:flex;align-items:center;gap:3px;font-weight:700}.gem-xs{width:16px;height:16px}.shop-merge{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.smerge{display:flex;align-items:center;gap:6px;text-align:left;flex-wrap:wrap}.smerge svg{width:30px;height:30px;flex:none}.reward.two{display:flex;justify-content:center;gap:6px}.keys-rw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:.6em 0}.keys-rw svg{width:58px;height:34px}.keys-rw .key-new{animation:pop .8s ease-out}.gems-row .dg svg{max-width:40px}.gduel{margin:14px 0 0;padding:10px 12px;border:2px solid #8e2a22;border-radius:8px;background:rgba(0,0,0,.28);text-align:center}.gd-t{margin:0 0 8px}.gd-slots,.gd-bag{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:center;min-height:56px}.gd-bag{margin-top:8px;border-top:1px dashed rgba(243,210,122,.35);padding-top:8px}.gslot{width:56px;height:56px;border:2px dashed #f3d27a;border-radius:9px;display:grid;place-items:center;background:rgba(0,0,0,.35)}.gitem{width:50px;height:50px;display:grid;place-items:center;border-radius:8px;background:rgba(255,248,230,.14);cursor:pointer;position:relative;touch-action:none}.gitem svg{width:42px;height:42px}.gitem:focus-visible{outline:3px solid #f3d27a}.gitem.ghost{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-50%)}.gduel.locked .gitem{cursor:default}.gduel.locked .gd-bag .gitem{opacity:.45}.gd-btns{margin-top:8px}.gd-sum{margin:8px 0 0;font-weight:700;color:#f3d27a}.gd-warn{color:#ffcf8a;margin:6px 0 0}.king-lost{margin-top:10px}.heal-ok{display:flex;gap:10px;align-items:center;background:#e6f4dd;border:2px solid #2f7d3a;border-radius:8px;padding:8px 10px;margin:.5em 0;color:#1f3d18}.heal-ok .heart{width:40px;height:36px;flex:none}.heal-ok p{margin:0}.heal-note{display:flex;gap:8px;align-items:center;font-size:.92rem}.heal-note .heart{width:26px;height:24px;flex:none}.modal canvas.fw{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:0}.modal.celebm .m-card{position:relative;z-index:1;text-align:center;background:rgba(34,22,20,.86)}.crowned{display:grid;place-items:center;margin:.3em 0}.crowned-av{width:160px;height:188px;filter:drop-shadow(0 0 16px rgba(255,210,58,.75));animation:pop .9s ease-out}.slots.many{gap:3px}.slots.many .slot{width:31px;height:31px}.slots.many .slot svg,.slots.many .slot .dg svg{width:25px;height:25px}.slots.many .slot .dg{width:27px;height:27px}.shop-foot{position:sticky;bottom:-20px;background:var(--parch);border-top:2px solid #b08a4a;margin:12px -24px -20px;padding:10px 24px;display:flex;gap:10px 14px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:2;box-shadow:0 -6px 12px rgba(140,100,40,.18)}.shop-msg{margin:0;font-style:italic;flex:1 1 240px}@media (max-width:560px){.sbtns{width:100%}.sbuy{flex:1 1 0;min-width:0;padding:.3em .2em;font-size:.72rem}.shop-foot{padding:8px 16px;margin:12px -16px -20px}.shop-msg{font-size:.88rem}}
 .legend{list-style:none;padding:0;display:grid;gap:8px}.legend li{display:flex;gap:10px;align-items:center}.legend svg{width:44px;height:44px;flex:none}
 details{border:2px solid #b08a4a;border-radius:8px;padding:6px 10px;margin:8px 0;background:rgba(255,255,255,.35)}
 summary{font-family:'Cinzel',Georgia,serif;font-weight:700;cursor:pointer}
@@ -345,26 +345,26 @@ var EXP_COPY='(Si no estás en el taller, copia en tu cuaderno cómo se realiza 
 
 /* ================= MAPA 1 ================= */
 var CHAINS=[
- ['Tronco de pino','Tablero de madera','Mesa de comedor'],
- ['Lana de oveja','Hilo de lana','Bufanda de invierno'],
- ['Bauxita','Lámina de aluminio','Lata de refresco'],
- ['Petróleo','Gránulos de polietileno','Bolsa de la compra'],
- ['Mineral de hierro','Barra de acero','Llave inglesa'],
- ['Corteza de alcornoque','Plancha de corcho','Tapón de botella'],
+ ['Tronco de pino recién talado','Tablero de madera de pino','Mesa de comedor de madera'],
+ ['Lana recién esquilada de la oveja','Hilo de lana','Bufanda de lana'],
+ ['Bauxita, el mineral del aluminio','Lámina de aluminio','Lata de refresco'],
+ ['Petróleo sacado del pozo','Gránulos de plástico','Bolsa de la compra'],
+ ['Mineral de hierro de la mina','Barra de acero','Llave inglesa de acero'],
+ ['Corteza de alcornoque','Plancha de corcho','Tapón de corcho de una botella'],
  ['Arena de cuarzo','Plancha de vidrio','Ventana del aula'],
- ['Látex del árbol del caucho','Caucho vulcanizado','Neumático de bici'],
- ['Algodón recién recogido','Tela de algodón','Camiseta'],
+ ['Látex del árbol del caucho','Lámina de caucho','Neumático de bicicleta'],
+ ['Algodón recién recogido','Tela de algodón','Camiseta de algodón'],
  ['Capullo del gusano de seda','Hilo de seda','Pañuelo de seda'],
- ['Mineral de cobre','Hilo de cobre','Cable del cargador'],
- ['Roca de mármol de la cantera','Losa de mármol pulida','Encimera de cocina']
+ ['Mineral de cobre de la mina','Hilo de cobre','Cable del cargador'],
+ ['Roca de mármol de la cantera','Losa de mármol pulida','Encimera de mármol de la cocina'], ['Minerales de cobre y de cinc','Plancha de latón','Pomo de latón de una puerta']
 ];
-var ROLE_ART=['una materia prima','un material','un producto tecnológico'];
+var ROLE_ART=['una materia prima','un material de uso técnico','un producto acabado'];
 var ROLE_HINT=['Busca lo que se toma tal cual de la naturaleza, sin transformar.','Busca algo ya transformado que sirve para fabricar, pero que aún no es un objeto terminado.','Busca el objeto terminado que usa la gente.'];
 var ROLE_WHY=['se toma directamente de la naturaleza.','es materia prima ya transformada, lista para fabricar.','es un objeto terminado que satisface una necesidad.'];
-var ROLE_DESC=['Es la materia prima, tomada tal cual de la naturaleza','Es el material, ya transformado para fabricar con él','Es el producto, el objeto terminado que usamos','Es un residuo que sobra durante la fabricación'];
+var ROLE_DESC=['Es la materia prima, tomada tal cual de la naturaleza','Es el material de uso técnico, ya transformado para fabricar con él','Es el producto acabado, el objeto terminado que usamos','Es un residuo que sobra durante la fabricación'];
 
 T({id:'mp',map:0,title:'Materia prima, material y producto',
-theory:'<p>Todo objeto tecnológico recorre un camino desde la naturaleza hasta tus manos:</p><ul><li><b>Materia prima</b>: lo que se extrae directamente de la naturaleza, sin transformar. Ej.: el tronco de un árbol, la lana de una oveja, el mineral de hierro, el petróleo.</li><li><b>Material</b>: la materia prima ya transformada mediante procesos físicos o químicos. Está preparada para fabricar cosas. Ej.: un tablero de madera, una barra de acero, una lámina de plástico.</li><li><b>Producto tecnológico</b>: el objeto terminado que se fabrica con materiales para satisfacer una necesidad. Ej.: una mesa, una bufanda, una lata de refresco.</li></ul><p class="cadena">Tronco ► Tablero ► Mesa</p><p>Un mismo producto suele combinar varios materiales: una silla del aula lleva madera, acero y plástico.</p>',
+theory:'<p>Todo objeto tecnológico recorre un camino desde la naturaleza hasta tus manos:</p><ul><li><b>Materia prima</b>: lo que se extrae directamente de la naturaleza, sin transformar. Ej.: el tronco de un árbol, la lana de una oveja, el mineral de hierro, el petróleo.</li><li><b>Material de uso técnico</b>: la materia prima ya transformada mediante procesos físicos o químicos. Está preparada para fabricar cosas. Ej.: un tablero de madera, una barra de acero, una lámina de plástico.</li><li><b>Producto acabado</b> o producto tecnológico: el objeto terminado que se fabrica con materiales para satisfacer una necesidad. Ej.: una mesa, una bufanda, una lata de refresco.</li><li><b>Residuo</b>: lo que sobra al fabricar, como las virutas o los recortes, o lo que se tira cuando ya no sirve. Si se recicla, vuelve a ser materia prima.</li></ul><p class="cadena">Tronco ► Tablero ► Mesa</p><p>Un mismo producto suele combinar varios materiales: una silla del aula lleva madera, acero y plástico.</p>',
 exp:null,
 slots:[
  {lv:'Recuerda',items:(function(){var out=[];CHAINS.forEach(function(ch,i){[0,1,2].forEach(function(r){out.push(function(){var o=shuffle(CHAINS.filter(function(_,j){return j!==i;}));return {q:'¿Cuál de estos elementos es '+ROLE_ART[r]+'?',c:ch[r],w:[o[0][(r+1)%3],o[1][(r+2)%3],o[2][(r+1+rnd(2))%3]],h:ROLE_HINT[r],e:'«'+ch[r]+'» es '+ROLE_ART[r]+': '+ROLE_WHY[r]};});});});return out;})()},
@@ -376,15 +376,15 @@ var FAM=['Metales','Plásticos','Maderas','Pétreos','Cerámicos','Textiles'];
 function famQ(list,stem,hint){return list.map(function(it){return function(){return {q:stem(it[0]),c:it[1],w:FAM.filter(function(f){return f!==it[1];}),h:hint,e:it[2]||('Pertenece a la familia de los '+it[1].toLowerCase()+'.')};};});}
 var ORI_OPTS={a:['Origen animal','Origen vegetal','Origen mineral','Origen sintético'],v:['Origen vegetal','Origen animal','Origen mineral','Origen sintético'],m:['Origen mineral','Origen animal','Origen vegetal','Origen sintético']};
 T({id:'fam',map:0,title:'Origen de las materias primas y familias de materiales',
-theory:'<p>Las materias primas se clasifican según su <b>origen</b>:</p><ul><li><b>Animales</b>: lana, seda, cuero.</li><li><b>Vegetales</b>: madera, corcho, algodón, lino, látex, esparto.</li><li><b>Minerales</b>: arena, arcilla, mármol, granito, pizarra y los minerales de los que salen los metales (bauxita, magnetita…).</li></ul><p>Con ellas se obtienen las grandes <b>familias de materiales de uso técnico</b>:</p><ul><li><b>Maderas</b> y derivados: pino, roble, aglomerado, contrachapado, papel.</li><li><b>Metales</b>: hierro, acero, cobre, aluminio, bronce…</li><li><b>Plásticos</b>: se obtienen sobre todo del petróleo: PVC, polietileno, metacrilato, baquelita.</li><li><b>Pétreos</b>: rocas y piedras como el mármol, el granito o la pizarra.</li><li><b>Cerámicos</b>: arcilla moldeada y cocida en un horno: ladrillo, teja, azulejo, porcelana.</li><li><b>Textiles</b>: fibras que se hilan y se tejen: algodón, lana, seda, lino.</li></ul><p>Para elegir un material se tienen en cuenta sus <b>propiedades</b>, su <b>disponibilidad</b>, su <b>precio</b> y su <b>impacto ambiental</b>.</p>',
+theory:'<p>Las materias primas se clasifican según su <b>origen</b>:</p><ul><li><b>Animales</b>: lana, seda, cuero.</li><li><b>Vegetales</b>: madera, corcho, algodón, lino, látex, esparto.</li><li><b>Minerales</b>: arena, arcilla, mármol, granito, pizarra y los minerales de los que salen los metales (bauxita, magnetita…).</li></ul><p>Con ellas se obtienen las grandes <b>familias de materiales de uso técnico</b>:</p><ul><li><b>Maderas</b> y derivados: tablas de pino, muebles de roble, tableros de madera, papel y cartón.</li><li><b>Metales</b>: hierro, acero, cobre, aluminio…</li><li><b>Plásticos</b>: se obtienen sobre todo del petróleo: bolsas de la compra, cubos, botellas, fundas de cables.</li><li><b>Pétreos</b>: rocas y piedras como el mármol, el granito o la pizarra.</li><li><b>Cerámicos</b>: arcilla moldeada y cocida en un horno: ladrillo, teja, azulejo, porcelana.</li><li><b>Textiles</b>: fibras que se hilan y se tejen: algodón, lana, seda, lino.</li></ul><p>Para elegir un material se tienen en cuenta sus <b>propiedades</b>, su <b>disponibilidad</b>, su <b>precio</b> y su <b>impacto ambiental</b>.</p>',
 exp:null,
 slots:[
  {lv:'Recuerda',items:outcome([['lana','a'],['seda','a'],['cuero','a'],['corcho','v'],['algodón','v'],['lino','v'],['madera','v'],['látex','v'],['esparto','v'],['arena','m'],['arcilla','m'],['granito','m'],['mármol','m'],['bauxita','m'],['pizarra','m']],
   function(x){return '¿Cuál es el origen de la materia prima «'+x+'»?';},ORI_OPTS,'Pregúntate de dónde sale: de un animal, de una planta o de la tierra.',
-  function(it){return 'El '+it[0]+' tiene '+{a:'origen animal',v:'origen vegetal',m:'origen mineral'}[it[1]]+'.';})},
- {lv:'Comprende',items:famQ([['cobre','Metales'],['acero','Metales'],['aluminio','Metales'],['bronce','Metales'],['PVC','Plásticos'],['polietileno','Plásticos'],['metacrilato','Plásticos'],['baquelita','Plásticos'],['pino','Maderas'],['aglomerado','Maderas'],['contrachapado','Maderas'],['granito','Pétreos'],['mármol','Pétreos'],['pizarra','Pétreos'],['porcelana','Cerámicos'],['ladrillo','Cerámicos'],['teja','Cerámicos'],['azulejo','Cerámicos'],['tela de algodón','Textiles'],['tejido de seda','Textiles']],
-  function(x){return '¿A qué familia de materiales pertenece el '+x+'?';},'Piensa de qué está hecho y cómo se obtiene.')},
- {lv:'Aplica',items:famQ([['Se obtiene al moldear arcilla y cocerla en un horno a alta temperatura.','Cerámicos'],['Se fabrica a partir de derivados del petróleo y se moldea con calor.','Plásticos'],['Procede del tronco de los árboles.','Maderas'],['Se extrae de canteras en forma de bloques o de lajas.','Pétreos'],['Se obtiene de minerales en hornos y conduce bien la electricidad.','Metales'],['Está formado por fibras que se hilan y se tejen.','Textiles'],['A esta familia pertenecen las tejas y los azulejos del baño.','Cerámicos'],['A esta familia pertenecen las tuberías de PVC y las bolsas.','Plásticos'],['A esta familia pertenecen los tableros de aglomerado y el papel.','Maderas'],['A esta familia pertenecen las encimeras de granito.','Pétreos'],['A esta familia pertenecen las vigas de acero y las latas.','Metales'],['A esta familia pertenecen los vaqueros y las toallas.','Textiles']],
+  function(it){return 'Esta materia prima ('+it[0]+') tiene '+{a:'origen animal',v:'origen vegetal',m:'origen mineral'}[it[1]]+'.';})},
+ {lv:'Comprende',items:famQ([['un hilo de cobre','Metales'],['una barra de acero','Metales'],['una lata de refresco','Metales'],['un clavo de hierro','Metales'],['una bolsa de la compra','Plásticos'],['un cubo de fregar','Plásticos'],['la funda de un cable','Plásticos'],['una mesa de pino','Maderas'],['una puerta de roble','Maderas'],['una hoja de papel','Maderas'],['una encimera de granito','Pétreos'],['una escultura de mármol','Pétreos'],['un tejado de pizarra','Pétreos'],['una taza de porcelana','Cerámicos'],['un ladrillo','Cerámicos'],['una teja','Cerámicos'],['un azulejo del baño','Cerámicos'],['una camiseta de algodón','Textiles'],['un pañuelo de seda','Textiles'],['una bufanda de lana','Textiles']],
+  function(x){return '¿A qué familia pertenece el material principal de '+x+'?';},'Piensa de qué está hecho y cómo se obtiene.')},
+ {lv:'Aplica',items:famQ([['Se obtiene al moldear arcilla y cocerla en un horno a alta temperatura.','Cerámicos'],['Se fabrica a partir de derivados del petróleo y se moldea con calor.','Plásticos'],['Procede del tronco de los árboles.','Maderas'],['Se extrae de canteras en forma de bloques o de lajas.','Pétreos'],['Se obtiene de minerales en hornos y conduce bien la electricidad.','Metales'],['Está formado por fibras que se hilan y se tejen.','Textiles'],['A esta familia pertenecen las tejas y los azulejos del baño.','Cerámicos'],['A esta familia pertenecen las bolsas de la compra y los cubos de fregar.','Plásticos'],['A esta familia pertenecen las mesas de pino y el papel.','Maderas'],['A esta familia pertenecen las encimeras de granito.','Pétreos'],['A esta familia pertenecen las vigas de acero y las latas.','Metales'],['A esta familia pertenecen los vaqueros y las toallas.','Textiles']],
   function(x){return '¿De qué familia de materiales se habla? «'+x+'»';},'Fíjate en el origen o en el ejemplo que te dan.')}
 ]});
 
@@ -494,7 +494,7 @@ theory:'<p>Las <b>propiedades ópticas</b> describen cómo se comporta un materi
 exp:{title:'La linterna investigadora',mat:'Una linterna o la luz del móvil, una lámina de metacrilato, papel vegetal o papel de horno, un trozo de cartón y papel de aluminio.',steps:['Haz el experimento junto a una pared, con el aula un poco a oscuras.','Ilumina la pared a través de cada material, de uno en uno.','Mira a través de cada material y comprueba si distingues bien lo que hay al otro lado.','Clasifícalos en transparentes, translúcidos y opacos.'],safe:'No apuntes la linterna a los ojos de nadie.'},
 slots:[
  {lv:'Experimento',items:outcome([['una lámina de metacrilato','t'],['el cristal de una ventana','t'],['una botella de agua transparente','t'],['un papel vegetal','l'],['el vidrio esmerilado de una ducha','l'],['una bolsa de plástico blanca','l'],['un papel de horno','l'],['un trozo de cartón','o'],['un papel de aluminio','o'],['una tabla de madera','o'],['una chapa de acero','o']],
-  function(x){return 'Con «La linterna investigadora» iluminas a través de '+x+'. ¿Qué observas?';},OPT_OPTS,'¿Pasa la luz? Y si pasa, ¿ves con nitidez lo de detrás?',
+  function(x){return ('Con «La linterna investigadora» iluminas a través de '+x+'. ¿Qué observas?').replace(' de el ',' del ');},OPT_OPTS,'¿Pasa la luz? Y si pasa, ¿ves con nitidez lo de detrás?',
   function(it){return {t:'Es transparente: deja pasar la luz y se ve con nitidez.',l:'Es translúcido: pasa la luz, pero no se ve con nitidez.',o:'Es opaco: no deja pasar la luz.'}[it[1]];})},
  {lv:'Comprende',items:[
   {q:'¿Cómo es un material translúcido?',c:'Deja pasar la luz, aunque lo de detrás se ve borroso',w:['Deja pasar la luz y se ve con total nitidez a través','No deja pasar nada de luz y no se ve a través','Refleja toda la luz que le llega, como un espejo'],h:'Piensa en el cristal de la ducha.',e:'Lo translúcido deja pasar la luz, aunque la imagen se ve borrosa.'},
@@ -562,7 +562,7 @@ slots:[
 ]});
 
 /* ================= MAPA 2 ================= */
-var MOHS=[['talco',1],['yeso',2],['calcita',3],['fluorita',4],['apatito',5],['ortosa',6],['cuarzo',7],['topacio',8],['corindón',9],['diamante',10]];
+var MOHS=[['talco',1],['yeso',2],['calcita',3],['fluorita',4],['apatito',5],['ortosa',6],['cuarzo',7],['topacio',8],['corindón',9],['diamante',10]];function eM(n,c){var f=/^(calcita|fluorita|ortosa)$/i.test(n);return (c?(f?'La ':'El '):(f?'la ':'el '))+n;}function aM(n){return (/^(calcita|fluorita|ortosa)$/i.test(n)?'a la ':'al ')+n;}
 var RAYA_OPTS={t:['Queda una raya: es menos duro que el clavo','No queda raya: es más duro que el clavo','Se parte en trozos: es un material tenaz','Se dobla y recupera la forma: es elástico'],f:['No queda raya: es más duro que el clavo','Queda una raya: es menos duro que el clavo','Se parte en trozos: es un material tenaz','Se dobla y recupera la forma: es elástico']};
 T({id:'dur',map:1,title:'La dureza',
 theory:'<p>La <b>dureza</b> mide lo difícil que es <b>rayar</b> un material con otro. Un material raya a otro si es más duro que él.</p><p>Para comparar la dureza de los minerales se usa la <b>escala de Mohs</b>, del 1 al 10: talco (1), yeso (2), calcita (3), fluorita (4), apatito (5), ortosa (6), cuarzo (7), topacio (8), corindón (9) y diamante (10). El <b>diamante</b> es el más duro y el <b>talco</b>, el más blando.</p><p>Las herramientas de corte (brocas, limas, sierras) deben ser más duras que el material que trabajan. Ojo: duro no significa irrompible. El vidrio es duro, pero se rompe con un golpe.</p>',
@@ -584,7 +584,7 @@ slots:[
   {q:'¿Qué material elegirías para la punta de una broca del taller?',c:'Acero endurecido',w:['Aluminio','Plomo','Cobre'],h:'Necesitas el más duro.',e:'La broca debe ser más dura que lo que perfora.'},
   {q:'¿Duro significa lo mismo que irrompible?',c:'No: un material duro puede romperse con un golpe',w:['Sí: un material duro nunca se rompe con un golpe','No: un material duro siempre es también elástico','Sí: un material duro siempre es también tenaz'],h:'Piensa en el vidrio.',e:'La dureza es resistencia al rayado, no a los golpes.'}
  ]},
- {lv:'Aplica',items:(function(){var out=[];for(var i=0;i<MOHS.length;i++){for(var j=i+1;j<MOHS.length;j++){(function(a,b){out.push(function(){var ab=Math.random()<.5;var X=ab?a:b,Y=ab?b:a;return {q:'En la escala de Mohs, el '+X[0]+' tiene dureza '+X[1]+' y el '+Y[0]+', dureza '+Y[1]+'. ¿Qué ocurre si frotas uno contra otro?',c:'El '+b[0]+' raya al '+a[0],w:['El '+a[0]+' raya al '+b[0],'Se rayan los dos por igual','Ninguno de los dos raya al otro'],h:'El que tiene el número más alto raya al otro.',e:'El '+b[0]+' ('+b[1]+') es más duro que el '+a[0]+' ('+a[1]+').'};});})(MOHS[i],MOHS[j]);}}return out;})()}
+ {lv:'Aplica',items:(function(){var out=[];for(var i=0;i<MOHS.length;i++){for(var j=i+1;j<MOHS.length;j++){(function(a,b){out.push(function(){var ab=Math.random()<.5;var X=ab?a:b,Y=ab?b:a;return {q:'En la escala de Mohs, '+eM(X[0])+' tiene dureza '+X[1]+' y '+eM(Y[0])+', dureza '+Y[1]+'. ¿Qué ocurre si frotas uno contra otro?',c:eM(b[0],1)+' raya '+aM(a[0]),w:[eM(a[0],1)+' raya '+aM(b[0]),'Se rayan los dos por igual','Ninguno de los dos raya al otro'],h:'El que tiene el número más alto raya al otro.',e:eM(b[0],1)+' ('+b[1]+') tiene más dureza que '+eM(a[0])+' ('+a[1]+').'};});})(MOHS[i],MOHS[j]);}}return out;})()}
 ]});
 
 var ELA_OPTS={t:['Recupera su forma: es un material elástico','Se queda deformado: es un material plástico','Se rompe en trozos: es un material frágil','Se calienta mucho: es un conductor térmico'],f:['Se queda deformado: es un material plástico','Recupera su forma: es un material elástico','Se rompe en trozos: es un material frágil','Se calienta mucho: es un conductor térmico']};
@@ -594,7 +594,7 @@ theory:'<p>Cuando aplicamos una fuerza a un material, este puede deformarse. Lo 
 exp:{title:'Estira y aplasta',mat:'Una goma elástica, el muelle de un bolígrafo, una bola de plastilina, un trozo de papel de aluminio y una pelota de goma.',steps:['Estira la goma elástica y suéltala con cuidado.','Aprieta el muelle con los dedos y suéltalo.','Aplasta la plastilina y arruga el papel de aluminio.','Anota qué materiales recuperan su forma y cuáles se quedan deformados.'],safe:'No apuntes a nadie con la goma estirada.'},
 slots:[
  {lv:'Experimento',items:outcome([['una goma elástica que estiras','t'],['el muelle de un bolígrafo que aprietas','t'],['una pelota de goma que aprietas','t'],['una esponja que estrujas','t'],['una cinta elástica del pelo que estiras','t'],['una bola de plastilina que aplastas','f'],['un trozo de arcilla húmeda que aplastas','f'],['un papel de aluminio que arrugas','f'],['un hilo de cobre que doblas','f'],['un trozo de masa de pan que aplastas','f']],
-  function(x){return 'En «Estira y aplasta» pruebas con '+x+' y después lo sueltas. ¿Qué ocurre?';},ELA_OPTS,'Fíjate en lo que pasa al dejar de hacer fuerza.',
+  function(x){return 'En «Estira y aplasta» pruebas con '+x+' y después dejas de hacer fuerza. ¿Qué ocurre?';},ELA_OPTS,'Fíjate en lo que pasa al dejar de hacer fuerza.',
   function(it){return it[1]==='t'?'Vuelve a su forma: es elástico.':'Se queda deformado: es plástico.';})},
  {lv:'Comprende',items:[
   {q:'¿Qué es la elasticidad?',c:'La capacidad de recuperar la forma al quitar la fuerza',w:['La capacidad de quedarse deformado al quitar la fuerza','La capacidad de romperse sin deformarse antes','La capacidad de dejarse rayar por otro material'],h:'Piensa en una goma elástica.',e:'Un material elástico vuelve a su forma.'},
@@ -676,7 +676,7 @@ slots:[
   {q:'Las piezas de un avión se revisan a menudo para detectar fatiga porque…',c:'Soportan vibraciones y cargas repetidas',w:['Soportan una sola carga muy grande','Se oxidan siempre en cada vuelo','Se vuelven transparentes con la altura'],h:'Cada vuelo repite las mismas cargas.',e:'Las cargas repetidas producen fatiga.'}
  ]},
  {lv:'Aplica',items:esfQ([['el cable de una grúa que levanta una carga','Tracción'],['una columna que sostiene un techo','Compresión'],['un trampolín cuando saltas en su punta','Flexión'],['un destornillador al apretar un tornillo','Torsión'],['una perforadora al hacer agujeros en un papel','Cortadura'],['los pilares de un puente','Compresión'],['la viga de un puente con coches encima','Flexión'],['el viento de una tienda de campaña','Tracción'],['el eje de un molinillo que gira con fuerza','Torsión'],['las cuchillas de una cizalla al cortar chapa','Cortadura'],['la cadena de una bicicleta al pedalear','Tracción']],
-  function(x){return '¿Qué esfuerzo soporta '+x+'?';},'Imagina cómo se deformaría ese elemento.')}
+  function(x){return '¿Qué esfuerzo '+(/^(los|las) /.test(x)?'soportan ':'soporta ')+x+'?';},'Imagina cómo se deformaría ese elemento.')}
 ]});
 
 var MAL5=['Maleabilidad','Ductilidad','Elasticidad','Dureza','Porosidad','Fragilidad'];
@@ -710,7 +710,7 @@ T({id:'tec',map:1,title:'Propiedades tecnológicas',
 theory:'<p>Las <b>propiedades tecnológicas</b> indican si un material se puede trabajar bien con una técnica concreta. Además de la maleabilidad y la ductilidad, destacan:</p><ul><li><b>Maquinabilidad</b>: facilidad para trabajarlo con herramientas de corte (serrar, limar, taladrar, tornear).</li><li><b>Soldabilidad</b>: facilidad para unirse a otra pieza mediante soldadura.</li><li><b>Fusibilidad</b>: facilidad para fundirse y poder echarlo en moldes.</li><li><b>Forjabilidad</b>: facilidad para darle forma a golpes cuando está caliente, como hace el herrero.</li></ul><p>Conocerlas ayuda a elegir el material y la técnica: el pino se sierra con facilidad; una pieza de acero cuesta mucho más.</p>',
 exp:{title:'Lima y compara',mat:'Una lima, un tornillo de banco, un listón de pino, una chapita de aluminio, una pletina de acero y una tira de PVC.',steps:['Sujeta cada material en el tornillo de banco.','Da diez pasadas de lima a cada uno con la misma fuerza.','Compara cuánto material ha salido (serrín o limaduras).','Ordena los materiales de más fácil a más difícil de limar.'],safe:'Sujeta bien la pieza y no toques las limaduras metálicas con los dedos.'},
 slots:[
- {lv:'Experimento',items:MAQ_PAIRS.map(function(p){return function(){var e=p[0],d=p[1];var sw=Math.random()<.5;var A=sw?d:e,B=sw?e:d;return {q:'En «Lima y compara» das diez pasadas de lima a una pieza de '+A+' y a otra de '+B+'. ¿De cuál sale más material?',c:'De la de '+e+': tiene mejor maquinabilidad',w:['De la de '+d+': tiene mejor maquinabilidad','De las dos igual: la lima es la misma','De ninguna: la lima solo sirve para metal'],h:'Cuanto más blando, más fácil de limar.',e:'El '+e+' se trabaja con más facilidad que el '+d+'.'};};})},
+ {lv:'Experimento',items:MAQ_PAIRS.map(function(p){return function(){var e=p[0],d=p[1];var sw=Math.random()<.5;var A=sw?d:e,B=sw?e:d;return {q:'En «Lima y compara» das diez pasadas de lima a una pieza de '+A+' y a otra de '+B+'. ¿De cuál sale más material?',c:'De la de '+e+': tiene mejor maquinabilidad',w:['De la de '+d+': tiene mejor maquinabilidad','De las dos igual: la lima es la misma','De ninguna: la lima solo sirve para metal'],h:'Cuanto más blando, más fácil de limar.',e:'La pieza de '+e+' se trabaja con más facilidad que la de '+d+'.'};};})},
  {lv:'Comprende',items:[
   {q:'¿Qué indican las propiedades tecnológicas?',c:'Si un material se puede trabajar bien con una técnica',w:['Si un material contamina mucho al fabricarse','Si un material deja pasar la luz o el sonido','Si un material es caro o barato en la tienda'],h:'Tienen que ver con fabricar.',e:'Informan de cómo se comporta el material al trabajarlo.'},
   {q:'¿Qué es la maquinabilidad?',c:'La facilidad para trabajarlo con herramientas de corte',w:['La facilidad para unirlo con soldadura','La facilidad para fundirlo en un horno','La facilidad para doblarlo con las manos'],h:'Serrar, limar, taladrar…',e:'Maquinabilidad: facilidad para el corte con herramientas.'},
@@ -851,7 +851,7 @@ var PD={
 var P_M1=['flota','elec','term','mag','opt','poro'],P_ALL=P_M1.concat(['raya','frag','ela','mal','duc','oxi','biod']);
 function combo(Ps,Qs){return function(){
   for(var t=0;t<120;t++){var P=pick(Ps),vP=pick(Object.keys(PD[P])),Q=pick(Qs.filter(function(q){return q!==P;})),vQ=pick(Object.keys(PD[Q]));
-    var kn=MAT.filter(function(m){return m[P]!==undefined&&m[Q]!==undefined;});
+    var kn=MAT.filter(function(m){return m[P]!==undefined&&m[Q]!==undefined&&(Ps!==P_M1||!/estaño|polietileno|PVC/.test(m.n));});
     var ok=kn.filter(function(m){return String(m[P])===vP&&String(m[Q])===vQ;});
     var half=kn.filter(function(m){return (String(m[P])===vP)!==(String(m[Q])===vQ);});
     if(ok.length&&half.length>=3){var c=pick(ok);return {q:'¿Qué material '+PD[P][vP]+' y, además, '+PD[Q][vQ]+'?',c:cap(c.n),w:sampleN(half,3).map(function(m){return cap(m.n);}),h:'Comprueba las dos condiciones en cada opción: varias cumplen solo una de ellas.',e:cap(c.n)+' '+PD[P][vP]+' y '+PD[Q][vQ]+'.'};}}
@@ -859,7 +859,7 @@ function combo(Ps,Qs){return function(){
 var FAM1={Metales:'metal',Plásticos:'plástico',Maderas:'material de la familia de las maderas',Cerámicos:'material cerámico',Pétreos:'material pétreo',Textiles:'material textil'};
 function famCombo(){return function(){
   for(var t=0;t<120;t++){var F=pick(Object.keys(FAM1)),Q=pick(P_ALL),vQ=pick(Object.keys(PD[Q]));
-    var kn=MAT.filter(function(m){return m.f&&m[Q]!==undefined;});
+    var kn=MAT.filter(function(m){return m.f&&m[Q]!==undefined&&!/latón|estaño|polietileno|metacrilato|porexpán|PVC/.test(m.n);});
     var ok=kn.filter(function(m){return m.f===F&&String(m[Q])===vQ;});
     var half=kn.filter(function(m){return (m.f===F)!==(String(m[Q])===vQ);});
     if(ok.length&&half.length>=3){var c=pick(ok);return {q:'¿Qué '+FAM1[F]+' '+PD[Q][vQ]+'?',c:cap(c.n),w:sampleN(half,3).map(function(m){return cap(m.n);}),h:'Deben cumplirse dos cosas: la familia y la propiedad.',e:cap(c.n)+' es de la familia de los '+F.toLowerCase()+' y '+PD[Q][vQ]+'.'};}}
@@ -871,17 +871,17 @@ function relEntry(pairs,stem,classify){return function(){var rows=sampleN(pairs,
 
 var EXT={
  mp:{theory:'<p>Lo que es producto para unos puede ser material para otros: el hilo de lana es el producto final de una hilandería, pero es el material del que parte quien teje una bufanda.</p><p>Además, casi todos los productos combinan varios materiales. Una bicicleta lleva acero o aluminio en el cuadro, caucho en las ruedas, plástico en el sillín y cobre en los cables de las luces. Para <b>analizar un producto</b> se separan sus piezas y se identifica de qué material es cada una y por qué se eligió.</p>',
-  hard:CHAINS.map(function(ch,i){return function(){var o=sampleN(CHAINS.filter(function(_,j){return j!==i;}),3);var bad=shuffle([[1,0,2],[0,2,1],[2,1,0]])[0].map(function(k){return ch[k];}).join(' ► ');return {q:'Tres de estas cadenas están bien ordenadas (materia prima ► material ► producto). ¿Cuál tiene un error?',c:bad,w:o.map(function(c){return c.join(' ► ');}),h:'Busca la cadena que no empieza en la naturaleza o que no termina en un objeto terminado.',e:'Lo correcto sería '+ch.join(' ► ')+'.'};};}).concat([
+  hard:CHAINS.map(function(ch,i){return function(){var o=sampleN(CHAINS.filter(function(_,j){return j!==i;}),3);var bad=shuffle([[1,0,2],[0,2,1],[2,1,0]])[0].map(function(k){return ch[k];}).join(' ► ');return {q:'Tres de estas cadenas están bien ordenadas (materia prima ► material de uso técnico ► producto acabado). ¿Cuál tiene un error?',c:bad,w:o.map(function(c){return c.join(' ► ');}),h:'Busca la cadena que no empieza en la naturaleza o que no termina en un objeto terminado.',e:'Lo correcto sería '+ch.join(' ► ')+'.'};};}).concat([
    {q:'Una bicicleta lleva cuadro de aluminio, ruedas de caucho y sillín de plástico. ¿Qué afirmación es correcta?',c:'Es un producto que combina varios materiales',w:['Es una materia prima mineral','Es un material, porque sirve para fabricar','Es un producto hecho con un único material'],h:'Piensa en el objeto completo.',e:'La bicicleta es un producto terminado que combina varios materiales.'},
    {q:'¿Por qué el hilo de lana puede ser a la vez producto y material?',c:'Es el producto de la hilandería y el material del tejedor',w:['Es materia prima y producto a la vez en el campo','Es un material que nunca se puede transformar','Es un producto que no sirve para fabricar nada'],h:'Depende de quién lo use.',e:'Para la hilandería es su producto; para quien teje, su material.'}
   ]),
-  rel:[CHAINS.map(function(c){return [c[0],'Materia prima'];}).concat(CHAINS.map(function(c){return [c[1],'Material'];}),CHAINS.map(function(c){return [c[2],'Producto'];})),'Relaciona cada elemento con su papel en la cadena de fabricación.',true]},
+  rel:[CHAINS.map(function(c){return [c[0],'Materia prima'];}).concat(CHAINS.map(function(c){return [c[1],'Material de uso técnico'];}),CHAINS.map(function(c){return [c[2],'Producto acabado'];}),[['Virutas que sobran al cepillar una tabla','Residuo'],['Recortes de chapa que sobran al fabricar latas','Residuo'],['Retales de tela que sobran al cortar camisetas','Residuo']]),'Relaciona cada elemento con su papel en la cadena de fabricación.',true]},
  fam:{theory:'<p>Dentro de cada familia hay grupos. Los metales pueden ser <b>férricos</b>, si contienen hierro (hierro, acero, fundición), o <b>no férricos</b> (cobre, aluminio, plomo, estaño…). Las maderas pueden ser <b>naturales</b> (pino, roble) o <b>prefabricadas</b> (aglomerado, contrachapado, DM).</p><p>Para elegir se combinan criterios: un material puede tener las mejores propiedades, pero si es muy caro, escaso o contamina mucho, se busca otro que también cumpla.</p>',
   hard:rep(famCombo(),10).concat([
-   {q:'¿Qué metal es no férrico?',c:'El aluminio',w:['El acero','La fundición','El hierro'],h:'No contiene hierro.',e:'El aluminio no contiene hierro: es no férrico.'},
+   {q:'¿Qué metal es no férrico?',c:'El aluminio',w:['El acero','El acero inoxidable','El hierro'],h:'No contiene hierro.',e:'El aluminio no contiene hierro: es no férrico.'},
    {q:'Dos materiales sirven igual de bien para un banco del patio, pero uno es mucho más caro y contamina más al fabricarse. ¿Qué criterios te ayudan a decidir?',c:'El precio y el impacto ambiental',w:['Solo las propiedades del material','Solo el color y el brillo del material','La familia, porque decide por sí sola'],h:'Las propiedades ya empatan.',e:'Si las propiedades empatan, deciden el precio, la disponibilidad y el impacto.'}
   ]),
-  rel:[[['Cobre','Metales'],['Acero','Metales'],['PVC','Plásticos'],['Metacrilato','Plásticos'],['Aglomerado','Maderas'],['Pino','Maderas'],['Granito','Pétreos'],['Pizarra','Pétreos'],['Porcelana','Cerámicos'],['Teja','Cerámicos'],['Lana','Textiles'],['Algodón','Textiles']],'Relaciona cada material con su familia.',true]},
+  rel:[[['Cobre','Metales'],['Acero','Metales'],['Bolsa de la compra','Plásticos'],['Cubo de fregar','Plásticos'],['Tablero de madera','Maderas'],['Pino','Maderas'],['Granito','Pétreos'],['Pizarra','Pétreos'],['Porcelana','Cerámicos'],['Teja','Cerámicos'],['Lana','Textiles'],['Algodón','Textiles']],'Relaciona cada material con su familia.',true]},
  den:{theory:'<p>Con la densidad se puede <b>identificar un material</b>. Se mide la masa con una balanza y el volumen sumergiendo la pieza en una probeta con agua: el agua sube tanto como el volumen de la pieza. Por ejemplo, 54 g que hacen subir el agua 20 cm³ dan 54 / 20 = 2,7 g/cm³: es aluminio.</p><p>Un barco de acero flota porque su forma hueca encierra mucho aire: la densidad media del barco es más baja que la del agua.</p>',
   hard:rep(combo(['flota'],P_M1),6).concat(DENS.slice(0,8).map(function(p){return function(){var V=pick([10,20,25,40]);var m=Math.round(p[1]*V*100)/100;var fl=p[1]<1;return {q:'Una pieza tiene una masa de '+fmt(m)+' g y, al sumergirla en una probeta, el agua sube '+V+' cm³. ¿Qué densidad tiene y qué hará en el agua?',c:fmt(p[1])+' g/cm³; '+(fl?'flota':'se hunde'),w:[fmt(p[1])+' g/cm³; '+(fl?'se hunde':'flota'),fmt(V/m)+' g/cm³; '+(V/m<1?'flota':'se hunde'),fmt(m*V)+' g/cm³; se hunde'],h:'Primero d = m / V; después compara con 1 g/cm³.',e:'d = '+fmt(m)+' / '+V+' = '+fmt(p[1])+' g/cm³, '+(fl?'menor':'mayor')+' que la del agua.'};};}),[
    {q:'¿Por qué flota un barco de acero si el acero es mucho más denso que el agua?',c:'Porque su forma hueca hace que su densidad media sea menor',w:['Porque el acero de los barcos es menos denso que el agua','Porque el agua del mar es más densa que el acero','Porque los barcos llevan un motor que los empuja hacia arriba'],h:'Piensa en el aire que hay dentro.',e:'El aire del interior baja la densidad media del barco.'}]),
@@ -1208,14 +1208,14 @@ var OBJ_NEEDED=5;
 
 var MAPS=[
  {name:'El Valle de las Materias',theme:'valle',obj:{key:'diamante',one:'diamante',many:'diamantes'},
-  topics:['mp','fam','den','elec','term','opt','mag'],monsters:['hidra','troll','dragon','hidra'],okPlace:'uni',riddle:'Si a la meta quieres llegar, la sabiduría deberás alcanzar.',
-  intro:'Las forjas del reino se han apagado y los carpinteros ya no distinguen el roble del pino: alguien ha robado los saberes de los materiales. Recorre los caminos del Valle de las Materias, aprende en cada pergamino y reúne diamantes del saber: con cinco podrás abrir la puerta que lleva a la meta.',
+  topics:['mp','fam','den','elec','term','opt','mag'],monsters:['hidra','troll','dragon','hidra'],king:'k_herrumbre',okPlace:'uni',riddle:'Si a la meta quieres llegar, la sabiduría deberás alcanzar.',
+  intro:'Las forjas del reino se han apagado y los carpinteros ya no distinguen el roble del pino: alguien ha robado los saberes de los materiales. Recorre los caminos del Valle de las Materias, aprende en cada pergamino y reúne diamantes del saber. Pasa en orden por el Bosque, las Puertas de la Ciudad y la Universidad: cada sitio te dará una llave. Con las tres llaves abrirás la puerta de la meta, donde te espera el Rey Herrumbre.',
   places:{
    pmontana:{name:'Puerta de la Montaña',kind:'block',cut:'La puerta de la montaña está cerrada a cal y canto: detrás solo hay rocas sin transformar, materias primas que todavía no son materiales.'},
-   bosque:{name:'Bosque',kind:'pass',gem:true,pass:'El bosque es una gran fuente de materias primas: madera, corcho, resinas… Sus guardianes te dejan pasar y te regalan un diamante del saber.'},
-   pciudad:{name:'Puertas de la Ciudad',kind:'pass',need:'basics',wait:'Don Anselmo Cerrojo, el guardián de las Puertas de la Ciudad, solo deja pasar a quien trae los diamantes de todos los pergaminos básicos del Valle.',pass:'Don Anselmo Cerrojo cuenta tus diamantes de los pergaminos básicos y abre las Puertas de la Ciudad.'},
-   uni:{name:'Universidad de los Materiales',short:'Universidad',kind:'ok'},
-   hospital:{name:'Hospital',kind:'block',cut:'En el hospital se cura a las personas, no se estudian los materiales. Te piden silencio y te cierran la puerta.'},
+   bosque:{name:'Bosque',kind:'pass',seq:1,gem:true,pass:'El bosque es una gran fuente de materias primas: madera, corcho, resinas… Sus guardianes te dejan pasar y te regalan un diamante del saber.'},
+   pciudad:{name:'Puertas de la Ciudad',kind:'pass',seq:2,need:'basics',toll:7,wait:'Don Anselmo Cerrojo, el guardián de las Puertas de la Ciudad, no abre a quien no ha pasado antes por el Bosque, la gran fuente de materias primas del Valle.',needMsg:'Don Anselmo Cerrojo solo deja pasar a quien ha superado todos los pergaminos básicos del Valle.',tollMsg:'Don Anselmo Cerrojo te cierra el paso: el peaje de las Puertas de la Ciudad es de siete diamantes del saber.',pass:'Don Anselmo Cerrojo guarda tus siete diamantes en su cofre y abre las Puertas de la Ciudad.'},
+   uni:{name:'Universidad de los Materiales',short:'Universidad',kind:'ok',seq:3,toll:3,wait:'La Universidad solo recibe a quien ha cruzado las Puertas de la Ciudad.'},
+   hospital:{name:'Hospital',kind:'block',cut:'En el hospital se cura a las personas, no se estudian los materiales, y por aquí no se llega a la meta.',heal:'Una enfermera te atiende con mucho cuidado y te deja descansar un rato en una camilla.'},
    ayto:{name:'Ayuntamiento',kind:'block',cut:'En el ayuntamiento se gobierna la ciudad, pero allí no se estudian las propiedades de los materiales. El conserje te corta el paso.'},
    aero:{name:'Centro Aeronáutico',kind:'block',cut:'En el centro aeronáutico se fabrican aviones de aluminio y titanio, pero no se enseñan los saberes que buscas. La verja está cerrada.'},
    colina:{name:'Colina',kind:'block',cut:'Desde lo alto de la colina se ve la meta, pero un barranco corta el camino. Tendrás que volver.'}
@@ -1228,20 +1228,20 @@ var MAPS=[
     ['J1',[[600,635]],'J2'],['J2',[[690,700],[690,560]],'PC'],['J2',[[535,700]],'B3'],['B1',[[470,830],[475,910]],'B3'],['B3','CA'],
     ['CA',[[905,890],[895,735],[1045,705]],'RB'],['PC','J5'],['J5',[[822,497],[825,420]],'HO'],['HO','RH'],['J5',[[770,580]],'AY'],['AY',[[1060,577]],'L'],
     ['PC',[[683,300]],'UN'],['UN',[[790,268],[940,265]],'RU']],
-   ponds:[[340,284,52,34],[1440,834,58,34]]}
+   ponds:[[340,284,52,34],[1440,834,58,34]],forge:[[510,635]]}
  },
  {name:'Las Cumbres del Ensayo',theme:'cumbres',obj:{key:'rubi',one:'rubí',many:'rubíes'},
-  topics:['dur','ela','ten','esf','mal','tec','qui','eco'],monsters:['golem','arana','wyvern','golem'],okPlace:'lab',
+  topics:['dur','ela','ten','esf','mal','tec','qui','eco'],monsters:['golem','arana','wyvern','golem'],king:'k_quebradizo',okPlace:'lab',
   riddle:'Donde se raya, se estira y se golpea, y cada material su secreto confiesa, allí el paso a tu destino encontrarás.',
-  intro:'En las Cumbres del Ensayo los materiales se ponen a prueba. Recorre sus caminos, supera los pergaminos y reúne rubíes: con cinco podrás abrir la puerta que lleva a la meta.',
+  intro:'En las Cumbres del Ensayo los materiales se ponen a prueba. Recorre sus caminos, supera los pergaminos y reúne rubíes. Pasa en orden por el Mirador de las Cumbres, el Puente de Hierro y el Laboratorio de Ensayos: cada sitio te dará una llave. Con las tres llaves abrirás la puerta de la meta, donde te espera el Rey Quebradizo.',
   places:{
-   mirador:{name:'Mirador de las Cumbres',kind:'pass',gem:true,pass:'Desde el mirador se ven todas las cumbres. Un viejo cantero te deja pasar y te regala un rubí.'},
+   mirador:{name:'Mirador de las Cumbres',kind:'pass',seq:1,gem:true,pass:'Desde el mirador se ven todas las cumbres. Un viejo cantero te deja pasar y te regala un rubí.',heal:'Te sientas en el mirador a respirar el aire limpio de las cumbres y descansas un buen rato.'},
    paso:{name:'Paso de la Montaña',kind:'pass',pass:'Un estrecho paso entre las rocas te deja cruzar al otro lado de la montaña.'},
-   lab:{name:'Laboratorio de Ensayos',kind:'ok'},
-   puente:{name:'Puente de Hierro',kind:'pass',need:'basics',wait:'Doña Hortensia Calibre, la guardiana del Puente de Hierro, solo deja cruzar a quien trae los rubíes de todos los pergaminos básicos de las Cumbres.',pass:'Doña Hortensia Calibre cuenta tus rubíes de los pergaminos básicos y te deja cruzar el Puente de Hierro.'},
+   lab:{name:'Laboratorio de Ensayos',kind:'ok',seq:3,toll:3,wait:'El laboratorio solo abre a quien ha cruzado el Puente de Hierro.'},
+   puente:{name:'Puente de Hierro',kind:'pass',seq:2,need:'basics',toll:7,wait:'Doña Hortensia Calibre, la guardiana del Puente de Hierro, no deja cruzar a quien no ha subido antes al Mirador de las Cumbres.',needMsg:'Doña Hortensia Calibre solo deja cruzar a quien ha superado todos los pergaminos básicos de las Cumbres.',tollMsg:'Doña Hortensia Calibre te cierra el paso: el peaje del Puente de Hierro es de siete rubíes.',pass:'Doña Hortensia Calibre cuenta tus siete rubíes y te deja cruzar el Puente de Hierro.'},
    aserradero:{name:'Aserradero del Río',kind:'block',cut:'En el aserradero se corta la madera en tablas, pero aquí no se ensayan los materiales. La rueda del molino bloquea el paso.'},
    cantera:{name:'Cantera de Mármol',kind:'block',cut:'De la cantera se extraen bloques de roca, que son materias primas. Un bloque de piedra rueda y tapa el camino.'},
-   forja:{name:'Forja del Herrero',kind:'block',cut:'En la forja se trabajan los metales a golpes, pero no se miden ni se comparan sus propiedades. El fuego de la fragua te cierra el paso.'},
+   forja:{name:'Taller del Calderero',kind:'block',cut:'En el taller del calderero se da forma al cobre a martillazos, pero allí no se miden ni se comparan las propiedades de los materiales. El fuego del horno te cierra el paso.'},
    mina:{name:'Mina de Cobre',kind:'block',cut:'De la mina se extrae mineral de cobre, una materia prima. Un derrumbe en la galería te cierra el paso.'},
    torre:{name:'Torre del Alquimista',kind:'block',cut:'El alquimista intenta convertir el plomo en oro con conjuros, no con ensayos. Su puerta está sellada con magia.'},
    puerto:{name:'Puerto de las Barcas',kind:'block',cut:'Del puerto salen productos hacia otros reinos. La marea alta inunda el muelle y no puedes pasar.'}
@@ -1290,7 +1290,7 @@ function buildPlan(mi,code){
   var free=shuffle(PP.filter(function(n){return n.kind==='path'&&d0(n)>300;}),R),used=[];
   function far(n){return used.every(function(u){return Math.hypot(u.x-n.x,u.y-n.y)>200;});}
   var jails=0,sur=0;free.forEach(function(n){if(jails<2&&far(n)){n.type='jail';used.push(n);jails++;}else if(sur<4&&far(n)){n.type='surprise';used.push(n);sur++;}});
-  return {nodes:N,start:S0.id,end:meta.id};
+  markForge(M,N,S0,meta,PL,T);return {nodes:N,start:S0.id,end:meta.id};
 }
 function buildMaze(mi,code){
   var M=MAPS[mi],Z=M.mz,RL=mulberry32(Z.seed*7919+13),R=mulberry32(hashStr(code+'#mapa'+mi)),N=[],SP=44;
@@ -1333,7 +1333,7 @@ function shortestToMeta(mi){var g=G[mi],N=g.nodes,dist={},q=[g.start];dist[g.sta
   return dist[g.end];}
 /* ---------- Estado ---------- */
 var S=null,G=[],busy=false,printing=false,lastExitAt=0,blurTimer=null,ZOOM=1,FIT=null;
-function newState(){return {v:2,stage:'register',player:{nombre:'',apellidos:'',curso:'2.º ESO',grupo:''},avatar:null,code:'',map:0,pos:0,prev:null,forceBack:false,lastJ:null,lives:3,inv:MAPS.map(function(){return 0;}),topics:{},placeOk:MAPS.map(function(){return false;}),unlocked:MAPS.map(function(){return false;}),defeated:{},opened:{},skip:0,skipWhy:'',ms:{},log:[],exits:0,rolls:0,started:0,finished:0,pending:null,introSeen:MAPS.map(function(){return false;}),exm:MAPS.map(function(){return 0;}),certs:{},mv:{}};}
+function newState(){return {v:2,forgeV:1,stage:'register',player:{nombre:'',apellidos:'',curso:'2.º ESO',grupo:''},avatar:null,code:'',map:0,pos:0,prev:null,forceBack:false,lastJ:null,lives:3,inv:MAPS.map(function(){return 0;}),topics:{},placeOk:MAPS.map(function(){return false;}),unlocked:MAPS.map(function(){return false;}),defeated:{},opened:{},skip:0,skipWhy:'',ms:{},log:[],exits:0,rolls:0,started:0,finished:0,pending:null,introSeen:MAPS.map(function(){return false;}),exm:MAPS.map(function(){return 0;}),certs:{},mv:{}};}
 function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(S));}catch(e){}}
 function loadState(){try{var t=localStorage.getItem(STORE_KEY);return t?JSON.parse(t):null;}catch(e){return null;}}
 function node(id,mi){return G[mi===undefined?S.map:mi].nodes[id];}
@@ -1376,8 +1376,8 @@ function drawMap(mi){
     var LBL=P.short||P.name,w=Math.max(80,LBL.length*7.4+16),LB=[[0,34],[0,-34],[w/2+30,0],[-(w/2+30),0],[w/2+20,30],[-(w/2+20),30],[w/2+20,-30],[-(w/2+20),-30],[0,56],[0,-56]],lb=LB[0],lv=-1e9;
     LB.forEach(function(o){var x=n.x+o[0],y=n.y+o[1];if(Math.abs(x-bx)<w/2+40&&Math.abs(y-by)<52)return;var v=Math.min(clr(x-w/2+6,y),clr(x,y),clr(x+w/2-6,y));if(x-w/2<6||x+w/2>1594||y<16||y>988)v-=500;if(v>lv){lv=v;lb=o;}});
   });
-  s+='<g transform="translate('+MT.x+','+MT.y+')"><path d="M-40,26 L-40,-24 Q0,-70 40,-24 L40,26Z" fill="#6c665c" stroke="#3a352c" stroke-width="3"/><path d="M-26,26 L-26,-16 Q0,-46 26,-16 L26,26Z" fill="#5fb7ff"/><path d="M-26,26 L-26,-16 Q0,-46 26,-16 L26,26Z" fill="url(#glow'+mi+')"/><rect x="-36" y="34" width="72" height="22" rx="4" fill="#f1e2bb" stroke="#6b4a1e" stroke-width="2"/><text y="50" text-anchor="middle" class="ptxt">Meta</text></g>';
-  s+='<g id="tiles">';N.forEach(function(n){s+=tileSVG(mi,n);});s+='</g>';
+  s+='<g transform="translate('+MT.x+','+MT.y+')"><path d="M-40,26 L-40,-24 Q0,-70 40,-24 L40,26Z" fill="#6c665c" stroke="#3a352c" stroke-width="3"/><path d="M-26,26 L-26,-16 Q0,-46 26,-16 L26,26Z" fill="#5fb7ff"/><path d="M-26,26 L-26,-16 Q0,-46 26,-16 L26,26Z" fill="url(#glow'+mi+')"/><rect x="-36" y="34" width="72" height="22" rx="4" fill="#f1e2bb" stroke="#6b4a1e" stroke-width="2"/><text y="50" text-anchor="middle" class="ptxt">Meta</text></g>';s+=mapExtras(mi,N,E,places,MT);
+  s+='<g id="tiles">';N.forEach(function(n){if(!n.forge)s+=tileSVG(mi,n);});N.forEach(function(n){if(n.forge)s+=tileSVG(mi,n);});s+='</g>';
   s+='<g id="mons">';N.forEach(function(n){if(n.kind==='fight')s+=monSVG(mi,n);});s+='</g>';
   s+='<g id="choices"></g><g id="hero"></g></svg>';
   return s;
@@ -1465,19 +1465,19 @@ async function pergamino(mi){
   }
   var bad=0,host,PB=poolsOf(id);
   if(k<2){
-    c=modal(qShell(k===0?t.title:'Ampliación: '+t.title,'Responde las dos preguntas. Si aciertas al menos una, ganas un '+o.one+'.'),'parch');host=$('#qhost',c);
+    c=modal(qShell(k===0?t.title:'Ampliación: '+t.title,'Responde las dos preguntas. Si aciertas al menos una, ganas '+gemWin(mi)+'.'),'parch');host=$('#qhost',c);
     var QS=k===0?[pickFresh([PB.sl,PB.fi]),pickFresh([PB.mc,PB.ge,PB.ge])]:[pickFresh([EXT[id].hard]),pickFresh([PB.hd,PB.ge,EXT[id].hard])];
     for(var s=0;s<2;s++){var r=await runItem(host,QS[s],ctx);if(!r.ok)bad++;c.scrollTop=0;}
   }else{
-    c=modal(qShell('Relacionar conceptos: '+t.title,'Sin teoría: relaciona lo que has aprendido en estos dos ejercicios. Si aciertas al menos uno, ganas un '+o.one+'.'),'parch');host=$('#qhost',c);
+    c=modal(qShell('Relacionar conceptos: '+t.title,'Sin teoría: relaciona lo que has aprendido en estos dos ejercicios. Si aciertas al menos uno, ganas '+gemWin(mi)+'.'),'parch');host=$('#qhost',c);
     var R1=pickFresh([[function(){return relQ(id);}]]),R2=pickFresh([XSIT[mi]||[],[crossRel(mi)]]);
     var rr=[await runItem(host,R1,ctx)];c.scrollTop=0;rr.push(await runItem(host,R2,ctx+', conceptos de todo el mapa'));
     bad=rr.filter(function(x){return !x.ok;}).length;
   }
   S.pending=null;var ok=bad<=1;
-  if(ok){rec.p[k]=true;rec.d[k]=true;S.inv[mi]++;save();updatePanel();
-    c=modal('<div class="reward">'+ART.gem(o.key,'gem-big')+'</div><h2 class="m-title">¡Pergamino superado!</h2><p class="center">Recibes un '+o.one+' del saber. Lo verás en tu bolsa.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Seguir el camino</button></div>','parch narrow');
-    await choice(c);closeModal();say('¡Un '+o.one+' más en tu bolsa!');return;}
+  if(ok){rec.p[k]=true;rec.d[k]=true;var gg=gemGain(mi);S.inv[mi]+=gg;save();updatePanel();
+    c=modal('<div class="reward'+(gg>1?' two':'')+'">'+ART.gem(o.key,'gem-big')+(gg>1?ART.gem(o.key,'gem-big'):'')+'</div><h2 class="m-title">¡Pergamino superado!</h2><p class="center">'+(gg>1?'Recibes dos '+o.many+' del saber: premio doble. Los verás en tu bolsa.':'Recibes '+unO(o)+' del saber. '+(o.f?'La':'Lo')+' verás en tu bolsa.')+'</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Seguir el camino</button></div>','parch narrow');
+    await choice(c);closeModal();say(gg>1?'¡Dos '+o.many+' más en tu bolsa!':'¡'+UnO(o)+' más en tu bolsa!');return;}
   rec.fails[k]++;
   if(k===0){S.skip=1;S.skipWhy='perg';save();
     c=modal(sageHead('No pasa nada: equivocarse también enseña.')+'<h2 class="m-title">Sin '+o.one+' esta vez</h2><p>Has fallado las dos preguntas, así que no consigues '+o.one+' y se te retiene un turno. La próxima casilla de pergamino te mostrará la misma teoría con preguntas distintas.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');
@@ -1495,24 +1495,24 @@ function poolQ(mi){var seen=MAPS[mi].topics.filter(function(id){return topicRec(
 /* ---------- Combates ---------- */
 async function fightFlow(nd){
   var mi=S.map,mon=ART.monsters[nd.monster];S.pending={k:'fight',n:nd.id};save();
-  var c=modal('<div class="arena-top">'+ART.monsterSVG(nd.monster,'mon-big')+'<div class="bubble mon">'+esc(mon.taunt)+'</div></div><h2 class="m-title">'+esc(mon.name)+'</h2><p class="center">Antes del combate responde dos preguntas sobre lo que ya has aprendido. Cada acierto suma +1 a tu tirada de dos dados.</p><div id="qhost"></div>','dark');
+  var c=modal('<div class="arena-top">'+ART.monsterSVG(nd.monster,'mon-big')+'<div class="bubble mon">'+esc(mon.taunt)+'</div></div><h2 class="m-title">'+esc(mon.name)+'</h2><p class="center">Antes del combate responde dos preguntas sobre lo que ya has aprendido. Cada acierto suma +1 a tu tirada de dos dados.'+fightNote(nd,mi)+'</p><div id="qhost"></div>','dark');
   var host=$('#qhost',c),bonus=0;
-  var RPf=reviewPools(mi,false);if(RPf.unseen){var tf=TOPIC_BY_ID[MAPS[mi].topics[0]];libOpen(MAPS[mi].topics[0],0);host.innerHTML=sageHead('Antes de luchar, lee este saber.')+'<div class="theory mini">'+tf.theory+'</div><div class="m-actions"><button class="btn primary" data-v="1">He leído la teoría</button></div>';await choice(host);}for(var i=0;i<2;i++){var r=await runItem(host,pickFresh(RPf.pools),'Combate contra '+mon.name);if(r.ok)bonus++;c.scrollTop=0;}
-  host.innerHTML='<div class="duel"><div class="side">'+ART.avatarSVG(S.avatar,'duel-av')+'<div class="dice" id="hd">'+ART.die(1)+ART.die(1)+'</div><p id="ht">Bonificación: +'+bonus+'</p></div><div class="vs">contra</div><div class="side">'+ART.monsterSVG(nd.monster,'duel-mon')+'<div class="dice" id="md">'+ART.die(1)+ART.die(1)+'</div><p id="mt">&nbsp;</p></div></div><div class="m-actions"><button class="btn primary big" id="froll" data-focus>Comenzar el combate</button></div><p class="center" id="fres" aria-live="polite"></p>';
-  var win=null;
-  while(win===null){await new Promise(function(r){$('#froll',host).addEventListener('click',r,{once:true});});$('#froll',host).disabled=true;
-    var md=$('#md',host),hd=$('#hd',host),fr=$('#fres',host),m1=1,m2=1,h1=1,h2=1,rm=reduced();$('#ht',host).textContent='Bonificación: +'+bonus;$('#mt',host).innerHTML='&nbsp;';
-    fr.innerHTML=esc(mon.name)+' lanza sus dados…';md.classList.add('rolling');
-    for(var f=0;f<(rm?4:14);f++){m1=1+rnd(6);m2=1+rnd(6);md.innerHTML=ART.die(m1)+ART.die(m2);await sleep(rm?40:75);}
-    md.classList.remove('rolling');var mv=m1+m2;$('#mt',host).textContent=m1+' + '+m2+' = '+mv;fr.innerHTML='<b>'+esc(mon.name)+' ha sacado '+mv+'.</b> Ahora ruedan tus dados…';await sleep(rm?300:1200);
+  var RPf=reviewPools(mi,false);if(RPf.unseen){var tf=TOPIC_BY_ID[MAPS[mi].topics[0]];libOpen(MAPS[mi].topics[0],0);host.innerHTML=sageHead('Antes de luchar, lee este saber.')+'<div class="theory mini">'+tf.theory+'</div><div class="m-actions"><button class="btn primary" data-v="1">He leído la teoría</button></div>';await choice(host);}for(var i=0;i<2;i++){var r=await runItem(host,pickFresh(RPf.pools),'Combate contra '+(mon.c||mon.name));if(r.ok)bonus++;c.scrollTop=0;}
+  host.innerHTML='<div class="duel"><div class="side">'+ART.avatarSVG(S.avatar,'duel-av')+'<div class="dice" id="hd">'+ART.die(1)+ART.die(1)+'</div><p id="ht">Bonificación: +'+bonus+'</p></div><div class="vs">contra</div><div class="side">'+ART.monsterSVG(nd.monster,'duel-mon')+'<div class="dice" id="md">'+ART.die(1)+ART.die(1)+(nd.king?ART.die(1):'')+'</div><p id="mt">&nbsp;</p></div></div>'+gearDuelHTML(mi)+'<div class="m-actions"><button class="btn primary big" id="froll" data-focus>Comenzar el combate</button></div><p class="center" id="fres" aria-live="polite"></p>';gearDuelBind(host,mi);
+  var win=null,m3=0,gw=0,gs=0;
+  while(win===null){await new Promise(function(r){$('#froll',host).addEventListener('click',r,{once:true});});if(gearWarn(host))continue;$('#froll',host).disabled=true;gw=gearSum(host,'a');gs=gearSum(host,'e');gearLock(host);
+    var md=$('#md',host),hd=$('#hd',host),fr=$('#fres',host),m1=1,m2=1,h1=1,h2=1,rm=reduced();$('#ht',host).textContent='Bonificación: +'+bonus+(gw?' · armas: +'+gw:'');$('#mt',host).innerHTML='&nbsp;';
+    fr.innerHTML=esc(mon.the||mon.name)+(nd.king?' lanza sus tres dados…':' lanza sus dados…');md.classList.add('rolling');
+    for(var f=0;f<(rm?4:14);f++){m1=1+rnd(6);m2=1+rnd(6);m3=nd.king?1+rnd(6):0;md.innerHTML=ART.die(m1)+ART.die(m2)+(nd.king?ART.die(m3):'');await sleep(rm?40:75);}
+    md.classList.remove('rolling');var mv=Math.max(0,m1+m2+m3-gs);$('#mt',host).textContent=m1+' + '+m2+(nd.king?' + '+m3:'')+(gs?' − '+gs:'')+' = '+mv;fr.innerHTML='<b>'+esc(mon.the||mon.name)+' ha sacado '+mv+(gs?' (tus escudos le restan '+gs+')':'')+'.</b> Ahora ruedan tus dados…';await sleep(rm?300:1200);
     hd.classList.add('rolling');var stp=rm?8:24;for(var k=0;k<stp;k++){h1=1+rnd(6);h2=1+rnd(6);hd.innerHTML=ART.die(h1)+ART.die(h2);await sleep(rm?35:(45+k*9));}
     hd.classList.remove('rolling');hd.classList.add('landed');setTimeout(function(){hd.classList.remove('landed');},500);
-    var hv=h1+h2+bonus;$('#ht',host).textContent=h1+' + '+h2+' + '+bonus+' = '+hv;
+    var hv=h1+h2+bonus+gw;$('#ht',host).textContent=h1+' + '+h2+' + '+bonus+(gw?' + '+gw:'')+' = '+hv;
     if(hv===mv){$('#fres',host).textContent='¡Empate a '+hv+'! Volved a lanzar.';$('#froll',host).disabled=false;$('#froll',host).textContent='Desempatar';}else{win=hv>mv;}}
-  S.pending=null;logQ({c:'Combate contra '+mon.name,duel:win?'Victoria':'Derrota',bonus:bonus});
+  S.pending=null;logQ({c:'Combate contra '+(mon.c||mon.name),duel:win?'Victoria':'Derrota',bonus:bonus,arm:gw,esc:gs});
   var bx=document.createElement('div');bx.className='m-actions';
-  if(win){S.defeated[mi+':'+nd.id]=true;save();refreshTile(nd);$('#fres',host).innerHTML='<b>¡Has vencido a '+esc(mon.name)+'!</b> El camino queda libre.';bx.innerHTML='<button class="btn primary" data-v="1">Seguir el camino</button>';host.appendChild(bx);$('button',bx).focus();await choice(bx);closeModal();say('¡Victoria! Sigue el camino.');}
-  else{$('#fres',host).innerHTML='<b>'+esc(mon.name)+' te ha derrotado</b> y te lanza al último cruce por el que pasaste. Pierdes una vida.';bx.innerHTML='<button class="btn primary" data-v="1">Continuar</button>';host.appendChild(bx);$('button',bx).focus();await choice(bx);closeModal();await penalize(S.lastJ!==null?S.lastJ:G[mi].start);}
+  if(win){S.defeated[mi+':'+nd.id]=true;if(nd.king&&S.dbl)S.dbl[mi]=false;save();updatePanel();refreshTile(nd);$('#fres',host).innerHTML='<b>¡Has vencido '+esc(mon.a||('a '+mon.name))+'!</b> '+(nd.king?'La meta es tuya.':'El camino queda libre.');bx.innerHTML='<button class="btn primary" data-v="1">'+(nd.king?'Ir a la meta':'Seguir el camino')+'</button>';host.appendChild(bx);$('button',bx).focus();await choice(bx);closeModal();if(nd.king){await kingWon(mi);}else{say('¡Victoria! Sigue el camino.');}}
+  else if(nd.king){await kingLoss(nd,host,mi);}else{$('#fres',host).innerHTML='<b>'+esc(mon.the||mon.name)+' te ha derrotado</b> y te lanza al último cruce por el que pasaste. Pierdes una vida.';bx.innerHTML='<button class="btn primary" data-v="1">Continuar</button>';host.appendChild(bx);$('button',bx).focus();await choice(bx);closeModal();await penalize(S.lastJ!==null?S.lastJ:G[mi].start);}
 }
 
 /* ---------- Elección de camino en los cruces ---------- */
@@ -1549,22 +1549,22 @@ async function placeFlow(nd){
     var c0=modal(art+'<h2 class="m-title">'+esc(P.name)+': todavía cerrado</h2><p>'+esc(P.wait||'Aún no puedes pasar por aquí.')+'</p><p>Por ahora está cerrado. En tu próximo turno tendrás que volver por donde has venido.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c0);closeModal();say('Cerrado por ahora: en el próximo turno vuelves atrás.');return;}
   if(P.need==='basics'&&!basicsDone(mi)){var tot=M.topics.length,hv=basicsHave(mi),row='';for(var gi=0;gi<tot;gi++)row+='<span class="'+(gi<hv?'gg on':'gg')+'">'+ART.gem(o.key,'')+'</span>';S.forceBack=true;save();
     var c5=modal(art+'<h2 class="m-title">'+esc(P.name)+': paso cerrado</h2><p>'+esc(P.needMsg||P.wait)+'</p><div class="gate-gems" aria-hidden="true">'+row+'</div><p class="center">Llevas <b>'+hv+' de '+tot+'</b> '+o.many+' de los pergaminos básicos.</p><p>Sigue recorriendo los caminos y vuelve cuando los tengas todos. En tu próximo turno tendrás que volver por donde has venido.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c5);closeModal();say('Te faltan pergaminos básicos: en el próximo turno vuelves atrás.');return;}
-  if(k==='block'){logQ({c:'Lugares del mapa '+(mi+1),place:P.name,ok:false,mi:mi});S.forceBack=true;save();
-    var c=modal(art+'<h2 class="m-title">'+esc(P.name)+': paso cortado</h2><p>'+esc(P.cut)+'</p><p>Aunque el camino parece seguir, por aquí no se puede pasar. En tu próximo turno tendrás que volver por donde has venido.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c);closeModal();say('Paso cortado: en el próximo turno vuelves atrás.');return;}
-  if(k==='pass'){if(!S.gifts)S.gifts={};var gk=mi+':'+nd.place,gift=!!P.gem&&!S.gifts[gk],first=!!P.seq&&done===P.seq-1;if(gift){S.gifts[gk]=true;S.inv[mi]++;}if(first)S.seq[mi]=P.seq;save();updatePanel();
+  if(k==='block'){logQ({c:'Lugares del mapa '+(mi+1),place:P.name,ok:false,mi:mi});S.forceBack=true;save();var hl=healAt(mi,nd.place);
+    var c=modal(art+'<h2 class="m-title">'+esc(P.name)+': paso cortado</h2><p>'+esc(P.cut)+'</p>'+hl+'<p>Aunque el camino parece seguir, por aquí no se puede pasar. En tu próximo turno tendrás que volver por donde has venido.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c);closeModal();say((hl.indexOf('heal-ok')>-1?'Recuperas una vida. ':'')+'Paso cortado: en el próximo turno vuelves atrás.');return;}
+  if(k==='pass'&&tollOf(mi,nd.place)&&!tollPaid(mi,nd.place)&&!(await payToll(mi,nd,art)))return;if(k==='pass'){if(!S.gifts)S.gifts={};var gk=mi+':'+nd.place,gift=!!P.gem&&!S.gifts[gk],first=!!P.seq&&done===P.seq-1;if(gift){S.gifts[gk]=true;S.inv[mi]++;}if(first)S.seq[mi]=P.seq;save();updatePanel();var hl=healAt(mi,nd.place);
     var nxt=P.seq?seqName(P.seq+1):null;logQ({c:'Lugares del mapa '+(mi+1),place:P.name,ok:true,mi:mi,pass:true});
-    var c3=modal(art+'<h2 class="m-title">'+esc(P.name)+'</h2><p>'+esc(P.seq&&!first?'Ya pasaste por aquí. Sigue tu camino.':P.pass)+'</p>'+(gift?'<div class="reward">'+ART.gem(o.key,'gem-big')+'</div><p class="center">¡Recibes un '+o.one+'!</p>':(P.gem?'<p class="center small">Ya recibiste aquí tu '+o.one+'.</p>':''))+'<p>En la próxima tirada sigues tu camino.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Continuar</button></div>','parch narrow');await choice(c3);closeModal();say(gift?'¡'+esc(P.name)+' te regala un '+o.one+'!':'Puedes seguir en la próxima tirada.');return;}
+    var c3=modal(art+'<h2 class="m-title">'+esc(P.name)+'</h2><p>'+esc(P.seq&&!first?'Ya pasaste por aquí. Sigue tu camino.':P.pass)+'</p>'+(first?keyHTML(mi,P.seq):'')+hl+(gift?'<div class="reward">'+ART.gem(o.key,'gem-big')+'</div><p class="center">¡Recibes '+unO(o)+'!</p>':(P.gem?'<p class="center small">Ya recibiste aquí tu '+o.one+'.</p>':''))+'<p>En la próxima tirada sigues tu camino.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Continuar</button></div>','parch narrow');await choice(c3);closeModal();say((first?'¡Llave '+P.seq+' de '+keysTot(mi)+'! ':'')+(gift?'¡'+esc(P.name)+' te regala '+unO(o)+'!':(hl.indexOf('heal-ok')>-1?'Recuperas una vida. ':'')+'Puedes seguir en la próxima tirada.'));return;}
   if(!S.placeOk[mi]){S.placeOk[mi]=true;logQ({c:'Lugares del mapa '+(mi+1),place:P.name,ok:true,mi:mi});}
   if(S.unlocked[mi]){say('Descansas en «'+esc(P.name)+'». En la próxima tirada sigues hacia la meta.');return;}
-  if(S.inv[mi]<OBJ_NEEDED){S.forceBack=true;save();var c2=modal(sageHead('¡Has encontrado el lugar correcto!')+'<h2 class="m-title">'+esc(P.name)+'</h2><p>La puerta tiene '+OBJ_NEEDED+' huecos para '+o.many+' y en tu bolsa '+(S.inv[mi]===1?'solo hay 1':'hay '+S.inv[mi])+'. En tu próximo turno tendrás que volver atrás: sigue superando pergaminos y regresa cuando tengas los que faltan.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c2);closeModal();say('Te faltan '+o.many+'. En el próximo turno vuelves atrás.');return;}
-  await unlockFlow(mi);S.unlocked[mi]=true;S.inv[mi]-=OBJ_NEEDED;if(P.seq)S.seq[mi]=P.seq;save();updatePanel();say('¡Puerta abierta! En la próxima tirada sigues hacia la meta.');
+  if(S.inv[mi]<objNeed(mi)){S.forceBack=true;save();var c2=modal(sageHead('¡Has encontrado el lugar correcto!')+'<h2 class="m-title">'+esc(P.name)+'</h2><p>La puerta tiene '+objNeed(mi)+' huecos para '+o.many+' y en tu bolsa '+(S.inv[mi]===1?'solo hay 1':'hay '+S.inv[mi])+'. En tu próximo turno tendrás que volver atrás: sigue superando pergaminos y regresa cuando tengas los que faltan.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c2);closeModal();say('Te faltan '+o.many+'. En el próximo turno vuelves atrás.');return;}
+  await unlockFlow(mi);S.unlocked[mi]=true;S.inv[mi]-=objNeed(mi);if(P.seq)S.seq[mi]=P.seq;save();updatePanel();if(P.seq)await keyModal(mi,P);say('¡Puerta abierta! En la próxima tirada sigues hacia la meta.');
 }
-function unlockFlow(mi){return new Promise(function(resolve){
-  var M=MAPS[mi],P=M.places[M.okPlace],o=M.obj,n=S.inv[mi];
-  var c=modal('<h2 class="m-title">'+esc(P.name)+'</h2><div class="gate"><svg viewBox="-120 -150 240 160" aria-hidden="true"><path d="M-110,10 L-110,-90 Q0,-160 110,-90 L110,10Z" fill="#7d7468"/><path d="M-80,10 L-80,-80 Q0,-130 80,-80 L80,10Z" fill="#3a2614"/><path class="door l" d="M-78,10 L-78,-78 Q-40,-104 0,-108 L0,10Z" fill="#7a4f2a"/><path class="door r" d="M78,10 L78,-78 Q40,-104 0,-108 L0,10Z" fill="#6b4423"/></svg><div class="slots">'+[0,1,2,3,4].map(function(i){return '<span class="slot" data-s="'+i+'" tabindex="0" aria-label="Hueco '+(i+1)+'"></span>';}).join('')+'</div></div><p class="center">Arrastra '+OBJ_NEEDED+' '+o.many+' de tu bolsa hasta los huecos de la puerta. También puedes tocar un '+o.one+' y después un hueco.</p><div class="gems-row">'+Array.from({length:n}).map(function(_,i){return '<span class="dg" data-g="'+i+'" tabindex="0" role="button" aria-label="'+o.one+'">'+ART.gem(o.key)+'</span>';}).join('')+'</div><div class="m-actions"><button class="btn primary" id="uok" disabled>Abrir la puerta</button></div>','parch');
+function unlockFlow(mi,pk,need){return new Promise(function(resolve){
+  var M=MAPS[mi],P=M.places[pk||M.okPlace],o=M.obj,n=S.inv[mi],NEED=need||objNeed(mi);
+  var c=modal('<h2 class="m-title">'+esc(P.name)+'</h2><div class="gate"><svg viewBox="-120 -150 240 160" aria-hidden="true"><path d="M-110,10 L-110,-90 Q0,-160 110,-90 L110,10Z" fill="#7d7468"/><path d="M-80,10 L-80,-80 Q0,-130 80,-80 L80,10Z" fill="#3a2614"/><path class="door l" d="M-78,10 L-78,-78 Q-40,-104 0,-108 L0,10Z" fill="#7a4f2a"/><path class="door r" d="M78,10 L78,-78 Q40,-104 0,-108 L0,10Z" fill="#6b4423"/></svg><div class="slots'+(NEED>5?' many':'')+'">'+Array.from({length:NEED},function(_,i){return i;}).map(function(i){return '<span class="slot" data-s="'+i+'" tabindex="0" aria-label="Hueco '+(i+1)+'"></span>';}).join('')+'</div></div><p class="center">Arrastra '+NEED+' '+o.many+' de tu bolsa hasta los huecos de la puerta. También puedes tocar '+unO(o)+' y después un hueco.</p><div class="gems-row">'+Array.from({length:n}).map(function(_,i){return '<span class="dg" data-g="'+i+'" tabindex="0" role="button" aria-label="'+o.one+'">'+ART.gem(o.key)+'</span>';}).join('')+'</div><div class="m-actions"><button class="btn primary" id="uok" disabled>'+(pk&&pk!==M.okPlace?'Pagar el peaje':'Abrir la puerta')+'</button></div>','parch');
   var selected=null;
   function filled(){return $$('.slot',c).filter(function(s){return s.firstChild;}).length;}
-  function put(g,s){if(!s||s.firstChild||!g)return;s.appendChild(g);g.classList.remove('sel');g.classList.add('in');g.removeAttribute('tabindex');selected=null;if(filled()>=OBJ_NEEDED){$('#uok',c).disabled=false;$('#uok',c).focus();}}
+  function put(g,s){if(!s||s.firstChild||!g)return;s.appendChild(g);g.classList.remove('sel');g.classList.add('in');g.removeAttribute('tabindex');selected=null;if(filled()>=NEED){$('#uok',c).disabled=false;$('#uok',c).focus();}}
   $$('.dg',c).forEach(function(g){
     g.addEventListener('pointerdown',function(e){if(g.classList.contains('in'))return;e.preventDefault();var sx=e.clientX,sy=e.clientY,moved=false,gh=g.cloneNode(true);gh.className='dg ghost';document.body.appendChild(gh);
       function mv(ev){if(Math.hypot(ev.clientX-sx,ev.clientY-sy)>6)moved=true;gh.style.left=ev.clientX+'px';gh.style.top=ev.clientY+'px';}
@@ -1604,7 +1604,7 @@ async function reachEnd(mi){
   S.stage='mapcert';S.pending=null;save();var bar=$('#choicebar');if(bar)bar.hidden=true;renderCert(mi,{cont:true});
 }
 async function mapIntro(mi){if(S.introSeen[mi])return;S.introSeen[mi]=true;save();var M=MAPS[mi],o=M.obj;
-  var c=modal(sageHead('Soy '+MAGE_NAME[mageRace()]+', mago de la Universidad de los Materiales. Escucha bien mi acertijo: «'+esc(M.riddle||'')+'»')+'<h2 class="m-title">Mapa '+(mi+1)+': '+esc(M.name)+'</h2><p>'+esc(M.intro)+'</p><h3>Las reglas</h3><ul class="rules"><li>Tira el dado y avanza. En los cruces eliges tú por dónde seguir.</li><li>En las casillas de pergamino lee con atención y responde dos preguntas. Si aciertas al menos una, ganas un '+o.one+'. Si fallas las dos en los primeros pergaminos, te quedas en la casilla hasta el turno siguiente. En los de ampliación tienes tres intentos: si fallas, el siguiente pergamino te da otra oportunidad con preguntas distintas.</li><li>En las casillas de acertijo y de repaso, si aciertas, vuelves a tirar en ese mismo turno.</li><li>Entre turno y turno, repasa la teoría en el Libro de saberes: allí se guarda todo lo que ya has visto. Si no entiendes una palabra, búscala en el Glosario.</li><li>Si olvidas el acertijo, pulsa «Pista del mapa», debajo del mapa.</li><li>Con los botones de la barra superior puedes pasar de un mapa a otro sin perder lo que llevas hecho en cada uno.</li><li>Los lugares con estrella te detienen. Unos te dejan pasar y otros te cortan el paso: si te lo cortan, en el siguiente turno tendrás que volver.</li><li>Con '+OBJ_NEEDED+' '+o.many+' podrás abrir la puerta que lleva a la meta.</li><li>Si un monstruo te vence o caes en una trampa, pierdes una vida. Si pierdes las tres, vuelves a la salida.</li></ul><div class="m-actions"><button class="btn primary big" data-v="1" data-focus>¡A la aventura!</button></div>','parch');
+  var c=modal(sageHead('Soy '+MAGE_NAME[mageRace()]+', mago de la Universidad de los Materiales. Escucha bien mi acertijo: «'+esc(M.riddle||'')+'»')+'<h2 class="m-title">Mapa '+(mi+1)+': '+esc(M.name)+'</h2><p>'+esc(M.intro)+'</p><h3>Las reglas</h3><ul class="rules"><li>Tira el dado y avanza. En los cruces eliges tú por dónde seguir.</li><li>En las casillas de pergamino lee con atención y responde dos preguntas. Si aciertas al menos una, ganas '+unO(o)+'. Si fallas las dos en los primeros pergaminos, te quedas en la casilla hasta el turno siguiente. En los de ampliación tienes tres intentos: si fallas, el siguiente pergamino te da otra oportunidad con preguntas distintas.</li><li>En las casillas de acertijo y de repaso, si aciertas, vuelves a tirar en ese mismo turno.</li><li>Entre turno y turno, repasa la teoría en el Libro de saberes: allí se guarda todo lo que ya has visto. Si no entiendes una palabra, búscala en el Glosario.</li><li>Si olvidas el acertijo, pulsa «Pista del mapa», debajo del mapa.</li><li>Con los botones de la barra superior puedes pasar de un mapa a otro sin perder lo que llevas hecho en cada uno.</li><li>Los lugares con estrella te detienen. Unos te dejan pasar y otros te cortan el paso: si te lo cortan, en el siguiente turno tendrás que volver.</li><li>'+gateRule(mi)+'</li>'+extraRules(mi)+'<li>Si un monstruo te vence o caes en una trampa, pierdes una vida. Si pierdes las tres, vuelves a la salida.</li></ul><div class="m-actions"><button class="btn primary big" data-v="1" data-focus>¡A la aventura!</button></div>','parch');
   await choice(c);closeModal();say('¡Tira el dado para empezar!');}
 
 /* ---------- Turno y movimiento ---------- */
@@ -1628,9 +1628,9 @@ async function moveSteps(steps){
     S.forceBack=false;S.prev=cur;await animateTo(nxt);steps--;save();
     var m=node(nxt);
     if(m.kind==='junction')S.lastJ=m.id;
-    if(m.kind==='fight'&&!S.defeated[mi+':'+m.id]){await fightFlow(m);return;}
+    if(m.kind==='fight'&&!S.defeated[mi+':'+m.id]){await fightFlow(m);return;}if(m.forge){await shopFlow(mi,m);return;}
     if(m.kind==='place'){await placeFlow(m);return;}
-    if(m.kind==='end'){await reachEnd(mi);return;}
+    if(m.kind==='end'){await metaFlow(mi,m);return;}
   }
   await land(node(S.pos));
 }
@@ -1642,10 +1642,10 @@ async function land(n){var key=S.map+':'+n.id;
   else if(n.type==='jail'){await jailFlow();}
   else if(n.type==='surprise'&&!S.opened[key]){await surpriseFlow(n);}
 }
-async function quizFlow(mi,allDone){var c=modal(sageHead(allDone?'Ya has superado todos los pergaminos de este mapa: repasa con estas dos preguntas.':'Dos preguntas de repaso. Si aciertas al menos una, tiras otra vez.')+'<h2 class="m-title">Preguntas de repaso</h2><div id="qhost"></div>','parch'),host=$('#qhost',c),bad=0,RP=reviewPools(mi,true);
+async function quizFlow(mi,allDone){var c=modal(sageHead(allDone?'Ya has superado todos los pergaminos de este mapa: repasa con estas dos preguntas.'+(hasForge(mi)?' Si aciertas al menos una, ganas '+gemWin(mi)+' y tiras otra vez.':''):'Dos preguntas de repaso. Si aciertas al menos una, tiras otra vez.')+'<h2 class="m-title">Preguntas de repaso</h2><div id="qhost"></div>','parch'),host=$('#qhost',c),bad=0,RP=reviewPools(mi,true);
   if(RP.unseen){var t0=TOPIC_BY_ID[MAPS[mi].topics[0]];libOpen(MAPS[mi].topics[0],0);host.innerHTML='<div class="theory mini">'+t0.theory+'</div><div class="m-actions"><button class="btn primary" data-v="1">He leído la teoría</button></div>';await choice(host);}
   for(var i=0;i<2;i++){var r=await runItem(host,pickFresh(RP.pools),'Mapa '+(mi+1)+': repaso');if(!r.ok)bad++;c.scrollTop=0;}
-  closeModal();if(bad<=1){S.extra=1;save();say('¡Repaso superado! Tiras otra vez.');}else{say('Has fallado las dos preguntas. Sigue en tu próximo turno.');}}
+  closeModal();if(bad<=1){S.extra=1;var gq=(allDone&&hasForge(mi))?gemGain(mi):0;if(gq)S.inv[mi]+=gq;save();updatePanel();say('¡Repaso superado! '+(gq?'Ganas '+(gq>1?'dos '+MAPS[mi].obj.many:unO(MAPS[mi].obj))+'. ':'')+'Tiras otra vez.');}else{say('Has fallado las dos preguntas. Sigue en tu próximo turno.');}}
 async function againFlow(){var c=modal('<div class="reward"><span class="big-die">'+ART.die(1+rnd(6))+'</span></div><h2 class="m-title">¡Tira otra vez!</h2><p class="center">Esta casilla te regala una tirada extra.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Tirar otra vez</button></div>','parch narrow');await choice(c);closeModal();S.extra=1;save();}
 /* ---------- Pantalla de juego ---------- */
 function renderGame(){
@@ -1662,12 +1662,12 @@ function updatePanel(){if(!S||S.stage!=='game')return;var M=MAPS[S.map];
 /* ---------- Ayuda, libro, terminar ---------- */
 function legendTile(t,txt){return '<li><svg viewBox="-24 -24 48 48" aria-hidden="true"><circle r="19" fill="'+ART.tileFill[t]+'" stroke="#e8d3a0" stroke-width="2.2"/>'+ART.icon[t]+'</svg><span>'+txt+'</span></li>';}
 function starTile(){return '<g><circle r="27" fill="#e2b34a" stroke="#fff3c4" stroke-width="3"/><path d="M0,-16 l4.7,9.6 l10.5,1.5 l-7.6,7.4 l1.8,10.5 l-9.4,-5 l-9.4,5 l1.8,-10.5 l-7.6,-7.4 l10.5,-1.5Z" fill="#fff8de" stroke="#8a6420" stroke-width="1.5"/></g>';}
-async function helpModal(){var o=MAPS[S.map].obj;var c=modal(sageHead('¡Por la veta del roble y el brillo del cobre! Recuerda mi acertijo: «'+esc(MAPS[S.map].riddle||'')+'»')+'<h2 class="m-title">Cómo se juega</h2><ul class="legend">'+legendTile('theory','Pergamino: lee y responde dos preguntas. Si aciertas al menos una, ganas un '+o.one+'.')+legendTile('quiz','Repaso: dos preguntas de lo que ya has visto. Si aciertas al menos una, tiras otra vez.')+legendTile('riddle','Acertijo: si lo resuelves, tiras otra vez en este turno.')+legendTile('junction','Cruce: tú eliges por dónde seguir.')+legendTile('fight','Monstruo: responde dos preguntas y lucha con los dados. Cada acierto suma +1 a tu tirada. Si pierdes, pierdes una vida.')+'<li><svg viewBox="-30 -30 60 60" aria-hidden="true">'+starTile()+'</svg><span>Lugar: te detiene. Puede dejarte pasar o cortarte el paso. Pasa el cursor o púlsalo para ver su nombre.</span></li>'+legendTile('surprise','Sorpresa: puede darte una vida… o quitártela.')+legendTile('jail','Mazmorra: pierdes un turno.')+legendTile('end','Meta.')+'</ul><p>Con '+OBJ_NEEDED+' '+o.many+' podrás abrir la puerta que lleva a la meta. Cambiar de pantalla resta 0,5 puntos de tu nota final; recargar la página no resta.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Volver al mapa</button></div>','parch');await choice(c);closeModal();}
+async function helpModal(){var o=MAPS[S.map].obj;var c=modal(sageHead('¡Por la veta del roble y el brillo del cobre! Recuerda mi acertijo: «'+esc(MAPS[S.map].riddle||'')+'»')+'<h2 class="m-title">Cómo se juega</h2><ul class="legend">'+legendTile('theory','Pergamino: lee y responde dos preguntas. Si aciertas al menos una, ganas '+unO(o)+'.')+legendTile('quiz','Repaso: dos preguntas de lo que ya has visto. Si aciertas al menos una, tiras otra vez.')+legendTile('riddle','Acertijo: si lo resuelves, tiras otra vez en este turno.')+legendTile('junction','Cruce: tú eliges por dónde seguir.')+legendTile('fight','Monstruo: responde dos preguntas y lucha con los dados. Cada acierto suma +1 a tu tirada. Si pierdes, pierdes una vida.')+'<li><svg viewBox="-30 -30 60 60" aria-hidden="true">'+starTile()+'</svg><span>Lugar: te detiene. Puede dejarte pasar o cortarte el paso. Pasa el cursor o púlsalo para ver su nombre.</span></li>'+legendTile('surprise','Sorpresa: puede darte una vida… o quitártela.')+legendTile('jail','Mazmorra: pierdes un turno.')+legendTile('forge','Herrería: te detiene. Puedes comprar armas y escudos o juntar dos iguales.')+legendTile('end','Meta: se abre con las llaves y la guarda el rey del mapa.')+'</ul><p>'+gateRule(S.map)+' Cambiar de pantalla resta 0,5 puntos de tu nota final; recargar la página no resta.</p>'+'<ul class="rules">'+extraRules(S.map)+'</ul>'+'<div class="m-actions"><button class="btn primary" data-v="1" data-focus>Volver al mapa</button></div>','parch');await choice(c);closeModal();}
 async function bookModal(openId){var items=[];MAPS.forEach(function(M,mi){M.topics.forEach(function(id){var t=TOPIC_BY_ID[id];if(libHas(id,0)){items.push('<details id="bk-'+id+'"'+(id===openId?' open':'')+'><summary>'+esc(t.title)+' <span class="small">(mapa '+(mi+1)+')</span></summary><div class="theory">'+t.theory+(t.exp?'<p><b>Experimento «'+esc(t.exp.title)+'»:</b> '+esc(t.exp.mat)+'</p><ol>'+t.exp.steps.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ol>':'')+(libHas(id,1)?'<h4>Ampliación</h4>'+EXT[id].theory:'')+'</div></details>');}});});
   var c=modal(sageHead('Aquí se va guardando la teoría que ya has visto. Repásala entre turno y turno. ¿Una palabra que no entiendes? Búscala en el Glosario.')+'<h2 class="m-title">Libro de saberes</h2>'+(items.length?items.join(''):'<p>Todavía no has leído ningún pergamino. Cae en una casilla de pergamino para empezar.</p>')+'<div class="m-actions"><button class="btn" data-v="g">Abrir el Glosario</button><button class="btn primary" data-v="1" data-focus>Cerrar el libro</button></div>','parch');
   if(openId){var d=$('#bk-'+openId,c);if(d)setTimeout(function(){d.scrollIntoView({block:'start'});},60);}
   var v=await choice(c);closeModal();if(v==='g'){var r=await glossModal();if(r&&r.indexOf('book:')===0)await bookModal(r.slice(5));}}
-async function finishModal(){if(busy)return;busy=true;var g=grade(),gm=grade(S.map);var c=modal(sageHead('¿Quieres terminar ya tu aventura?')+'<h2 class="m-title">Terminar y entregar certificado</h2><p>Si terminas ahora, tu nota se calculará con lo que llevas hecho y la partida se cerrará. Con lo conseguido hasta ahora, tu nota del mapa '+(S.map+1)+' sería <b>'+fmtN(gm.nota)+'</b> y tu nota final, <b>'+fmtN(g.nota)+'</b>. Recibirás el certificado de cada mapa que hayas jugado y el certificado final.</p><div class="m-actions"><button class="btn" data-v="no" data-focus>Seguir jugando</button><button class="btn primary" data-v="si">Sí, entregar certificado</button></div>','parch narrow');var v=await choice(c);closeModal();busy=false;if(v==='si')finishGame();}
+async function finishModal(){if(busy)return;busy=true;var g=grade(),gm=grade(S.map);var c=modal(sageHead('¿Quieres terminar ya tu aventura?')+'<h2 class="m-title">Terminar y entregar certificado</h2><p>Si terminas ahora, tu nota se calculará con lo que llevas hecho y la partida se cerrará. Con lo conseguido hasta ahora, tu nota del mapa '+(S.map+1)+' sería <b>'+fmtN(gm.nota)+'</b> y tu nota final, <b>'+fmtN(g.nota)+'</b>. Recibirás el certificado de cada mapa que hayas jugado y el certificado final.'+(gm.nq<QMIN?' Llevas '+gm.nq+' preguntas respondidas en este mapa: hasta llegar a '+QMIN+', la nota se reduce en proporción.':'')+'</p><div class="m-actions"><button class="btn" data-v="no" data-focus>Seguir jugando</button><button class="btn primary" data-v="si">Sí, entregar certificado</button></div>','parch narrow');var v=await choice(c);closeModal();busy=false;if(v==='si')finishGame();}
 
 /* ---------- Nota y certificado ---------- */
 var BANDS=[[1,4.9],[5,5.9],[6,6.9],[7,7.9],[8,8.9],[9,10]];
@@ -1676,7 +1676,7 @@ function grade(sc){var all=(sc===undefined||sc==='all'),ids=all?TOPICS.map(funct
   ids.forEach(function(id){var r=S.topics[id];if(!r||!Array.isArray(r.p))return;for(var k=0;k<3;k++){if(r.seen[k]>0)acts.push(r.p[k]?Math.max(1,10-0.2*r.fails[k]):1);if(r.p[k])cnt[k]++;}});
   var media=acts.length?acts.reduce(function(a,b){return a+b;},0)/acts.length:1,T=ids.length,h=Math.ceil(T/2);
   var lv=cnt[0]<T?0:cnt[1]<h?1:cnt[1]<T?2:cnt[2]<h?3:cnt[2]<T?4:5,B=BANDS[lv],base=B[0]+(B[1]-B[0])*(media-1)/9;
-  var nota=Math.round(Math.max(0,Math.min(10,base-0.5*ex))*10)/10;return {lv:lv,media:media,nota:nota,cnt:cnt,T:T,acts:acts.length,ex:ex};}
+  var nq=qCount(all?'all':sc),fac=Math.min(1,nq/QMIN),fins=all?endedCount():(S.ms['end'+(sc+1)]?1:0),bon=all?fins/MAPS.length:fins;var nota=Math.floor(Math.max(0,Math.min(10,base*fac-0.5*ex+bon))*10+1e-9)/10;return {lv:lv,media:media,nota:nota,cnt:cnt,T:T,acts:acts.length,ex:ex,nq:nq,fac:fac,fins:fins,bon:bon,base:base};}
 function extArr(a,v){a=Array.isArray(a)?a:[];while(a.length<MAPS.length)a.push(v);return a;}
 function buildAll(){return MAPS.map(function(m,i){return buildGraph(i,S.code);});}
 function endedCount(){return MAPS.filter(function(m,i){return !!S.ms['end'+(i+1)];}).length;}
@@ -1684,9 +1684,9 @@ function allEnded(){return endedCount()===MAPS.length;}
 function migrateState(){if(!S.mv)S.mv={};if(!S.exm){S.exm=[0,0];S.exm[S.map||0]=S.exits||0;}S.exm=extArr(S.exm,0);S.inv=extArr(S.inv,0);S.placeOk=extArr(S.placeOk,false);S.unlocked=extArr(S.unlocked,false);S.introSeen=extArr(S.introSeen,false);if(!S.ms)S.ms={};if(!S.certs)S.certs={};var cur=0;(S.log||[]).forEach(function(e){if(e.mi!==undefined){cur=Math.max(cur,e.mi);return;}var m=/Mapa (\d)/.exec(e.c||'');if(m)cur=Math.max(cur,(+m[1])-1);e.mi=cur;});}
 function logOf(sc){return (sc===undefined||sc==='all')?S.log:S.log.filter(function(e){return e.mi===sc;});}
 function certData(sc){var all=(sc===undefined||sc==='all'),g=grade(all?'all':sc),fin=all?(S.finished||Date.now()):((S.certs&&S.certs[sc])||S.finished||Date.now());
-  var rows=[[all?'Nota final':'Nota del mapa',fmtN(g.nota)],['Nivel alcanzado',g.lv+' de 5: '+LEVELS[g.lv]],['Pergaminos superados','Básicos '+g.cnt[0]+' de '+g.T+'; ampliación '+g.cnt[1]+' de '+g.T+'; relacionar '+g.cnt[2]+' de '+g.T],['Media de los pergaminos',fmtN(g.media,2)],['Salidas de la ventana',g.ex+(g.ex?' (−'+fmtN(0.5*g.ex)+' puntos)':'')]];
-  if(all){var lm=lastMap();rows.splice(1,0,['Nota del último mapa',fmtN(grade(lm).nota)+' (mapa '+(lm+1)+')',1]);}if(all)rows.push(['Notas por mapa',MAPS.map(function(m,i){return 'mapa '+(i+1)+': '+(visitedMap(i)?fmtN(grade(i).nota):'sin jugar');}).join('; ')+'. Mapas completados: '+endedCount()+' de '+MAPS.length]);
-  else rows.push(['Meta del mapa',S.ms['end'+(sc+1)]?'Alcanzada':'No alcanzada']);
+  var rows=[[all?'Nota final':'Nota del mapa',fmtN(g.nota)],['Nivel alcanzado',g.lv+' de 5: '+LEVELS[g.lv]],['Pergaminos superados','Básicos '+g.cnt[0]+' de '+g.T+'; ampliación '+g.cnt[1]+' de '+g.T+'; relacionar '+g.cnt[2]+' de '+g.T],['Media de los pergaminos',fmtN(g.media,2)],['Preguntas respondidas',g.nq+(g.nq>=QMIN?' (con '+QMIN+' o más, la nota se calcula sobre 10)':' de las '+QMIN+' necesarias para evaluar sobre 10: la nota se multiplica por '+fmtN(g.fac,2)+' (como mucho, un '+fmtN(Math.floor(100*g.fac+1e-9)/10)+')')],[all?'Mapas finalizados':'Mapa finalizado',all?g.fins+' de '+MAPS.length+': +'+fmtN(g.bon,2)+' puntos extra (1 punto si los finalizas todos)':(g.fins?'Sí, rey vencido: +1 punto extra':'No (vencer al rey y finalizar el mapa da +1 punto extra)')],['Salidas de la ventana',g.ex+(g.ex?' (−'+fmtN(0.5*g.ex)+' puntos)':'')]];
+  if(all){var lm=lastMap();rows.splice(1,0,['Nota del último mapa',fmtN(grade(lm).nota)+' (mapa '+(lm+1)+')',1]);}if(all)rows.push(['Notas por mapa',MAPS.map(function(m,i){return 'mapa '+(i+1)+': '+(visitedMap(i)?fmtN(grade(i).nota):'sin jugar');}).join('; ')]);
+  
   rows.push(['Fecha y hora',fmtDate(fin)]);rows.push(['Partida e ID de obra',S.code+', '+WORK_ID]);
   return {g:g,all:all,sc:all?'all':sc,title:all?'Certificado final':'Certificado del mapa '+(sc+1),sub:all?'La Senda de los Materiales: mapas 1, 2, 3 y 4':'La Senda de los Materiales · Mapa '+(sc+1)+': '+MAPS[sc].name,rows:rows,fin:fin};}
 function diplomaName(n){return n<5?'Iniciado en':n<6?'Aprendiz de':n<7.5?'Oficial de':n<9?'Maestro en':'Gran maestro en';}
@@ -1694,7 +1694,7 @@ function finishGame(){S.stage='done';S.finished=Date.now();S.pending=null;save()
 function fmtDate(ts){var d=new Date(ts);var p=function(x){return String(x).padStart(2,'0');};return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()+', '+p(d.getHours())+':'+p(d.getMinutes())+' h';}
 function repLog(sc){var L=logOf(sc);if(sc===undefined||sc==='all'){L=L.map(function(e,i){return [e,i];}).sort(function(a,b){return ((a[0].mi||0)-(b[0].mi||0))||(a[1]-b[1]);}).map(function(x){return x[0];});}return L;}function secName(mi){return 'Mapa '+(mi+1)+': '+MAPS[mi].name;}function reportRows(sc){var all=(sc===undefined||sc==='all'),pm=-1;return repLog(sc).map(function(e,i){var hd='';if(all&&(e.mi||0)!==pm){pm=e.mi||0;hd='<tr class="rsec"><td colspan="6">'+esc(secName(pm))+'</td></tr>';}return hd+repRow(e,i);}).join('');}function repRow(e,i){var res=e.ok===true?'<span class="ok">Acierto</span>':(e.ok===false?'<span class="ko">Fallo</span>':'');
   if(e.exp)return '<tr><td>'+(i+1)+'</td><td>'+esc(e.c)+'</td><td colspan="3">Experimento «'+esc(e.exp)+'»: '+(e.v==='taller'?'realizado en el taller':'copiado en el cuaderno')+'</td><td></td></tr>';
-  if(e.duel)return '<tr><td>'+(i+1)+'</td><td>'+esc(e.c)+'</td><td colspan="3">Resultado del combate (bonificación +'+e.bonus+')</td><td>'+(e.duel==='Victoria'?'<span class="ok">Victoria</span>':'<span class="ko">Derrota</span>')+'</td></tr>';
+  if(e.duel)return '<tr><td>'+(i+1)+'</td><td>'+esc(e.c)+'</td><td colspan="3">Resultado del combate (bonificación +'+e.bonus+(e.arm?', armas +'+e.arm:'')+(e.esc?', escudos −'+e.esc:'')+')</td><td>'+(e.duel==='Victoria'?'<span class="ok">Victoria</span>':'<span class="ko">Derrota</span>')+'</td></tr>';
   if(e.place){var mm=MAPS[e.mi||0];return '<tr><td>'+(i+1)+'</td><td>'+esc(e.c)+'</td><td>Lugar al que llegó</td><td>'+esc(e.place)+'</td><td>'+(e.pass?'Lugar de paso':esc(mm.places[mm.okPlace].name))+'</td><td>'+(e.pass?'<span class="ok">Paso libre</span>':res)+'</td></tr>';}
   if(e.m)return '<tr><td>'+(i+1)+'</td><td>'+esc(e.c)+'</td><td>'+esc(e.q)+'</td><td>'+e.t.map(function(t,k){return (k+1)+'.º intento: '+t.map(function(x,r){return esc(e.m[r])+' → '+esc(e.o[x])+(x===e.a[r]?' ✓':' ✗');}).join('; ');}).join('<br>')+'</td><td>'+e.m.map(function(m,r){return esc(m)+' → '+esc(e.o[e.a[r]]);}).join('; ')+'</td><td>'+res+'</td></tr>';
   if(e.ord)return '<tr><td>'+(i+1)+'</td><td>'+esc(e.c)+'</td><td>'+esc(e.q)+'</td><td>'+e.pk.map(esc).join(' → ')+'</td><td>'+e.ord.map(esc).join(' → ')+'</td><td>'+res+'</td></tr>';
@@ -1727,7 +1727,7 @@ function goMap(mi,opts){opts=opts||{};if(!G.length)G=buildAll();mvSave();
   if(opts.resetFrom!==undefined)S.mv[opts.resetFrom]={pos:G[opts.resetFrom].start,prev:null,forceBack:false,lastJ:null,skip:0,skipWhy:''};
   mvLoad(mi);S.stage='game';S.pending=null;S.extra=0;save();$('#cert-wrap').hidden=true;var bar=$('#choicebar');if(bar)bar.hidden=true;renderGame();mapIntro(mi);}
 function mapSummary(mi){var M=MAPS[mi],T=M.topics.length,b=M.topics.filter(function(id){var r=S.topics[id];return r&&r.p&&r.p[0];}).length;
-  return '<ul class="rules"><li>Pergaminos básicos superados: '+b+' de '+T+'.</li><li>'+(M.obj.many.charAt(0).toUpperCase()+M.obj.many.slice(1))+' en la bolsa: '+(S.inv[mi]||0)+'.</li><li>Puerta de la meta: '+(S.unlocked[mi]?'abierta':'cerrada')+'.</li><li>Meta: '+(S.ms['end'+(mi+1)]?'alcanzada':'todavía no')+'.</li></ul>';}
+  return '<ul class="rules"><li>Pergaminos básicos superados: '+b+' de '+T+'.</li><li>'+(M.obj.many.charAt(0).toUpperCase()+M.obj.many.slice(1))+' en la bolsa: '+(S.inv[mi]||0)+'.</li><li>Llaves: '+keysHave(mi)+' de '+keysTot(mi)+'.</li><li>Combate final contra '+esc(ART.monsters[kingOf(mi)].c)+': '+(S.ms['end'+(mi+1)]?'ganado; mapa finalizado':'pendiente')+'.</li></ul>';}
 async function navModal(mi){if(busy||!$('#modal').hidden||mi===S.map||mi<0||mi>=MAPS.length)return;busy=true;
   var c=modal(sageHead('Tu progreso en el mapa '+(S.map+1)+' queda guardado: posición, '+MAPS[S.map].obj.many+', pergaminos y puertas abiertas. Podrás volver cuando quieras.')+'<h2 class="m-title">Ir al mapa '+(mi+1)+': '+esc(MAPS[mi].name)+'</h2>'+(visitedMap(mi)?'<p>Así está tu progreso en ese mapa:</p>'+mapSummary(mi):'<p>Todavía no has empezado este mapa. Empezarás en su salida.</p>')+'<div class="m-actions"><button class="btn" data-v="no" data-focus>Quedarme aquí</button><button class="btn primary" data-v="si">Ir al mapa '+(mi+1)+'</button></div>','parch narrow');
   var v=await choice(c);closeModal();busy=false;if(v==='si'){goMap(mi);say('Estás en el mapa '+(mi+1)+'. Tu progreso del otro mapa está guardado.');}}
@@ -1785,7 +1785,7 @@ window.addEventListener('focus',function(){clearTimeout(blurTimer);setTimeout(sh
 var unloading=false;window.addEventListener('pagehide',function(){unloading=true;});window.addEventListener('beforeunload',function(){unloading=true;});window.addEventListener('pageshow',function(e){if(e.persisted){unloading=false;if(S&&S.stage==='game'){addExit();save();pendingMsg='Has salido del juego a otra página: cuenta como una salida (−0,5).';setTimeout(showExitMsg,300);}}});window.addEventListener('beforeprint',function(){printing=true;});window.addEventListener('afterprint',function(){setTimeout(function(){printing=false;},800);});
 function resolvePending(){var P=S.pending;if(!P)return;S.pending=null;S.resume=P;/* Recargar no penaliza: la prueba que estaba abierta se repite desde el principio. */
   pendingMsg='Has recargado la página: no resta puntos. La prueba que tenías abierta vuelve a empezar.';}
-async function resumePending(){var P=S.resume;if(!P||busy||!S||S.stage!=='game')return;S.resume=null;save();busy=true;setRoll(false);try{if(P.k==='perg'){await pergamino(S.map);}else if(P.k==='fight'){var nd=node(P.n);if(nd&&nd.kind==='fight'&&!S.defeated[S.map+':'+nd.id])await fightFlow(nd);}}catch(e){console.error(e);}
+async function resumePending(){var P=S.resume;if(!P||busy||!S||S.stage!=='game')return;S.resume=null;save();busy=true;setRoll(false);try{if(P.k==='perg'){await pergamino(S.map);}else if(P.k==='fight'){var nd=node(P.n);if(nd&&(nd.kind==='fight'||nd.king)&&!S.defeated[S.map+':'+nd.id])await fightFlow(nd);}}catch(e){console.error(e);}
   finally{save();updatePanel();busy=false;setRoll(true);}}
 
 /* ---------- Inicio ---------- */
@@ -1831,7 +1831,7 @@ function newPage(){var cv=document.createElement('canvas');cv.width=Math.round(P
 var F_T='Cinzel, Georgia, serif',F_B='Alegreya, Georgia, serif',F_D='"Cinzel Decorative", Cinzel, Georgia, serif';
 function reportText(sc){var all=(sc===undefined||sc==='all'),pm=-1,out=[];repLog(sc).forEach(function(e,i){if(all&&(e.mi||0)!==pm){pm=e.mi||0;var h=['','','','','',''];h.sec=secName(pm);out.push(h);}out.push(repTxt(e,i));});return out;}function repTxt(e,i){var res=e.ok===true?'Acierto':(e.ok===false?'Fallo':'');
   if(e.exp)return [i+1,e.c,'Experimento «'+e.exp+'»',e.v==='taller'?'Realizado en el taller':'Copiado en el cuaderno','',''];
-  if(e.duel)return [i+1,e.c,'Resultado del combate (bonificación +'+e.bonus+')','','',e.duel];
+  if(e.duel)return [i+1,e.c,'Resultado del combate (bonificación +'+e.bonus+(e.arm?', armas +'+e.arm:'')+(e.esc?', escudos −'+e.esc:'')+')','','',e.duel];
   if(e.place){var mm=MAPS[e.mi||0];return [i+1,e.c,'Lugar al que llegó',e.place,e.pass?'Lugar de paso':mm.places[mm.okPlace].name,e.pass?'Acierto':res];}
   if(e.m)return [i+1,e.c,e.q,e.t.map(function(t,k){return (k+1)+'.º intento: '+t.map(function(x,r){return e.m[r]+' → '+e.o[x]+(x===e.a[r]?' ✓':' ✗');}).join('; ');}).join('\n'),e.m.map(function(m,r){return m+' → '+e.o[e.a[r]];}).join('; '),res];
   if(e.ord)return [i+1,e.c,e.q,e.pk.join(' → '),e.ord.join(' → '),res];
@@ -1919,11 +1919,11 @@ function CLS(pairs,stem){return relEntry(pairs,stem,true);}
 var NB={};
 /* ---------- MAPA 1 ---------- */
 NB.mp={
- fill:[FILL('La {0} se extrae directamente de la naturaleza y el {1} es esa materia ya transformada para fabricar.',[['materia prima','materia reciclada','producto final'],['material','producto','residuo']],'Materia prima ► material ► producto.'),
-  FILL('Un {0} es un objeto terminado que ya se puede usar, como una silla o una lata.',[['producto','material','mineral']]),
-  FILL('El algodón de la planta es una {0}, la tela es un {1} y la camiseta es un {2}.',[['materia prima','producto','material'],['material','producto','materia prima'],['producto','material','materia prima']]),
+ fill:[FILL('Lo que se extrae directamente de la naturaleza es {0}; cuando ya se ha transformado para fabricar con ello, es {1}.',[['materia prima','material de uso técnico','producto acabado','residuo'],['material de uso técnico','materia prima','producto acabado','residuo']],'Materia prima ► material de uso técnico ► producto acabado.'),
+  FILL('Un objeto terminado que ya se puede usar, como una silla o una lata, se llama {0}.',[['producto acabado','material de uso técnico','materia prima','residuo']]),
+  FILL('Algodón recién recogido: {0}. Tela de algodón: {1}. Camiseta de algodón: {2}.',[['materia prima','material de uso técnico','producto acabado','residuo'],['material de uso técnico','materia prima','producto acabado','residuo'],['producto acabado','material de uso técnico','materia prima','residuo']]),FILL('Las virutas que sobran al cepillar una tabla en el taller son un {0}, aunque se pueden reciclar para fabricar tableros.',[['residuo','producto acabado','material de uso técnico']]),
   FILL('Para fabricar una lata, la bauxita se transforma primero en láminas de {0}.',[['aluminio','acero','cobre']]),
-  FILL('El hilo de lana es el {0} final de una hilandería y el {1} de quien teje una bufanda.',[['producto','residuo','mineral'],['material','producto','residuo']],'Lo que es producto para unos puede ser material para otros.')],
+  FILL('Para una hilandería, el hilo de lana que fabrica es su {0}; para quien teje una bufanda con ese hilo, es su {1}.',[['producto acabado','materia prima','residuo','material de uso técnico'],['material de uso técnico','producto acabado','residuo','materia prima']],'Lo que es producto acabado para unos puede ser material de uso técnico para otros.')],
  mc:[MC('En casa vais a cambiar la mesa del salón por una de roble. ¿Qué es el tablero de roble que compra el carpintero?','Un material, porque con él fabricará la mesa',['Una materia prima, porque viene de un árbol','Un producto terminado listo para usar','Un residuo del aserradero'],'El tablero ya está transformado y sirve para fabricar: es un material.'),
   MC('Tu clase visita una fábrica de latas. ¿Qué entra en la fábrica para hacerlas?','Láminas de aluminio, que son el material',['Latas terminadas, que son el producto','Bauxita recién sacada de la mina','Arena de cuarzo para fundir'],'La fábrica de latas parte del material: láminas de aluminio.'),
   MC('Tu abuelo esquila sus ovejas. ¿Qué tiene en las manos al terminar?','Lana, una materia prima animal',['Hilo de lana, un material de origen mineral','Una bufanda, que es un producto','Algodón, una materia prima vegetal'],'La lana recién esquilada aún no se ha transformado: es materia prima.'),
@@ -1934,29 +1934,29 @@ NB.mp={
   MC('¿Qué hace falta para que una materia prima se convierta en material?','Transformarla: cortarla, fundirla, hilarla…',['Venderla en una tienda','Guardarla en un almacén','Pintarla de un color'],'Los procesos físicos o químicos transforman la materia prima en material.'),
   MC('Un leñador tala un pino. ¿Qué tiene que pasar para que acabe siendo una silla?','Cortarlo en tablas (material) y después fabricar la silla (producto)',['Fabricar la silla con el árbol todavía de pie','Fundir el tronco para obtener tablas','Esquilarlo para obtener fibras'],'Árbol ► tablas ► silla.'),
   MC('Encuentras una lata vacía en el patio. ¿Por qué conviene reciclarla aunque ya sea un producto?','Porque su aluminio puede volver a usarse como materia prima',['Porque el aluminio se convierte en madera','Porque las latas usadas ya no sirven para nada','Porque las latas son materias primas naturales'],'El aluminio reciclado vuelve al principio de la cadena.')],
- gen:[CLS([['Tronco de roble','Materia prima'],['Mineral de hierro','Materia prima'],['Petróleo','Materia prima'],['Lana de oveja','Materia prima'],['Arena de cuarzo','Materia prima'],['Bauxita','Materia prima'],['Algodón recién recogido','Materia prima'],['Arcilla','Materia prima'],['Corteza de alcornoque','Materia prima'],['Tablón de madera','Material'],['Lámina de aluminio','Material'],['Barra de acero','Material'],['Tela vaquera','Material'],['Plancha de vidrio','Material'],['Hilo de cobre','Material'],['Gránulos de plástico','Material'],['Plancha de corcho','Material'],['Silla de la cocina','Producto'],['Lata de refresco','Producto'],['Llave inglesa','Producto'],['Pantalón vaquero','Producto'],['Ventana del aula','Producto'],['Cable del cargador','Producto'],['Estantería','Producto'],['Tapón de botella','Producto']],'Clasifica cada elemento: ¿es materia prima, material o producto?'),
-  function(){var ch=pick(CHAINS);return ORD('Ordena la cadena desde la naturaleza hasta el objeto terminado.',ch,'Primero la materia prima, después el material y al final el producto.');},
+ gen:[CLS([['Tronco de roble recién talado','Materia prima'],['Mineral de hierro de la mina','Materia prima'],['Petróleo sacado del pozo','Materia prima'],['Lana recién esquilada','Materia prima'],['Arena de cuarzo de la cantera','Materia prima'],['Bauxita, el mineral del aluminio','Materia prima'],['Algodón recién recogido','Materia prima'],['Arcilla de la cantera','Materia prima'],['Corteza de alcornoque','Materia prima'],['Tablón de madera de pino','Material de uso técnico'],['Lámina de aluminio','Material de uso técnico'],['Barra de acero','Material de uso técnico'],['Rollo de tela vaquera','Material de uso técnico'],['Plancha de vidrio','Material de uso técnico'],['Bobina de hilo de cobre','Material de uso técnico'],['Saco de gránulos de plástico','Material de uso técnico'],['Plancha de corcho','Material de uso técnico'],['Plancha de latón','Material de uso técnico'],['Silla de madera de la cocina','Producto acabado'],['Lata de refresco','Producto acabado'],['Llave inglesa de acero','Producto acabado'],['Pantalón vaquero','Producto acabado'],['Ventana de vidrio del aula','Producto acabado'],['Cable del cargador','Producto acabado'],['Estantería de pino','Producto acabado'],['Tapón de corcho de una botella','Producto acabado'],['Pomo de latón de una puerta','Producto acabado'],['Virutas que sobran al cepillar una tabla','Residuo'],['Recortes de chapa que sobran al fabricar latas','Residuo'],['Retales de tela que sobran al cortar pantalones','Residuo'],['Trozos de vidrio que sobran al cortar ventanas','Residuo']],'Clasifica cada elemento: ¿es materia prima, material de uso técnico, producto acabado o residuo?'),
+ 
   function(){var C4=[['Árbol del bosque','Tronco talado','Tablas secas','Estantería'],['Oveja','Lana esquilada','Hilo de lana','Bufanda'],['Mina de bauxita','Lingote de aluminio','Lámina de aluminio','Lata de refresco'],['Pozo de petróleo','Gránulos de plástico','Lámina de plástico','Bolsa de la compra'],['Mina de hierro','Lingote de acero','Alambre de acero','Clavo'],['Arena de cuarzo','Vidrio fundido','Plancha de vidrio','Ventana'],['Planta de algodón','Fibra de algodón','Tela de algodón','Camiseta'],['Alcornoque','Corteza de alcornoque','Plancha de corcho','Tablón de anuncios']];return ORD('Ordena los pasos desde la naturaleza hasta el producto.',pick(C4),'Cada paso transforma lo anterior.');}]
 };
 NB.fam={
- fill:[FILL('El PVC y el metacrilato son {0} que se obtienen sobre todo del {1}.',[['plásticos','metales','pétreos'],['petróleo','mineral de hierro','granito']]),
+ fill:[FILL('Las bolsas de la compra y los cubos de fregar se fabrican con {0}, que se obtienen sobre todo del {1}.',[['plásticos','metales','pétreos'],['petróleo','mineral de hierro','granito']]),
   FILL('La {0} procede de un animal y el {1}, de una planta.',[['lana','arena','pizarra'],['algodón','mármol','cobre']]),
   FILL('Los ladrillos y las tejas son {0}: se fabrican con {1} cocida en un horno.',[['cerámicos','pétreos','textiles'],['arcilla','arena','pizarra']]),
   FILL('Para elegir un material se tienen en cuenta sus {0}, su precio, su disponibilidad y su {1}.',[['propiedades','colores','nombres'],['impacto ambiental','tamaño en la tienda','marca comercial']]),
   FILL('El acero es un metal {0} porque contiene {1}.',[['férrico','no férrico','precioso'],['hierro','cobre','aluminio']]),
   FILL('El aglomerado es una madera {0}, fabricada con virutas y cola.',[['prefabricada','natural','fósil']])],
- mc:[MC('Vas a hacer una caja para tus cromos: barata y fácil de cortar en el taller. ¿Qué eliges?','Contrachapado o cartón grueso',['Mármol, porque es muy bonito','Acero inoxidable, porque no se oxida','Vidrio, porque es transparente'],'Hay que pensar en las propiedades, el precio y la facilidad de trabajo.'),
+ mc:[MC('Vas a hacer una caja para tus cromos: barata y fácil de cortar en el taller. ¿Qué eliges?','Tablero fino de madera o cartón',['Mármol, porque es muy bonito','Acero inoxidable, porque no se oxida','Vidrio, porque es transparente'],'Hay que pensar en las propiedades, el precio y la facilidad de trabajo.'),
   MC('Tu familia quiere una encimera de cocina que aguante el calor y los cortes. ¿Qué familia es la más adecuada?','Los pétreos, como el granito',['Los textiles, como el lino','Los plásticos de las bolsas','El cartón de las cajas'],'El granito es duro y resiste bien el calor.'),
   MC('Un objeto es ligero, impermeable y se fabrica a partir del petróleo. ¿A qué familia pertenece?','A los plásticos',['A los pétreos','A los cerámicos','A los metales'],'Los plásticos se obtienen sobre todo del petróleo.'),
   MC('En el contenedor de una obra hay ladrillos, trozos de azulejo y tejas. ¿Qué tienen en común?','Son cerámicos: arcilla moldeada y cocida',['Son pétreos sacados tal cual de la cantera','Son metales férricos','Son plásticos reciclados'],'Ladrillo, teja y azulejo son cerámicos.'),
   MC('¿Por qué los cables se fabrican con cobre y no con oro, aunque el oro conduzca muy bien?','Porque el cobre es mucho más barato y abundante',['Porque el oro no deja pasar la corriente','Porque el cobre es un plástico','Porque el oro se oxida enseguida'],'El precio y la disponibilidad también cuentan al elegir.'),
   MC('Tu bufanda favorita abriga mucho y pica un poco. ¿De qué está hecha probablemente?','De lana, de origen animal',['De algodón, de origen mineral','De seda, de origen vegetal','De lino, de origen animal'],'La lana viene de las ovejas.'),
-  MC('Una mesa de jardín debe aguantar la lluvia sin pudrirse ni oxidarse. ¿Qué opción es más sensata?','Plástico resistente o aluminio',['Cartón grueso','Hierro sin pintar','Contrachapado sin barnizar'],'El plástico y el aluminio aguantan bien la intemperie.'),
-  MC('En una tienda hay dos sillas iguales: una de roble macizo y otra de aglomerado chapado. ¿Cuál es de madera natural?','La de roble macizo',['La de aglomerado chapado','Las dos, porque parecen iguales','Ninguna de las dos'],'El aglomerado es una madera prefabricada.'),
+  MC('Una mesa de jardín debe aguantar la lluvia sin pudrirse ni oxidarse. ¿Qué opción es más sensata?','Plástico resistente o aluminio',['Cartón grueso','Hierro sin pintar','Tablero de madera sin barnizar'],'El plástico y el aluminio aguantan bien la intemperie.'),
+  MC('En una tienda hay dos sillas iguales: una de roble macizo y otra de aglomerado chapado, un tablero de virutas prensadas. ¿Cuál es de madera natural?','La de roble macizo',['La de aglomerado chapado','Las dos, porque parecen iguales','Ninguna de las dos'],'El aglomerado es una madera prefabricada.'),
   MC('El esparto se usa para hacer cestos y alpargatas. ¿Qué tipo de materia prima es?','Vegetal, porque es una planta',['Animal, porque es una fibra','Mineral, porque se seca al sol','Sintética, porque viene del petróleo'],'El esparto es una planta.')],
- gen:[CLS([['Tablero de aglomerado','Maderas'],['Listón de roble','Maderas'],['Contrachapado','Maderas'],['Hoja de papel','Maderas'],['Cable de cobre','Metales'],['Lata de aluminio','Metales'],['Barra de acero','Metales'],['Estatua de bronce','Metales'],['Tubería de PVC','Plásticos'],['Bolsa de polietileno','Plásticos'],['Plancha de metacrilato','Plásticos'],['Encimera de granito','Pétreos'],['Suelo de mármol','Pétreos'],['Tejado de pizarra','Pétreos'],['Ladrillo','Cerámicos'],['Teja','Cerámicos'],['Azulejo del baño','Cerámicos'],['Taza de porcelana','Cerámicos'],['Camiseta de algodón','Textiles'],['Bufanda de lana','Textiles'],['Pañuelo de seda','Textiles'],['Mantel de lino','Textiles']],'Clasifica cada objeto en la familia de su material principal.'),
+ gen:[CLS([['Tablero de madera','Maderas'],['Listón de roble','Maderas'],['Puerta de pino','Maderas'],['Hoja de papel','Maderas'],['Cable de cobre','Metales'],['Lata de aluminio','Metales'],['Barra de acero','Metales'],['Clavo de hierro','Metales'],['Cubo de fregar','Plásticos'],['Bolsa de la compra','Plásticos'],['Funda de un cable','Plásticos'],['Encimera de granito','Pétreos'],['Suelo de mármol','Pétreos'],['Tejado de pizarra','Pétreos'],['Ladrillo','Cerámicos'],['Teja','Cerámicos'],['Azulejo del baño','Cerámicos'],['Taza de porcelana','Cerámicos'],['Camiseta de algodón','Textiles'],['Bufanda de lana','Textiles'],['Pañuelo de seda','Textiles'],['Mantel de lino','Textiles']],'Clasifica cada objeto en la familia de su material principal.'),
   CLS([['Lana','Animal'],['Seda','Animal'],['Cuero','Animal'],['Madera','Vegetal'],['Corcho','Vegetal'],['Algodón','Vegetal'],['Lino','Vegetal'],['Látex','Vegetal'],['Esparto','Vegetal'],['Arena','Mineral'],['Arcilla','Mineral'],['Mármol','Mineral'],['Granito','Mineral'],['Bauxita','Mineral'],['Pizarra','Mineral']],'Clasifica cada materia prima según su origen.')],
- hard:[CLS([['Hierro','Metal férrico'],['Acero','Metal férrico'],['Fundición','Metal férrico'],['Cobre','Metal no férrico'],['Aluminio','Metal no férrico'],['Plomo','Metal no férrico'],['Estaño','Metal no férrico'],['Pino','Madera natural'],['Roble','Madera natural'],['Haya','Madera natural'],['Aglomerado','Madera prefabricada'],['Contrachapado','Madera prefabricada'],['DM','Madera prefabricada']],'Clasifica cada material en su grupo.'),
+ hard:[CLS([['Clavo de hierro','Metal férrico'],['Barra de acero','Metal férrico'],['Tenedor de acero inoxidable','Metal férrico'],['Hilo de cobre','Metal no férrico'],['Lata de aluminio','Metal no férrico'],['Papel de aluminio','Metal no férrico'],['Tabla de pino','Madera natural'],['Puerta de roble macizo','Madera natural'],['Mango de haya de una herramienta','Madera natural'],['Tablero de virutas prensadas con cola','Madera prefabricada'],['Tablero de capas finas de madera pegadas','Madera prefabricada']],'Clasifica cada material en su grupo.'),
   MC('Un material tiene propiedades perfectas para un juguete, pero es carísimo y contamina al fabricarse. ¿Qué haría un buen diseñador?','Buscar otro que cumpla y sea más barato y limpio',['Usarlo igualmente, porque es el mejor','Fabricar el juguete sin material','Cambiar el juguete por otro más caro'],'Se combinan criterios: propiedades, precio, disponibilidad e impacto.')]
 };
 var DENSD=[['corcho',0.25],['madera de pino',0.5],['polietileno',0.95],['PVC',1.4],['vidrio',2.5],['aluminio',2.7],['acero',7.8],['plomo',11.3]];
@@ -2055,7 +2055,7 @@ NB.dur={
   MC('La arena de la playa raya los cristales de las gafas. ¿Qué lo explica?','La arena tiene cuarzo (7), más duro que el vidrio',['El vidrio es más duro que el cuarzo','La arena está mojada','El cuarzo es elástico'],'El cuarzo es muy duro.'),
   MC('A raya a B y B raya a C. ¿Qué puedes afirmar?','Que A también raya a C',['Que C raya a A','Que B es el más duro','Que A y C tienen la misma dureza'],'Si A > B y B > C, entonces A > C.')],
  gen:[function(){var s=sampleN(MOHS,4).sort(function(a,b){return a[1]-b[1];});return ORD('Ordena estos minerales de MÁS BLANDO a MÁS DURO según la escala de Mohs.',s.map(function(x){return x[0];}),'Escala de Mohs: talco, yeso, calcita, fluorita, apatito, ortosa, cuarzo, topacio, corindón y diamante.');},
-  function(){var s=sampleN(MOHS,2).sort(function(a,b){return a[1]-b[1];}),b=s[0],a=s[1];return MC('¿Puede el '+b[0].toLowerCase()+' rayar al '+a[0].toLowerCase()+'?','No: el '+a[0].toLowerCase()+' ('+a[1]+') es más duro que el '+b[0].toLowerCase()+' ('+b[1]+')',['Sí: el '+b[0].toLowerCase()+' es más duro','Sí: cualquier mineral raya a otro','No: ningún mineral raya a otro'],'Solo raya el más duro.');}],
+  function(){var s=sampleN(MOHS,2).sort(function(a,b){return a[1]-b[1];}),b=s[0],a=s[1];return MC('¿Puede '+eM(b[0].toLowerCase())+' rayar '+aM(a[0].toLowerCase())+'?','No: '+eM(a[0].toLowerCase())+' ('+a[1]+') tiene más dureza que '+eM(b[0].toLowerCase())+' ('+b[1]+')',['Sí: '+eM(b[0].toLowerCase())+' tiene más dureza','Sí: cualquier mineral raya a otro','No: ningún mineral raya a otro'],'Solo raya el más duro.');}],
  hard:[MC('Las limas del taller se endurecen solo por fuera. ¿Por qué no se endurecen enteras?','Para que por dentro sigan siendo tenaces y no se rompan',['Porque endurecerlas es muy barato','Para que pesen menos','Para que conduzcan la electricidad'],'Superficie dura y núcleo tenaz.'),
   function(){return ORD('Ordena los pasos de un ensayo de dureza.',['Colocar la pieza bajo la máquina','Clavar con fuerza la punta de diamante','Retirar la punta','Medir el tamaño de la huella'],'Cuanto más pequeña es la huella, más duro es el material.');}]
 };
@@ -2332,8 +2332,8 @@ function riddlePool(){var p=RIDDLES.filter(function(r){return (r.tg||[]).every(f
 /* ===== Glosario ===== */
 var GLOS=[
 ['Materia prima','Lo que se extrae directamente de la naturaleza, sin transformar: un tronco, la lana de una oveja, el petróleo o un mineral.','mp'],
-['Material','Materia prima ya transformada y lista para fabricar objetos: un tablero de madera, una barra de acero, una lámina de plástico.','mp'],
-['Producto tecnológico','Objeto terminado que se fabrica con materiales para cubrir una necesidad: una mesa, una bufanda, una lata.','mp'],
+['Material de uso técnico','Materia prima ya transformada y lista para fabricar objetos: un tablero de madera, una barra de acero, una lámina de plástico.','mp'],
+['Producto acabado','Objeto terminado, o producto tecnológico, que se fabrica con materiales para cubrir una necesidad: una mesa, una bufanda, una lata.','mp'],['Residuo','Lo que sobra al fabricar o lo que se tira cuando ya no sirve; si se recicla, vuelve a ser materia prima.','mp'],
 ['Bauxita','Mineral del que se obtiene el aluminio.','mp'],
 ['Arena de cuarzo','Arena formada por granos de cuarzo; es la materia prima del vidrio.','mp'],
 ['Petróleo','Líquido oscuro que se extrae del subsuelo; de él se obtienen casi todos los plásticos.','mp'],
@@ -2515,19 +2515,19 @@ async function hintModal(){var M=MAPS[S.map];var c=modal(sageHead('Escucha otra 
 
 /* ================= MAPA 3: definición, arte y plano ================= */
 MAPS.push({name:'Los Bosques de la Veta',theme:'bosque',obj:{key:'madera',one:'trozo de madera',many:'trozos de madera'},
-  topics:['arb','obm','pmd','mdu','mbl','mpr','fco','umd'],monsters:['carcoma','arbolfuria','troll','carcoma'],okPlace:'tienda',
+  topics:['arb','obm','pmd','mdu','mbl','mpr','fco','umd'],monsters:['carcoma','arbolfuria','troll','carcoma'],king:'k_carcoma',okPlace:'tienda',
   riddle:'Sigue el camino de la obtención de la madera para llegar a la meta.',
-  intro:'En los Bosques de la Veta los árboles guardan los secretos de la madera. Recorre sus senderos, aprende en cada pergamino y reúne trozos de madera: con cinco podrás abrir la puerta que lleva a la meta.',
+  intro:'En los Bosques de la Veta los árboles guardan los secretos de la madera. Recorre sus senderos, aprende en cada pergamino y reúne trozos de madera. Pasa en orden por los sitios del camino para ganar las llaves que abren la puerta de la meta, donde te espera el Rey Carcoma.',
   places:{
    bosque:{name:'Bosque de Robles y Pinos',kind:'seq',seq:1,pass:'Aquí empieza el camino de la madera: los leñadores talan los árboles con motosierras y les quitan las ramas. Los troncos son la materia prima.'},
    aserradero:{name:'Aserradero',kind:'seq',seq:2,pass:'En el aserradero descortezan los troncos, los cortan en tablas, tablones y listones, y los ponen a secar.',wait:'Las sierras están paradas: todavía no ha llegado ningún tronco del bosque.'},
    fabrica:{name:'Fábrica de Madera',kind:'seq',seq:3,need:'basics',pass:'En la fábrica las tablas secas se convierten en tableros, molduras y piezas listas para hacer muebles. Con los restos fabrican aglomerado.',wait:'La fábrica no tiene madera con la que trabajar: todavía no han llegado tablas del aserradero.',needMsg:'Don Fulgencio Viruta, el encargado de la fábrica, solo deja entrar a quien trae los trozos de madera de todos los pergaminos básicos de los Bosques de la Veta.'},
    tienda:{name:'Tienda de Muebles',kind:'ok',seq:4,wait:'La tienda está vacía: todavía no ha llegado ningún mueble de la fábrica.'},
    refineria:{name:'Refinería de Petróleo',kind:'block',cut:'En la refinería se obtienen plásticos a partir del petróleo, no madera. Una nube de humo te corta el paso.'},
-   granja:{name:'Granja de Ovejas',kind:'block',cut:'En la granja se esquila la lana de las ovejas, una materia prima animal. El rebaño ocupa todo el camino.'},
+   granja:{name:'Granja de Ovejas',kind:'block',cut:'En la granja se esquila la lana de las ovejas, una materia prima animal. El rebaño ocupa todo el camino.',heal:'La pastora te invita a un tazón de leche caliente junto al fuego de la cabaña.'},
    mina:{name:'Mina de Hierro',kind:'block',cut:'De la mina se extrae mineral de hierro, no madera. La galería está inundada y no se puede pasar.'},
    cantera:{name:'Cantera de Pizarra',kind:'block',cut:'En la cantera se sacan lajas de pizarra, un material pétreo. Un desprendimiento de rocas te cierra el paso.'},
-   forja:{name:'Herrería del Pueblo',kind:'block',cut:'El herrero trabaja el hierro a golpes, pero el camino de la madera no pasa por su yunque. La fragua echa chispas y no te deja pasar.'},
+   forja:{name:'Taller del Calderero',kind:'block',cut:'El calderero da forma a ollas de cobre a martillazos, pero el camino de la madera no pasa por su taller. El fuego del horno echa chispas y no te deja pasar.'},
    papelera:{name:'Fábrica de Papel',kind:'block',cut:'Aquí se fabrica papel con la pulpa de la madera: es un derivado, pero no es el camino de la madera hasta los muebles. Las bobinas de papel te tapan el paso.'}
   },
   plan:{tf:[0,0,1,0,0,1],sp:44,
@@ -3187,9 +3187,9 @@ SHORT.arb='El árbol y el tronco';SHORT.obm='Obtención de la madera';SHORT.pmd=
 
 /* ================= MAPA 4: definición, arte y plano ================= */
 MAPS.push({name:'Las Minas de Ferrum',theme:'mina',obj:{key:'lingote',one:'lingote',many:'lingotes'},
-  topics:['mgn','sid','fer','cbr','pes','lig','fcm','rmt'],monsters:['oxido','salamandra','golem','oxido'],okPlace:'laminacion',
+  topics:['mgn','sid','fer','cbr','pes','lig','fcm','rmt'],monsters:['oxido','salamandra','golem','oxido'],king:'k_escoria',okPlace:'laminacion',
   riddle:'Sigue el camino de la obtención del acero para llegar a la meta.',
-  intro:'En las Minas de Ferrum la tierra guarda hierro, cobre y muchos otros metales. Recorre sus caminos, aprende en cada pergamino y reúne lingotes: con cinco podrás abrir la puerta que lleva a la meta.',
+  intro:'En las Minas de Ferrum la tierra guarda hierro, cobre y muchos otros metales. Recorre sus caminos, aprende en cada pergamino y reúne lingotes. Pasa en orden por los sitios del camino para ganar las llaves que abren la puerta de la meta, donde te espera el Rey Escoria.',
   places:{
    mina:{name:'Mina de Hierro',kind:'seq',seq:1,pass:'Aquí empieza el camino del acero: los mineros extraen magnetita y siderita, y las trituran y criban para separar la mena de la ganga.'},
    altohorno:{name:'Alto Horno',kind:'seq',seq:2,pass:'En el alto horno la mena se funde con carbón y piedra caliza. Por abajo sale un río de arrabio al rojo y por encima flota la escoria.',wait:'El alto horno está apagado: todavía no ha llegado mineral de la mina.'},
@@ -3200,7 +3200,7 @@ MAPS.push({name:'Las Minas de Ferrum',theme:'mina',obj:{key:'lingote',one:'lingo
    cantera:{name:'Cantera de Mármol',kind:'block',cut:'En la cantera se extraen bloques de mármol, un material pétreo. Un bloque enorme ha caído sobre el camino.'},
    bauxita:{name:'Mina de Bauxita',kind:'block',cut:'De la bauxita se obtiene aluminio, un metal ligero, pero no acero. La galería está apuntalada y no se puede pasar.'},
    alfareria:{name:'Alfarería',kind:'block',cut:'El alfarero moldea arcilla y la cuece en su horno para hacer cerámica, no acero. Sus vasijas ocupan todo el camino.'},
-   granja:{name:'Granja de Ovejas',kind:'block',cut:'En la granja se esquila la lana, una materia prima animal para fabricar tejidos. El rebaño no te deja pasar.'}
+   granja:{name:'Granja de Ovejas',kind:'block',cut:'En la granja se esquila la lana, una materia prima animal para fabricar tejidos. El rebaño no te deja pasar.',heal:'El pastor te deja descansar en el pajar y comparte contigo pan y queso.'}
   },
   plan:{tf:[0,0,1,0,0,1],sp:44,
    pts:{S:[110,140,'start'],Ja:[330,150,'j'],Jb:[600,120,'j'],Jc:[880,170,'j'],Jd:[1160,120,'j'],Je:[1440,170,'j'],
@@ -3879,7 +3879,272 @@ GLOS.push(
 SHORT.mgn='Obtención y propiedades';SHORT.sid='Del mineral al acero';SHORT.fer='Metales férricos';SHORT.cbr='Cobre, latón y bronce';SHORT.pes='Otros metales pesados';SHORT.lig='Metales ligeros';SHORT.fcm='Formas comerciales';SHORT.rmt='Taller y reciclaje';
 
 document.addEventListener('DOMContentLoaded',init);
+/* ===== Llaves, peajes, herrerías, armas y escudos, el rey de cada mapa, lugares que curan y nota mínima ===== */
+var QMIN=40,GEAR_MAX=4,GEAR_COST=[0,2,4,6],RANK=['','básico','intermedio','superior'];
+var GEAR={espada:{t:'a',n:'Espada',pl:'espadas',f:1},arco:{t:'a',n:'Arco',pl:'arcos'},lanza:{t:'a',n:'Lanza',pl:'lanzas',f:1},trabuco:{t:'a',n:'Trabuco',pl:'trabucos'},polvora:{t:'a',n:'Saco de pólvora con mecha',pl:'sacos de pólvora con mecha'},
+  escudo:{t:'e',n:'Escudo',pl:'escudos'},armadura:{t:'e',n:'Armadura',pl:'armaduras',f:1},muralla:{t:'e',n:'Muralla',pl:'murallas',f:1}};
+var GEAR_W=['espada','arco','lanza','trabuco','polvora'],GEAR_S=['escudo','armadura','muralla'];
+var SMITH={extra:{name:'Maese Teodulfo Fraguas',f:false,title:'Herrería de Maese Teodulfo'},final:{name:'Doña Ermesinda Fuelle',f:true,title:'Herrería de Doña Ermesinda'}};
+function unO(o){return (o.f?'una ':'un ')+o.one;}
+function UnO(o){return (o.f?'Una ':'Un ')+o.one;}
+function listY(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' y '+a[a.length-1];}
+function hasForge(mi){return !!(MAPS[mi]&&MAPS[mi].plan);}
+function kingOf(mi){var k=MAPS[mi].king||'k_herrumbre';return ART.monsters[k]?k:'k_herrumbre';}
+function gT(g){return GEAR[g.k]?GEAR[g.k].t:'a';}
+function gearName(g){return GEAR[g.k].n+' de rango '+RANK[g.r];}
+function gearLow(g){var n=GEAR[g.k].n;return n.charAt(0).toLowerCase()+n.slice(1)+' de rango '+RANK[g.r];}
+function gearFx(g){return gT(g)==='a'?'+'+g.r+' a tus dados':'−'+g.r+' a los dados del monstruo';}
+function gearUn(g){return GEAR[g.k].f?'una ':'un ';}
+function gearOf(mi){if(!Array.isArray(S.gear))S.gear=[];while(S.gear.length<MAPS.length)S.gear.push([]);if(!Array.isArray(S.gear[mi]))S.gear[mi]=[];S.gear[mi]=S.gear[mi].filter(function(g){return g&&GEAR[g.k]&&g.r>=1&&g.r<=3;});return S.gear[mi];}
+function gearSort(L){L.sort(function(x,y){var a=gT(x),b=gT(y);return a!==b?(a==='a'?-1:1):(y.r-x.r||(x.k<y.k?-1:1));});return L;}
+function dblOn(mi){return !!(S&&S.dbl&&S.dbl[mi]);}
+function gemGain(mi){return dblOn(mi)?2:1;}
+function gemWin(mi){var o=MAPS[mi].obj;return gemGain(mi)>1?'dos '+o.many:unO(o);}
+function chainPl(mi){var M=MAPS[mi];return Object.keys(M.places).filter(function(k){return M.places[k].seq;}).sort(function(a,b){return M.places[a].seq-M.places[b].seq;});}
+function keysTot(mi){return chainPl(mi).length;}
+function keysHave(mi){return Math.min(keysTot(mi),(S&&S.seq&&S.seq[mi])||0);}
+function tollOf(mi,pk){var M=MAPS[mi],P=M.places[pk];if(!P)return 0;if(P.toll!==undefined)return P.toll;if(pk===M.okPlace)return 3;if(P.need==='basics'&&P.seq)return 7;return 0;}
+function objNeed(mi){return tollOf(mi,MAPS[mi].okPlace)||OBJ_NEEDED;}
+function tollPaid(mi,pk){return !!(S.paid&&S.paid[mi+':'+pk]);}
+function qCount(sc){return logOf(sc).filter(function(e){return e.q;}).length;}
 
+/* --- Dibujos --- */
+ART.gear=function(g,cls){var C=[null,['#c7843c','#7d4a17','#f2c084'],['#cfd8e0','#5f6b78','#ffffff'],['#f0c44c','#94640e','#fff1b0']][g.r]||['#999','#555','#ddd'],W='#8a5a32',Wd='#5a3b1e',s='<svg class="'+(cls||'')+'" viewBox="-24 -24 48 48" aria-hidden="true">';
+  switch(g.k){
+  case 'espada':s+='<g transform="rotate(40)"><path d="M0,-22 L4.5,-16 L4.5,5 L-4.5,5 L-4.5,-16Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1.6"/><path d="M0,-18 L0,3" stroke="'+C[2]+'" stroke-width="1.6"/><rect x="-11" y="5" width="22" height="4.5" rx="2" fill="'+C[1]+'"/><rect x="-2.6" y="9.5" width="5.2" height="9" fill="'+Wd+'"/><circle cy="20.5" r="3.2" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1"/></g>';break;
+  case 'arco':s+='<path d="M-6,-21 Q16,0 -6,21" stroke="'+W+'" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M-6,-21 Q16,0 -6,21" stroke="'+C[0]+'" stroke-width="1.6" fill="none" stroke-dasharray="3 5"/><path d="M-6,-21 L-6,21" stroke="#efe6cf" stroke-width="1.2"/><path d="M-18,0 L15,0" stroke="'+Wd+'" stroke-width="2.4"/><path d="M21,0 L13,-4.5 L13,4.5Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1"/><path d="M-18,0 l-4,-4 M-18,0 l-4,4 M-14,0 l-4,-4 M-14,0 l-4,4" stroke="#c0352b" stroke-width="2"/>';break;
+  case 'lanza':s+='<path d="M-17,19 L11,-9" stroke="'+W+'" stroke-width="4" stroke-linecap="round"/><path d="M-11,13 l4,4 M-7,9 l4,4" stroke="'+Wd+'" stroke-width="2"/><path d="M8,-6 L21,-21 L6,-16 L10,-10Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1.5" stroke-linejoin="round"/><path d="M8,-7 l-3,-3" stroke="'+C[1]+'" stroke-width="3"/>';break;
+  case 'trabuco':s+='<path d="M-22,4 L-7,-1 L-5,6 L-19,13Z" fill="'+W+'" stroke="'+Wd+'" stroke-width="1.4"/><rect x="-7" y="-4" width="22" height="7" rx="1.5" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1.4"/><path d="M14,-5 L22,-10 L22,9 L14,4Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1.4"/><path d="M-4,3 q1,6 5,6" stroke="'+C[1]+'" stroke-width="1.6" fill="none"/><circle cx="-2" cy="-5" r="1.8" fill="'+C[1]+'"/>';break;
+  case 'polvora':s+='<path d="M-13,19 Q-18,2 -9,-8 L9,-8 Q18,2 13,19Z" fill="#cdb27a" stroke="#7a5a32" stroke-width="1.6"/><path d="M-9,-8 Q0,-13 9,-8" stroke="#7a5a32" stroke-width="3" fill="none"/><rect x="-14" y="6" width="28" height="5" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1"/><path d="M0,-11 Q6,-18 2,-20 Q-2,-22 4,-24" stroke="#4a3a2a" stroke-width="1.6" fill="none"/><path d="M5,-24 l2,-4 l1,4 l4,1 l-4,1 l-1,4 l-2,-4 l-4,-1Z" fill="#ffcf3a"/><text x="0" y="5" text-anchor="middle" font-size="9" font-weight="700" fill="#5a3b1e" font-family="Georgia,serif">P</text>';break;
+  case 'escudo':s+='<path d="M0,-20 L17,-14 L17,0 Q17,14 0,21 Q-17,14 -17,0 L-17,-14Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="2.4"/><path d="M0,-15 L12,-11 L12,0 Q12,10 0,15.5 Q-12,10 -12,0 L-12,-11Z" fill="none" stroke="'+C[2]+'" stroke-width="1.4" opacity=".85"/><circle r="4.5" cy="-1" fill="'+C[2]+'" stroke="'+C[1]+'" stroke-width="1.4"/>';break;
+  case 'armadura':s+='<path d="M-11,-18 L-4,-14 Q0,-12 4,-14 L11,-18 L19,-12 L15,-2 L12,-4 L12,18 Q0,23 -12,18 L-12,-4 L-15,-2 L-19,-12Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1.8" stroke-linejoin="round"/><path d="M0,-12 L0,20 M-12,4 Q0,9 12,4 M-12,11 Q0,16 12,11" stroke="'+C[1]+'" stroke-width="1.3" fill="none"/><path d="M-9,-6 Q0,-2 9,-6" stroke="'+C[2]+'" stroke-width="1.6" fill="none"/>';break;
+  case 'muralla':s+='<path d="M-21,19 L-21,-8 L-15,-8 L-15,-16 L-8,-16 L-8,-8 L-3,-8 L-3,-16 L3,-16 L3,-8 L8,-8 L8,-16 L15,-16 L15,-8 L21,-8 L21,19Z" fill="'+C[0]+'" stroke="'+C[1]+'" stroke-width="1.8" stroke-linejoin="round"/><path d="M-21,0 H21 M-21,9 H21 M-12,-8 V0 M6,-8 V0 M-4,0 V9 M14,0 V9 M-14,9 V19 M4,9 V19" stroke="'+C[1]+'" stroke-width="1.2"/><path d="M-4,19 L-4,11 Q0,6 4,11 L4,19Z" fill="#3a2614"/>';break;
+  }
+  return s+'</svg>';};
+ART.key=function(on,cls){var c=on?['#f0c44c','#94640e']:['none','rgba(243,210,122,.55)'];return '<svg class="'+(cls||'')+'" viewBox="-24 -14 48 28" aria-hidden="true"><circle cx="-12" cy="0" r="9" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="2.4"'+(on?'':' stroke-dasharray="3 3"')+'/><circle cx="-12" cy="0" r="3.4" fill="'+(on?'#5a3b1e':'none')+'" stroke="'+c[1]+'" stroke-width="'+(on?0:1.4)+'"/><path d="M-3,-2.6 H20 V2.6 H16 V8 H12 V2.6 H8 V7 H4 V2.6 H-3Z" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1.8"'+(on?'':' stroke-dasharray="3 3"')+'/></svg>';};
+ART.crownAt={ogro:-98,ogra:-98,caballero:-106,caballera:-104,buho:-84};
+ART.crown=function(by){return '<g transform="translate(0,'+by+')"><path d="M-20,0 L-23,-20 L-11,-9 L0,-25 L11,-9 L23,-20 L20,0Z" fill="#f2c445" stroke="#a87a1e" stroke-width="2.2" stroke-linejoin="round"/><rect x="-21" y="-4" width="42" height="7" rx="2" fill="#e2b34a" stroke="#a87a1e" stroke-width="1.5"/><circle cx="0" cy="-.5" r="2.8" fill="#c0352b"/><circle cx="-12" cy="-.5" r="2.2" fill="#5ac8f0"/><circle cx="12" cy="-.5" r="2.2" fill="#5ac8f0"/><circle cx="-23" cy="-20" r="2.4" fill="#fff3c4"/><circle cx="0" cy="-25" r="2.6" fill="#fff3c4"/><circle cx="23" cy="-20" r="2.4" fill="#fff3c4"/></g>';};
+Object.keys(ART.avatars).forEach(function(k){var d0=ART.avatars[k].draw;ART.avatars[k].draw=function(){return d0()+((typeof S!=='undefined'&&S&&S.crowned)?ART.crown(ART.crownAt[k]||-100):'');};});
+ART.smith=function(f){var sk=f?'#e8b48a':'#d39a72',hair=f?'#8a3a1a':'#3e2a1a',s=ART.shadow(30);
+  s+='<rect x="-18" y="-34" width="14" height="34" rx="4" fill="#3b2a1e"/><rect x="4" y="-34" width="14" height="34" rx="4" fill="#3b2a1e"/>';
+  s+='<path d="M-30,-30 Q-34,-80 -20,-86 L20,-86 Q34,-80 30,-30Z" fill="'+(f?'#2f5a7a':'#8a2f2a')+'"/><path d="M-19,-78 L19,-78 L24,-22 L-24,-22Z" fill="#5a3b1e"/><path d="M-19,-78 L-12,-90 M19,-78 L12,-90" stroke="#5a3b1e" stroke-width="3"/><rect x="-10" y="-56" width="20" height="12" rx="2" fill="#6b4a2a"/>';
+  s+='<path d="M-24,-82 Q-42,-62 -36,-44" stroke="'+sk+'" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M24,-82 Q42,-76 46,-62" stroke="'+sk+'" stroke-width="11" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M46,-62 L49,-118" stroke="#6b4423" stroke-width="5" stroke-linecap="round"/><rect x="37" y="-131" width="26" height="14" rx="2" fill="#5b6068"/><rect x="37" y="-131" width="26" height="4" fill="#7b818a"/>';
+  s+='<ellipse cx="0" cy="-101" rx="15" ry="16" fill="'+sk+'"/>';
+  if(f)s+='<path d="M-16,-104 Q-15,-123 0,-123 Q15,-123 16,-104 Q8,-113 0,-112 Q-8,-113 -16,-104Z" fill="'+hair+'"/><path d="M14,-108 Q26,-92 18,-70" stroke="'+hair+'" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="18" cy="-68" r="3.5" fill="#e2b34a"/><path d="M-5,-93 Q0,-89 5,-93" stroke="#8a4a3a" stroke-width="1.8" fill="none"/>';
+  else s+='<path d="M-15,-99 Q-16,-77 0,-71 Q16,-77 15,-99 Q8,-91 0,-93 Q-8,-91 -15,-99Z" fill="'+hair+'"/><path d="M-15,-105 Q-12,-121 0,-121 Q12,-121 15,-105 Q8,-111 0,-111 Q-8,-111 -15,-105Z" fill="'+hair+'"/>';
+  s+='<circle cx="-5" cy="-103" r="1.9" fill="#2a1d10"/><circle cx="5" cy="-103" r="1.9" fill="#2a1d10"/><path d="M-10,-109 l7,1 M10,-109 l-7,1" stroke="'+hair+'" stroke-width="2.4" stroke-linecap="round"/>';
+  return s;};
+ART.smithSVG=function(f,cls){return '<svg class="'+(cls||'')+'" viewBox="-60 -158 120 164" aria-hidden="true">'+ART.smith(f)+'</svg>';};
+ART.places.herreria=function(){var s='<ellipse cx="0" cy="0" rx="72" ry="14" fill="rgba(0,0,0,.3)"/><rect x="-58" y="-56" width="86" height="56" fill="#8a7d6a"/>';
+  [[-50,-50],[-30,-50],[-10,-50],[10,-50],[-40,-38],[-20,-38],[0,-38]].forEach(function(p){s+='<rect x="'+p[0]+'" y="'+p[1]+'" width="16" height="9" fill="#9c907c"/>';});
+  s+='<path d="M-64,-56 L-15,-88 L34,-56Z" fill="#7a3a22"/><rect x="6" y="-104" width="14" height="36" fill="#5a524a"/><path d="M13,-108 q-7,-10 2,-18 q9,-8 -1,-18" stroke="#b0a89a" stroke-width="5" fill="none" opacity=".6"/>';
+  s+='<path d="M-38,0 L-38,-28 Q-23,-42 -8,-28 L-8,0Z" fill="#2a1a12"/><path d="M-34,0 q4,-15 8,-4 q4,-15 8,0Z" fill="#ff8a2a"/><path d="M-30,0 q3,-9 5,-2 q3,-9 5,0Z" fill="#ffd23a"/>';
+  s+='<path d="M28,-62 L44,-62" stroke="#5a3b1e" stroke-width="3"/><rect x="34" y="-62" width="36" height="28" rx="3" fill="#e9d6a6" stroke="#5a3b1e" stroke-width="2"/><path d="M40,-38 L58,-58" stroke="#7b8794" stroke-width="3.5"/><path d="M39,-45 L46,-38" stroke="#5a3b1e" stroke-width="3"/><path d="M58,-57 l8,2 l0,6 q0,7 -8,10 q-8,-3 -8,-10 l0,-6Z" fill="#cd8a3e" stroke="#8a5320" stroke-width="1.5"/>';
+  s+='<path d="M32,-15 L66,-15 L59,-6 L47,-6 L52,0 L41,0 L44,-6 L32,-6Z" fill="#3b3f46"/>';
+  return s;};
+ART.icon.forge='<path d="M-11,-3 L9,-3 Q12,-3 12,-6 L12,-7 L-14,-7 Q-14,-3 -11,-3Z" fill="#f1e2bb"/><path d="M-5,-3 L5,-3 L4,3 L8,8 L-8,8 L-4,3Z" fill="#f1e2bb"/><path d="M6,-17 L13,-10 M3,-13 L10,-20" stroke="#e2b34a" stroke-width="3" stroke-linecap="round"/>';
+ART.tileFill.forge='#a0522d';
+/* Reyes: uno por mapa, con tres dados */
+ART.kingArt=function(c){var s='<ellipse cx="0" cy="0" rx="78" ry="13" fill="rgba(0,0,0,.35)"/>'+(c.wings||'');
+  s+='<path d="M-46,-116 Q-84,-60 -72,0 L72,0 Q84,-60 46,-116Z" fill="'+c.capeD+'"/><path d="M-40,-116 Q-72,-60 -60,-4 L60,-4 Q72,-60 40,-116Z" fill="'+c.cape+'"/>';
+  s+='<rect x="-30" y="-44" width="22" height="44" rx="5" fill="'+c.dark+'"/><rect x="8" y="-44" width="22" height="44" rx="5" fill="'+c.dark+'"/><rect x="-34" y="-9" width="30" height="9" rx="3" fill="'+c.body+'"/><rect x="4" y="-9" width="30" height="9" rx="3" fill="'+c.body+'"/>';
+  s+='<path d="M-42,-46 L-46,-112 Q0,-126 46,-112 L42,-46Z" fill="'+c.body+'" stroke="'+c.dark+'" stroke-width="3"/>';
+  s+='<path d="M-46,-108 Q-74,-84 -68,-56" stroke="'+c.body+'" stroke-width="18" fill="none" stroke-linecap="round"/><path d="M46,-108 Q72,-92 76,-70" stroke="'+c.body+'" stroke-width="18" fill="none" stroke-linecap="round"/>';
+  s+='<rect x="-44" y="-56" width="88" height="10" fill="'+c.dark+'"/><rect x="-8" y="-58" width="16" height="14" rx="2" fill="#e2b34a"/>'+(c.deco||'');
+  s+='<path d="M76,-70 L88,-150" stroke="#e2b34a" stroke-width="6" stroke-linecap="round"/><circle cx="89" cy="-154" r="9" fill="#e2b34a"/><circle cx="89" cy="-154" r="4" fill="'+c.gem+'"/><circle cx="76" cy="-70" r="10" fill="'+c.dark+'"/><circle cx="-68" cy="-54" r="10" fill="'+c.dark+'"/>';
+  if(c.queen)s+='<path d="M-22,-132 Q-36,-104 -30,-80 M22,-132 Q36,-104 30,-80" stroke="'+c.hair+'" stroke-width="8" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M-24,-116 L-24,-144 Q0,-158 24,-144 L24,-116 Q0,-108 -24,-116Z" fill="'+c.body+'" stroke="'+c.dark+'" stroke-width="3"/><rect x="-16" y="-137" width="32" height="8" rx="2" fill="#1d1210"/><rect x="-12" y="-135" width="7" height="4" fill="'+c.eye+'"/><rect x="5" y="-135" width="7" height="4" fill="'+c.eye+'"/>';
+  s+=c.queen?'<path d="M-26,-148 L-22,-165 L-12,-152 L0,-170 L12,-152 L22,-165 L26,-148Z" fill="#e2b34a" stroke="#a87a1e" stroke-width="2"/><circle cx="0" cy="-157" r="3.5" fill="'+c.gem+'"/><circle cx="-22" cy="-162" r="2.4" fill="#fff"/><circle cx="22" cy="-162" r="2.4" fill="#fff"/>'
+    :'<path d="M-26,-148 L-26,-164 L-16,-154 L-8,-168 L0,-156 L8,-168 L16,-154 L26,-164 L26,-148Z" fill="#e2b34a" stroke="#a87a1e" stroke-width="2"/><circle cx="0" cy="-153" r="3" fill="'+c.gem+'"/>';
+  return s;};
+(function(){var R=[
+ ['k_herrumbre','Rey Herrumbre',0,{body:'#9a4a1f',dark:'#6e3214',cape:'#7a1f2a',capeD:'#55141d',eye:'#ff7a2a',gem:'#c0352b',deco:'<path d="M-30,-100 q8,-6 14,2 q-4,8 -14,-2Z M14,-86 q10,-4 14,6 q-8,6 -14,-6Z M-22,-72 q6,-5 12,1 q-5,6 -12,-1Z M24,-66 q5,-4 9,1 q-4,5 -9,-1Z" fill="#c46a2e"/>'},'¡El óxido se come el hierro que nadie protege! ¿Vienes tú bien protegido? Yo lanzo tres dados.'],
+ ['k_quebradizo','Rey Quebradizo',0,{body:'#a9dce8',dark:'#4f8fa0',cape:'#3a4f7a',capeD:'#26365a',eye:'#ffffff',gem:'#5ac8f0',deco:'<path d="M-22,-108 L-10,-94 L-18,-82 L-6,-66 M18,-106 L8,-92 L20,-78 L12,-64 M-36,-92 L-26,-86" stroke="#ffffff" stroke-width="2.2" fill="none"/><path d="M-30,-104 L-22,-110 L-20,-100Z" fill="#e8fbff" opacity=".8"/>'},'Soy más duro que el cuarzo: nadie consigue rayarme. ¿Que me rompo de un golpe? ¡Inténtalo! Yo lanzo tres dados.'],
+ ['k_carcoma','Rey Carcoma',0,{body:'#a5743f',dark:'#6b4423',cape:'#3e6a2a',capeD:'#2a4a1c',eye:'#ffd23a',gem:'#3fae4a',deco:'<path d="M-30,-98 q6,6 12,0 t12,0 M4,-80 q6,6 12,0 t12,0 M-24,-68 q6,6 12,0" stroke="#5a3b1e" stroke-width="2" fill="none"/>'+[[-28,-104],[-14,-90],[10,-100],[22,-86],[-6,-74],[18,-64],[-30,-62]].map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="2.6" fill="#2a1a0e"/>';}).join('')},'Mis larvas abren galerías en la madera que nadie trata ni barniza. ¡Hoy te toca a ti! Yo lanzo tres dados.'],
+ ['k_escoria','Rey Escoria',0,{body:'#3b3a3f',dark:'#222126',cape:'#6a2a14',capeD:'#4a1a0c',eye:'#ffcf3a',gem:'#ff8a2a',deco:'<path d="M-28,-104 L-16,-92 L-24,-80 L-10,-66 M20,-106 L10,-90 L22,-76 M-36,-74 L-24,-70 M30,-64 L18,-58" stroke="#ff8a2a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-28,-104 L-16,-92 L-24,-80 L-10,-66 M20,-106 L10,-90 L22,-76" stroke="#ffd23a" stroke-width="1.2" fill="none"/>'},'Floto sobre el arrabio en el alto horno y nadie me quiere en su acero. ¡Pero aquí mando yo! Yo lanzo tres dados.'],
+ ['k_microplastica','Reina Microplástica',1,{body:'#4fa7bf',dark:'#2f6f85',cape:'#2a8a8a',capeD:'#1c6262',eye:'#ffffff',gem:'#f39ad8',hair:'#bfe9f3',queen:1,deco:[['#ff6b6b',-30,-100],['#ffd23a',-12,-90],['#9fe39a',12,-104],['#f39ad8',26,-84],['#ffffff',-24,-72],['#ffb43a',4,-70],['#5ac8f0',28,-62],['#ff6b6b',-4,-104]].map(function(p){return '<rect x="'+p[1]+'" y="'+p[2]+'" width="6" height="4" rx="1" fill="'+p[0]+'" transform="rotate(25 '+p[1]+' '+p[2]+')"/>';}).join('')},'Nazco cuando los plásticos se rompen en trocitos en el mar. ¡Nadie me ve, pero estoy en todas partes! Yo lanzo tres dados.'],
+ ['k_vertedero','Rey Vertedero',0,{body:'#6b6a4a',dark:'#4a4930',cape:'#4a3a2a',capeD:'#33281c',eye:'#c8e04a',gem:'#8a8f3a',deco:'<rect x="-30" y="-100" width="10" height="14" rx="2" fill="#a0a8b0" stroke="#5f6b78" stroke-width="1.5"/><path d="M10,-104 l4,0 l1,6 q4,2 4,8 l0,16 l-14,0 l0,-16 q0,-6 4,-8Z" fill="#3f8a4a" opacity=".9"/><path d="M-20,-70 q10,-14 20,-2 q-8,-4 -12,4 q-4,-6 -8,-2Z" fill="#e8d24a"/>'},'Todo lo que no se separa ni se recicla acaba en mi reino. ¡Pasa a mi montaña de basura! Yo lanzo tres dados.'],
+ ['k_polilla','Reina de las Polillas',1,{body:'#9a8a6a',dark:'#5e5240',cape:'#5a4a6a',capeD:'#3e3250',eye:'#ffcf3a',gem:'#b58ad8',hair:'#cfc2a0',queen:1,wings:'<path d="M-36,-104 Q-112,-156 -108,-70 Q-90,-44 -40,-74Z M36,-104 Q112,-156 108,-70 Q90,-44 40,-74Z" fill="#c9bb98" stroke="#7a6a4a" stroke-width="2"/><circle cx="-80" cy="-96" r="9" fill="#7a6a4a"/><circle cx="80" cy="-96" r="9" fill="#7a6a4a"/><circle cx="-80" cy="-96" r="4" fill="#efe6cf"/><circle cx="80" cy="-96" r="4" fill="#efe6cf"/>',deco:'<path d="M-26,-96 q8,4 16,0 M8,-90 q8,4 16,0 M-18,-72 q8,4 16,0" stroke="#efe6cf" stroke-width="2.4" fill="none"/>'},'Mis larvas se comen la lana que se guarda sucia y sin proteger. ¡Tu bufanda será mi cena! Yo lanzo tres dados.'],
+ ['k_salitre','Rey Salitre',0,{body:'#b2aa9c',dark:'#7d766a',cape:'#5a6a7a',capeD:'#3e4a58',eye:'#ffffff',gem:'#e8e4da',deco:'<path d="M-32,-104 q6,-6 12,0 q4,6 -4,8 q-8,2 -8,-8Z M10,-96 q8,-6 16,0 q2,8 -8,8 q-10,0 -8,-8Z M-22,-74 q6,-4 12,0 q2,6 -6,6 q-8,0 -6,-6Z M16,-70 q4,-4 8,0 q0,5 -4,5 q-5,0 -4,-5Z" fill="#fbfbf5" opacity=".9"/>'},'Subo con la humedad por los muros y dejo manchas blancas en la piedra y el ladrillo. ¡Tus muros serán míos! Yo lanzo tres dados.']];
+ R.forEach(function(r){var nm=r[1],q=r[2],art=q?'la ':'el ';ART.monsters[r[0]]={name:nm,the:(q?'La ':'El ')+nm,a:(q?'a la ':'al ')+nm,c:art+nm,king:1,taunt:r[4],draw:function(){return ART.kingArt(r[3]);}};});})();
+
+(function(){var FEM=/^(Hidra|Araña|Polilla|Gárgola|Carcoma|Bestia|Salamandra|Reina)\b/;Object.keys(ART.monsters).forEach(function(k){var m=ART.monsters[k];if(m.the)return;var f=FEM.test(m.name)||/^[^ ]+a\b/.test(m.name);m.the=(f?'La ':'El ')+m.name;m.a=(f?'a la ':'al ')+m.name;m.c=(f?'la ':'el ')+m.name;});})();
+/* --- Herrerías y rey en el plano --- */
+function markForge(M,N,S0,meta,PL,T){
+  meta.monster=M.king&&ART.monsters[M.king]?M.king:'k_herrumbre';meta.king=true;
+  var ok=N.filter(function(n){return n.kind==='place'&&n.place===M.okPlace;})[0];
+  function isBlock(n){return n.kind==='place'&&M.places[n.place]&&M.places[n.place].kind==='block';}
+  if(ok){var seen={},q=[ok.id];seen[ok.id]=1;while(q.length){var u=q.shift();N[u].adj.forEach(function(v){if(seen[v]||v===meta.id||isBlock(N[v]))return;seen[v]=1;q.push(v);});}
+    meta.adj.forEach(function(v){var n=N[v];if(seen[v]&&n.kind==='path'){n.forge='final';n.type='forge';}});}
+  (PL.forge||[]).forEach(function(p){var xy=T(p),best=null,bd=1e9;N.forEach(function(n){if(n.kind!=='path'||n.forge)return;var d=Math.hypot(n.x-xy[0],n.y-xy[1]);if(d<bd){bd=d;best=n;}});if(best){best.forge='extra';best.type='forge';}});
+}
+function clearOf(x,y,N,E,extra){var m=1e9;for(var b=0;b<E.length;b++)m=Math.min(m,segDist(x,y,E[b][0].x,E[b][0].y,E[b][1].x,E[b][1].y));for(var a=0;a<N.length;a++)m=Math.min(m,Math.hypot(N[a].x-x,N[a].y-y)-6);(extra||[]).forEach(function(p){m=Math.min(m,Math.hypot(p[0]-x,p[1]-y)-p[2]);});return m;}
+function mapExtras(mi,N,E,places,MT){var s='',taken=[[MT.x,MT.y-12,62],[MT.x,MT.y+45,42]];places.forEach(function(p){taken.push([p.x,p.y-24,64]);});
+  N.forEach(function(n){if(!n.forge)return;var best=[0,-60],bv=-1e9,FP=[[-24,-4],[24,-4],[-24,-38],[24,-38],[0,-20],[0,-44]];
+    [56,72,90].forEach(function(rr){for(var a=0;a<16;a++){var an=a*Math.PI/8,dx=Math.cos(an)*rr,dy=Math.sin(an)*rr+16,x=n.x+dx,y=n.y+dy,v=1e9;
+      FP.forEach(function(f){v=Math.min(v,clearOf(x+f[0],y+f[1],N,E,taken));});v-=rr*.05;if(x<40||x>1560||y<60||y>985)v-=500;if(v>bv){bv=v;best=[dx,dy];}}});
+    var bx=n.x+best[0],by=n.y+best[1];taken.push([bx,by-20,40]);s+='<g class="forge-art" transform="translate('+bx.toFixed(0)+','+by.toFixed(0)+') scale(.42)">'+ART.places.herreria()+'</g>';});
+  var meta=N.filter(function(n){return n.kind==='end';})[0];
+  if(meta&&meta.king){var tot=keysTot(mi);
+    if(!(S.metaOpen&&S.metaOpen[mi])&&!S.defeated[mi+':'+meta.id]){var kh='';for(var i=0;i<tot;i++){var kx=(i-(tot-1)/2)*11;kh+='<circle cx="'+kx+'" cy="4" r="3.6" fill="#e2b34a" stroke="#5a3b1e" stroke-width="1"/><path d="M'+(kx-1.4)+',6 L'+(kx+1.4)+',6 L'+(kx+1)+',11 L'+(kx-1)+',11Z" fill="#5a3b1e"/>';}
+      s+='<g id="metadoor" transform="translate('+MT.x+','+MT.y+')"><path d="M-26,26 L-26,-16 Q0,-46 26,-16 L26,26Z" fill="#7a4f2a" stroke="#4a3018" stroke-width="2"/><path d="M-13,26 L-13,-28 M0,26 L0,-31 M13,26 L13,-28" stroke="#5a3b1e" stroke-width="1.6"/><path d="M-26,-6 H26 M-26,18 H26" stroke="#3b3f46" stroke-width="3"/>'+kh+'</g>';}
+    if(!S.defeated[mi+':'+meta.id]){var kb=[78,18],kv=-1e9,KF=[[-22,-4],[22,-4],[-22,-30],[22,-30],[0,-52],[0,-20]];
+      [72,92,112].forEach(function(rr){for(var a=0;a<16;a++){var an=a*Math.PI/8,dx=Math.cos(an)*rr,dy=Math.sin(an)*rr+20,x=MT.x+dx,y=MT.y+dy,v=1e9;
+        KF.forEach(function(f){v=Math.min(v,clearOf(x+f[0],y+f[1],N,E,taken));});v-=rr*.04;if(x<36||x>1564||y<58||y>990)v-=500;if(v>kv){kv=v;kb=[dx,dy];}}});
+      s+='<g id="metaking" class="mon-map" transform="translate('+(MT.x+kb[0]).toFixed(0)+','+(MT.y+kb[1]).toFixed(0)+') scale(.3)">'+ART.monsters[meta.monster].draw()+'</g>';}}
+  return s;}
+
+/* --- Panel: llaves, armas y escudos, preguntas --- */
+function gearBoxes(L){var h='';for(var i=0;i<GEAR_MAX;i++){var g=L[i];h+='<span class="gbox'+(g?' on':'')+'" role="listitem"'+(g?' title="'+esc(gearName(g)+': '+gearFx(g))+'" aria-label="'+esc(gearName(g)+': '+gearFx(g))+'"':' aria-label="Recuadro libre"')+'>'+(g?ART.gear(g)+'<b class="gb">'+(gT(g)==='a'?'+':'−')+g.r+'</b>':'')+'</span>';}return '<div class="gbox-row" role="list">'+h+'</div>';}
+function gearPanel(){if(!S||S.stage!=='game')return;var mi=S.map,w=$('#p-gearw');
+  if(!w){var inv=$('#p-inv');if(!inv)return;var box=inv.parentNode;w=document.createElement('div');w.id='p-gearw';box.parentNode.insertBefore(w,box.nextSibling);}
+  var tot=keysTot(mi),hv=keysHave(mi),nq=qCount(mi),kh='';for(var i=0;i<tot;i++)kh+=ART.key(i<hv,'pkey');
+  w.innerHTML=(tot?'<p class="lbl">Llaves</p><div class="keyrow" role="img" aria-label="Llaves: '+hv+' de '+tot+'">'+kh+'</div>':'')+(hasForge(mi)?'<p class="lbl">Armas y escudos</p>'+gearBoxes(gearOf(mi)):'')+(dblOn(mi)?'<p class="dblnote">Premio doble: cada pergamino da 2 '+esc(MAPS[mi].obj.many)+'.</p>':'')+'<p class="qcount">Preguntas respondidas: <b>'+nq+'</b>'+(nq<QMIN?' de '+QMIN:'')+'</p>';}
+var updatePanel0=updatePanel;updatePanel=function(){updatePanel0();gearPanel();};
+
+/* --- Herrería --- */
+async function shopFlow(mi,nd){var M=MAPS[mi],o=M.obj,sm=SMITH[nd.forge==='extra'?'extra':'final'],K=ART.monsters[kingOf(mi)],msg;
+  msg=nd.forge==='extra'?'¡Te doy la bienvenida a mi herrería! Soy '+sm.name+'. Por unos '+o.many+' te forjo armas y escudos, y si me traes dos iguales, te hago uno mejor.'
+    :'Soy '+sm.name+'. Detrás de esta casilla está la puerta de la meta y, cuando la abras, te espera '+K.c+', que lanza tres dados. ¡No vayas a verlo con las manos vacías!';
+  var hello=msg;msg='Elige lo que quieras comprar o juntar. Cuando acabes, sal de la herrería.';var c=modal('<div id="shopin"></div>','parch shopm'),box=$('#shopin',c);
+  function row(k){var G0=GEAR[k],L=gearOf(mi),h='<div class="srow"><div class="shead">'+ART.gear({k:k,r:2},'sico')+'<p class="sname">'+G0.n+'</p></div><div class="sbtns">';
+    for(var r=1;r<=3;r++){var cost=GEAR_COST[r],dis=L.length>=GEAR_MAX||S.inv[mi]<cost;h+='<button class="btn sbuy" type="button" data-buy="'+k+':'+r+'"'+(dis?' disabled':'')+' aria-label="Comprar '+esc(gearLow({k:k,r:r}))+' por '+cost+' '+o.many+'">'+ART.gear({k:k,r:r})+'<span class="slab">'+RANK[r]+' <b>'+(G0.t==='a'?'+':'−')+r+'</b></span><span class="scost">'+cost+ART.gem(o.key,'gem-xs')+'</span></button>';}
+    return h+'</div></div>';}
+  function merges(){var L=gearOf(mi),cnt={},h='';L.forEach(function(g){var k=g.k+':'+g.r;cnt[k]=(cnt[k]||0)+1;});
+    Object.keys(cnt).forEach(function(key){var p=key.split(':'),k=p[0],r=+p[1];if(cnt[key]<2||r>=3)return;var up={k:k,r:r+1};
+      h+='<button class="btn smerge" type="button" data-merge="'+key+'">'+ART.gear({k:k,r:r})+ART.gear({k:k,r:r})+'<span>Juntar dos '+GEAR[k].pl+' de rango '+RANK[r]+' → '+gearLow(up)+'</span>'+ART.gear(up)+'</button>';});
+    return h||'<p class="small">Cuando tengas dos iguales (mismo tipo y mismo rango), aquí podrás juntarlos para conseguir uno del rango siguiente. Los de rango superior ya no se pueden mejorar.</p>';}
+  function draw(focus){var L=gearOf(mi),inv=S.inv[mi],full=L.length>=GEAR_MAX;
+    box.innerHTML='<div class="m-head">'+ART.smithSVG(sm.f,'sage-mini')+'<div class="bubble">'+esc(hello)+'</div></div><h2 class="m-title">'+esc(sm.title)+'</h2>'+
+      '<div class="shop-top"><div><p class="lbl2">Tu bolsa</p><p class="shop-inv">'+ART.gem(o.key,'gem-s')+'<b>'+inv+'</b> '+(inv===1?o.one:o.many)+'</p></div><div><p class="lbl2">Tus armas y escudos ('+L.length+' de '+GEAR_MAX+')</p>'+gearBoxes(L)+'</div></div>'+
+      (full?'<p class="shop-note">Llevas el máximo de 4. Junta dos iguales para hacer sitio.</p>':'')+
+      '<h3>Armas: suman su rango a tus dados</h3><div class="slist">'+GEAR_W.map(row).join('')+'</div>'+
+      '<h3>Escudos: restan su rango a los dados del monstruo</h3><div class="slist">'+GEAR_S.map(row).join('')+'</div>'+
+      '<h3>Juntar dos iguales</h3><div class="shop-merge">'+merges()+'</div>'+
+      '<p class="small">Lo que compras aquí sirve en los combates de este mapa.</p><div class="shop-foot"><p class="shop-msg" aria-live="polite">'+esc(msg)+'</p><button class="btn primary" type="button" data-v="out" data-focus>Salir de la herrería</button></div>';
+    var f=focus&&$(focus,box);if(f&&!f.disabled)f.focus({preventScroll:true});else{var b=$('[data-v=out]',box);if(b)b.focus({preventScroll:true});}}
+  draw();c.scrollTop=0;
+  await new Promise(function(res){box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;var L=gearOf(mi);
+    if(b.getAttribute('data-v')==='out'){res();return;}
+    var by=b.getAttribute('data-buy');if(by){var p=by.split(':'),g={k:p[0],r:+p[1]},cost=GEAR_COST[g.r];if(!GEAR[g.k]||L.length>=GEAR_MAX||S.inv[mi]<cost)return;S.inv[mi]-=cost;L.push(g);gearSort(L);save();updatePanel();
+      msg='Aquí tienes '+gearUn(g)+gearLow(g)+': '+gearFx(g)+' en cada combate. Te cobro '+cost+' '+o.many+'.';draw('[data-buy="'+by+'"]');return;}
+    var mg=b.getAttribute('data-merge');if(mg){var q=mg.split(':'),k=q[0],r=+q[1],idx=[];L.forEach(function(g,i){if(g.k===k&&g.r===r&&idx.length<2)idx.push(i);});if(idx.length<2||r>=3)return;
+      L.splice(idx[1],1);L.splice(idx[0],1);var up={k:k,r:r+1};L.push(up);gearSort(L);save();updatePanel();msg='¡Hecho! Me quedo tus dos '+GEAR[k].pl+' de rango '+RANK[r]+' y te forjo '+gearUn(up)+gearLow(up)+': '+gearFx(up)+'.';draw();return;}
+  });});
+  closeModal();say('Sales de la herrería. En la próxima tirada sigues tu camino.');}
+
+/* --- Recuadros de armas y escudos en los combates --- */
+function gearDuelHTML(mi){if(!hasForge(mi))return '';var L=gearOf(mi);
+  var bag=L.length?L.map(function(g,i){var t=esc(gearName(g)+': '+gearFx(g));return '<span class="gitem" role="button" tabindex="0" data-i="'+i+'" aria-label="'+t+'" title="'+t+'">'+ART.gear(g)+'<b class="gb">'+(gT(g)==='a'?'+':'−')+g.r+'</b></span>';}).join(''):'<span class="small">No llevas armas ni escudos: puedes conseguirlos en las herrerías.</span>';
+  return '<div class="gduel" id="gduel"><p class="gd-t"><b>Tus armas y escudos para este combate.</b>'+(L.length?' Tócalos o arrástralos a los recuadros para subirlos; tócalos otra vez para bajarlos.':'')+'</p><div class="gd-slots">'+[0,1,2,3].map(function(i){return '<span class="gslot" data-s="'+i+'" aria-label="Recuadro '+(i+1)+'"></span>';}).join('')+'</div><div class="gd-bag" id="gdbag">'+bag+'</div>'+(L.length?'<div class="gd-btns"><button class="btn" type="button" id="gdall">Subir todo</button></div>':'')+'<p class="gd-sum" id="gdsum" aria-live="polite">Armas: +0 · Escudos: −0</p><p class="gd-warn" id="gdwarn" aria-live="polite"></p></div>';}
+function gearDuelBind(host,mi){var w=$('#gduel',host);if(!w)return;
+  function lk(){return w.classList.contains('locked');}
+  function upd(){$('#gdsum',w).textContent='Armas: +'+gearSum(host,'a')+' · Escudos: −'+gearSum(host,'e');var a=$('#gdall',w);if(a)a.disabled=lk()||!$$('#gdbag .gitem',w).length;}
+  function toSlot(it,sl){if(lk())return;sl=sl||$$('.gslot',w).filter(function(s){return !s.firstElementChild;})[0];if(!sl||sl.firstElementChild)return;sl.appendChild(it);$('#gdwarn',w).textContent='';upd();}
+  function toBag(it){if(lk())return;$('#gdbag',w).appendChild(it);upd();}
+  function act(it){if(it.parentNode.classList.contains('gslot'))toBag(it);else toSlot(it);}
+  $$('.gitem',w).forEach(function(it){
+    it.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();act(it);it.focus();}});
+    it.addEventListener('pointerdown',function(e){if(lk())return;e.preventDefault();var sx=e.clientX,sy=e.clientY,moved=false,gh=null;
+      function mv(ev){if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>6){moved=true;gh=it.cloneNode(true);gh.className='gitem ghost';document.body.appendChild(gh);}if(gh){gh.style.left=ev.clientX+'px';gh.style.top=ev.clientY+'px';}}
+      function up(ev){document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);if(gh)gh.remove();
+        if(!moved){act(it);return;}var t=document.elementFromPoint(ev.clientX,ev.clientY),sl=t&&t.closest('.gslot'),bg=t&&t.closest('#gdbag');if(sl&&w.contains(sl))toSlot(it,sl);else if(bg&&w.contains(bg))toBag(it);}
+      document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);});});
+  var all=$('#gdall',w);if(all)all.addEventListener('click',function(){$$('#gdbag .gitem',w).forEach(function(it){toSlot(it);});});
+  upd();}
+function gearSum(host,t){var w=$('#gduel',host);if(!w)return 0;var L=gearOf(S.map),s=0;$$('.gslot .gitem',w).forEach(function(it){var g=L[+it.getAttribute('data-i')];if(g&&gT(g)===t)s+=g.r;});return s;}
+function gearLock(host){var w=$('#gduel',host);if(!w)return;w.classList.add('locked');var a=$('#gdall',w);if(a)a.disabled=true;$$('.gitem',w).forEach(function(it){it.setAttribute('tabindex','-1');it.setAttribute('aria-disabled','true');});}
+function gearWarn(host){var w=$('#gduel',host);if(!w||w.classList.contains('locked')||w.getAttribute('data-warned'))return false;if($$('.gslot .gitem',w).length||!$$('#gdbag .gitem',w).length)return false;
+  w.setAttribute('data-warned','1');$('#gdwarn',w).textContent='No has subido ninguna arma ni ningún escudo. Súbelos a los recuadros o pulsa otra vez «Comenzar el combate» para luchar sin ellos.';return true;}
+function fightNote(nd,mi){var s='';if(nd.king)s+=' ¡Cuidado: '+esc(ART.monsters[nd.monster].c||'el rey')+' lanza tres dados!';if(hasForge(mi))s+=' Después podrás subir tus armas y escudos a los cuatro recuadros del combate.';return s;}
+
+/* --- Peajes, llaves y lugares que curan --- */
+async function payToll(mi,nd,art){var M=MAPS[mi],P=M.places[nd.place],o=M.obj,need=tollOf(mi,nd.place);
+  if(S.inv[mi]<need){S.forceBack=true;save();var row='';for(var i=0;i<need;i++)row+='<span class="'+(i<S.inv[mi]?'gg on':'gg')+'">'+ART.gem(o.key,'')+'</span>';
+    var c=modal(art+'<h2 class="m-title">'+esc(P.name)+': peaje</h2><p>'+esc(P.tollMsg||('Para pasar por aquí hay que entregar '+need+' '+o.many+'.'))+'</p><div class="gate-gems" aria-hidden="true">'+row+'</div><p class="center">En tu bolsa '+(S.inv[mi]===1?'solo hay 1 '+o.one:'hay '+S.inv[mi]+' '+o.many)+' y el peaje es de <b>'+need+'</b>.</p><p>Sigue superando pergaminos y vuelve cuando tengas los que faltan. En tu próximo turno tendrás que volver por donde has venido.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');
+    await choice(c);closeModal();say('Te faltan '+o.many+' para el peaje: en el próximo turno vuelves atrás.');return false;}
+  await unlockFlow(mi,nd.place,need);S.inv[mi]-=need;if(!S.paid)S.paid={};S.paid[mi+':'+nd.place]=true;save();updatePanel();return true;}
+function keyHTML(mi,n){var M=MAPS[mi],ch=chainPl(mi),tot=ch.length,nx=ch[n]?M.places[ch[n]]:null,kh='';for(var i=0;i<tot;i++)kh+=ART.key(i<n,i===n-1?'key-new':'');
+  return '<div class="keys-rw">'+kh+'</div><p class="center"><b>¡Recibes la llave '+n+' de '+tot+'!</b> '+(nx?'Sigue la cadena: el próximo sitio es «'+esc(nx.name)+'».':'Ya tienes todas las llaves: ve hacia la meta.')+'</p>';}
+async function keyModal(mi,P){var c=modal('<h2 class="m-title">'+esc(P.name)+'</h2>'+keyHTML(mi,P.seq)+'<div class="m-actions"><button class="btn primary" data-v="1" data-focus>Continuar</button></div>','parch narrow');await choice(c);closeModal();}
+function healAt(mi,pk){var P=MAPS[mi].places[pk];if(!P||!P.heal||!S)return '';if(!S.healed)S.healed={};
+  if(S.healed[mi])return '<p class="heal-note">'+ART.heart(false)+'<span>Ya recuperaste aquí una vida en este mapa: solo se puede una vez.</span></p>';
+  if(S.lives>=3)return '<p class="heal-note">'+ART.heart(true)+'<span>Tienes tus tres vidas. Si pierdes alguna, vuelve aquí y la recuperarás (una vez en este mapa).</span></p>';
+  S.lives++;S.healed[mi]=true;save();updatePanel();return '<div class="heal-ok">'+ART.heart(true)+'<p>'+esc(P.heal)+' <b>Recuperas una vida.</b></p></div>';}
+
+/* --- La meta: puerta con llaves y combate contra el rey --- */
+async function metaFlow(mi,m){
+  if(!m.king||S.defeated[mi+':'+m.id]){await reachEnd(mi);return;}
+  if(!S.metaOpen)S.metaOpen={};var tot=keysTot(mi),hv=keysHave(mi);
+  if(!S.metaOpen[mi]){
+    if(tot&&hv<tot){S.forceBack=true;save();var c=modal('<h2 class="m-title">La puerta de la meta</h2><p>La puerta tiene '+tot+' cerraduras y solo llevas '+hv+(hv===1?' llave':' llaves')+'. Consigue las que faltan pasando en orden por los sitios del mapa. En tu próximo turno tendrás que volver atrás.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Entendido</button></div>','parch narrow');await choice(c);closeModal();say('Te faltan llaves: en el próximo turno vuelves atrás.');return;}
+    if(tot)await keyDoorFlow(mi);S.metaOpen[mi]=true;save();var d=$('#metadoor');if(d)d.remove();}
+  await fightFlow(m);}
+function keyDoorFlow(mi){return new Promise(function(resolve){var tot=keysTot(mi),K=ART.monsters[kingOf(mi)];
+  var c=modal('<h2 class="m-title">La puerta de la meta</h2><div class="gate kdoor"><svg viewBox="-120 -150 240 160" aria-hidden="true"><path d="M-110,10 L-110,-90 Q0,-160 110,-90 L110,10Z" fill="#6c665c"/><path d="M-80,10 L-80,-80 Q0,-130 80,-80 L80,10Z" fill="#1f3550"/><path class="door l" d="M-78,10 L-78,-78 Q-40,-104 0,-108 L0,10Z" fill="#7a4f2a"/><path class="door r" d="M78,10 L78,-78 Q40,-104 0,-108 L0,10Z" fill="#6b4423"/></svg><div class="slots">'+Array.from({length:tot},function(_,i){return '<span class="slot kslot" data-s="'+i+'" tabindex="0" aria-label="Cerradura '+(i+1)+'"></span>';}).join('')+'</div></div><p class="center">Usa tus '+tot+' llaves: arrástralas hasta las cerraduras o toca una llave y después una cerradura.</p><div class="gems-row">'+Array.from({length:tot},function(_,i){return '<span class="dg" data-g="'+i+'" tabindex="0" role="button" aria-label="Llave '+(i+1)+'">'+ART.key(true)+'</span>';}).join('')+'</div><div class="m-actions"><button class="btn primary" id="uok" disabled>Abrir la puerta</button></div>','parch');
+  var selected=null;
+  function filled(){return $$('.slot',c).filter(function(s){return s.firstChild;}).length;}
+  function put(g,s){if(!s||s.firstChild||!g)return;s.appendChild(g);g.classList.remove('sel');g.classList.add('in');g.removeAttribute('tabindex');selected=null;if(filled()>=tot){$('#uok',c).disabled=false;$('#uok',c).focus();}}
+  $$('.dg',c).forEach(function(g){
+    g.addEventListener('pointerdown',function(e){if(g.classList.contains('in'))return;e.preventDefault();var sx=e.clientX,sy=e.clientY,moved=false,gh=g.cloneNode(true);gh.className='dg ghost';document.body.appendChild(gh);
+      function mv(ev){if(Math.hypot(ev.clientX-sx,ev.clientY-sy)>6)moved=true;gh.style.left=ev.clientX+'px';gh.style.top=ev.clientY+'px';}
+      function up(ev){document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);gh.remove();
+        if(!moved){$$('.dg',c).forEach(function(x){x.classList.remove('sel');});g.classList.add('sel');selected=g;return;}
+        var t=document.elementFromPoint(ev.clientX,ev.clientY);put(g,t&&t.closest('.slot'));}
+      mv(e);document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();$$('.dg',c).forEach(function(x){x.classList.remove('sel');});g.classList.add('sel');selected=g;}});});
+  $$('.slot',c).forEach(function(s){s.addEventListener('click',function(){put(selected,s);});s.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();put(selected,s);}});});
+  $('#uok',c).addEventListener('click',async function(){$('.gate',c).classList.add('open');$('#uok',c).disabled=true;await sleep(reduced()?100:900);
+    var c2=modal('<div class="arena-top">'+ART.monsterSVG(kingOf(mi),'mon-big')+'<div class="bubble mon">'+esc(K.taunt)+'</div></div><h2 class="m-title">La puerta se abre… ¡y aparece '+esc(K.c)+'!</h2><p class="center">Para llegar a la meta tendrás que vencerlo en combate. Lanza tres dados.</p><div class="m-actions"><button class="btn primary" data-v="1" data-focus>Al combate</button></div>','dark narrow');
+    await choice(c2);closeModal();resolve();});
+});}
+async function kingLoss(nd,host,mi){var K=ART.monsters[nd.monster],o=MAPS[mi].obj,first=!dblOn(mi);if(!S.dbl)S.dbl={};S.dbl[mi]=true;save();updatePanel();
+  $('#fres',host).innerHTML='<b>'+esc(K.the||K.name)+' te ha derrotado.</b> Pierdes una vida.';
+  var bx=document.createElement('div');bx.className='king-lost';
+  bx.innerHTML='<p>'+(first?'Desde ahora, en este mapa, cada pergamino superado te da <b>dos '+esc(o.many)+'</b> en lugar de uno. ':'Sigues con premio doble: cada pergamino superado te da dos '+esc(o.many)+'. ')+'Da más vueltas al mapa para reunir '+esc(o.many)+', consigue mejores armas y escudos en las herrerías y vuelve a por '+esc(K.c)+'.</p><div class="m-actions"><button class="btn" data-v="back">Volver al último cruce</button><button class="btn primary" data-v="lap" data-focus>Dar otra vuelta al mapa</button></div>';
+  host.appendChild(bx);$('[data-v=lap]',bx).focus();var v=await choice(bx);closeModal();
+  if(v==='lap'){await penalize(G[mi].start);say('Nueva vuelta: ahora cada pergamino te da dos '+o.many+'.');}
+  else{await penalize(S.lastJ!==null&&S.lastJ!==undefined?S.lastJ:G[mi].start);say('Prepárate bien antes de volver a por '+K.c+'.');}}
+async function kingWon(mi){var k=$('#metaking');if(k)k.remove();if(mi===MAPS.length-1)await celebrate(mi);await reachEnd(mi);}
+async function celebrate(mi){S.crowned=true;save();var K=ART.monsters[kingOf(mi)];
+  var c=modal('<div class="celebr"><h2 class="m-title">¡Enhorabuena, '+esc(S.player.nombre||'')+'!</h2><div class="crowned">'+ART.avatarSVG(S.avatar,'crowned-av')+'</div><p class="center">Has vencido '+esc(K.a)+' y has llegado al final de la Senda de los Materiales. ¡Todo el reino celebra tu victoria y te corona!</p><div class="m-actions"><button class="btn primary big" data-v="1" data-focus>Recoger mi diploma</button></div></div>','dark narrow celebm');
+  var m=$('#modal'),cv=document.createElement('canvas');cv.className='fw';cv.setAttribute('aria-hidden','true');m.insertBefore(cv,m.firstChild);fireworks(cv);
+  updatePanel();var h=$('#hero');if(h&&S.pos!==undefined){h.innerHTML=heroSVG();placeHero(S.pos,true);}
+  await choice(c);closeModal();}
+function fireworks(cv){var ctx=cv.getContext('2d'),W=cv.width=window.innerWidth,H=cv.height=window.innerHeight,parts=[],rockets=[],last=0,cols=['#ffd23a','#ff6b6b','#5ac8f0','#9fe39a','#f39ad8','#ffffff','#ffb43a'];
+  function burst(x,y){var col=cols[rnd(cols.length)],n=70;for(var i=0;i<n;i++){var a=Math.random()*Math.PI*2,v=1.2+Math.random()*3.6;parts.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:55+Math.random()*35,c:Math.random()<.2?'#ffffff':col});}}
+  function step(){ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,0,W,H);ctx.globalCompositeOperation='lighter';
+    rockets.forEach(function(r){r.y+=r.vy;r.vy+=0.09;ctx.fillStyle='#ffe9a8';ctx.fillRect(r.x-1.5,r.y-5,3,9);if(r.y<=r.ty||r.vy>=-0.5){r.dead=1;burst(r.x,r.y);}});rockets=rockets.filter(function(r){return !r.dead;});
+    parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=0.045;p.vx*=.986;p.vy*=.986;p.l--;ctx.globalAlpha=Math.max(0,Math.min(1,p.l/60));ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,2.3,0,6.2832);ctx.fill();});ctx.globalAlpha=1;parts=parts.filter(function(p){return p.l>0;});}
+  if(reduced()){for(var k=0;k<6;k++)burst(W*(.12+.76*Math.random()),H*(.12+.4*Math.random()));for(var f=0;f<26;f++)step();return;}
+  function loop(t){if(!cv.isConnected)return;if(t-last>480){rockets.push({x:W*(.08+.84*Math.random()),y:H,vy:-(8+Math.random()*4),ty:H*(.1+.38*Math.random())});last=t;}step();requestAnimationFrame(loop);}
+  requestAnimationFrame(loop);}
+
+/* --- Reglas que se muestran en la presentación y en «Cómo se juega» --- */
+function gateRule(mi){var M=MAPS[mi],o=M.obj,ch=chainPl(mi);if(!ch.length)return 'Con '+objNeed(mi)+' '+o.many+' podrás abrir la puerta que lleva a la meta.';
+  var t=ch.filter(function(k){return tollOf(mi,k);}).map(function(k){return 'en «'+M.places[k].name+'» pagas '+tollOf(mi,k)+' '+o.many;});
+  var s=listY(t);return 'Pasa en orden por '+listY(ch.map(function(k){return '«'+M.places[k].name+'»';}))+': cada sitio te da una llave. '+(s?s.charAt(0).toUpperCase()+s.slice(1)+'. ':'')+'Con todas las llaves abrirás la puerta de la meta.';}
+function extraRules(mi){var M=MAPS[mi],o=M.obj,h='',hp=null,K=ART.monsters[kingOf(mi)];Object.keys(M.places).forEach(function(k){if(M.places[k].heal)hp=M.places[k];});
+  if(hp)h+='<li>Una vez en este mapa, «'+esc(hp.name)+'» te devuelve una vida si has perdido alguna.</li>';
+  if(hasForge(mi))h+='<li>En las herrerías (casilla con yunque) cambias '+esc(o.many)+' por armas (espada, arco, lanza, trabuco o saco de pólvora con mecha) y por escudos (escudo, armadura o muralla). Los de rango básico cuestan 2; los de rango intermedio, 4, y los de rango superior, 6. En los combates, cada arma suma su rango a tus dados y cada escudo lo resta a los dados del monstruo. Puedes llevar 4 como máximo y, si juntas dos iguales del mismo rango, el herrero te da uno del rango siguiente.</li>'+
+    '<li>En la meta te espera '+esc(K.c)+', que lanza tres dados. Si te vence, puedes dar más vueltas al mapa y, desde ese momento, cada pergamino superado te da el doble de '+esc(o.many)+'.</li>'+
+    '<li>Cuando hayas superado todos los pergaminos, sus casillas te ponen dos preguntas de repaso: si aciertas al menos una, también ganas '+esc(unO(o))+'.</li>';
+  h+='<li>Tu nota sale de las preguntas. Para que se calcule sobre 10 necesitas responder al menos '+QMIN+' en este mapa; con menos, baja en proporción (con 30, como mucho un 7,5; con 20, un 5). Vencer al rey y finalizar el mapa suma 1 punto extra.</li>';
+  return h;}
+
+/* --- Partidas guardadas antes de las llaves --- */
+function migrateForge(){if(!S||S.forgeV)return;S.forgeV=1;if(!S.seq)S.seq={};if(!S.paid)S.paid={};
+  MAPS.forEach(function(M,mi){var ch=chainPl(mi),tot=ch.length;if(!tot)return;var had=S.seq[mi]!==undefined,d=S.seq[mi]||0;
+    if(S.unlocked&&S.unlocked[mi])d=tot;
+    else if(!had){var g=G[mi]||(S.code?buildGraph(mi,S.code):null),pos=(S.map===mi)?S.pos:(S.mv&&S.mv[mi]?S.mv[mi].pos:null);
+      if(S.gifts&&S.gifts[mi+':'+ch[0]])d=Math.max(d,1);
+      if(g&&pos!==null&&pos!==undefined&&g.nodes[pos]){var N=g.nodes,seen={},q=[g.start];seen[g.start]=1;
+        while(q.length){var u=q.shift();N[u].adj.forEach(function(v){if(seen[v])return;var n=N[v];if(n.kind==='place'){var P=M.places[n.place];if(P.kind==='block'||(P.seq&&P.seq>=2))return;}seen[v]=1;q.push(v);});}
+        if(!seen[pos])d=Math.max(d,tot-1);}}
+    if(d>(S.seq[mi]||0)){S.seq[mi]=d;ch.forEach(function(k){if(M.places[k].seq<=d)S.paid[mi+':'+k]=true;});}
+    if(S.ms&&S.ms['end'+(mi+1)]){var gg=G[mi]||(S.code?buildGraph(mi,S.code):null);if(gg){if(!S.metaOpen)S.metaOpen={};S.metaOpen[mi]=true;S.defeated[mi+':'+gg.end]=true;}}});}
+var migrateState0=migrateState;migrateState=function(){migrateState0();try{migrateForge();}catch(e){console.error(e);}};
 </script>
 </body>
 </html>
